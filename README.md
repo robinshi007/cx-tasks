@@ -13,7 +13,7 @@ A Task/Project management webapp like simplified JIRA
 ## Tools
 
 - Sketch: for icon and page design use.
-- NeoVim: for doc and code editing.
+- NeoVim&VsCode: for doc and code editing.
 - iTerm2&Tmux: for terminal management.
 - Git&Github: for doc and code version management.
 - Chrome browser: for webapp test by manual.
