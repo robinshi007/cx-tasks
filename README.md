@@ -1,6 +1,6 @@
 ## CxTasks
 
-A Task/Project management webapp like simplified JIRA
+A Task/Project management webapp like simplified Asana and Trello
 
 ## Folder Structure
 
