@@ -8,6 +8,7 @@ const { whenDev, whenProd, when } = require('@craco/craco');
 const path = require('path');
 
 const isBuildAnalyzer = process.env.BUILD_ANALYZER === 'true';
+const pathResolve = (pathUrl) => path.join(__dirname, pathUrl);
 
 module.exports = {
   babel: {
@@ -35,13 +36,13 @@ module.exports = {
       // config file extension
       webpackConfig.resolve.extensions = [
         ...webpackConfig.resolve.extensions,
-        ...['.scss', '.less'],
+        ...['jsx', '.scss', '.less'],
       ];
       return webpackConfig;
     },
     // alias
     alias: {
-      '@': path.resolve(__dirname, 'src'),
+      '@': pathResolve('src'),
     },
     plugins: [
       new WebpackBar({ profile: true }),
@@ -79,7 +80,6 @@ module.exports = {
         lessLoaderOptions: {
           lessOptions: {
             modifyVars: {
-              '@primary-color': '#ddd',
               '@border-radius-base': '2px',
             },
             javascriptEnabled: true,

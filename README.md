@@ -6,7 +6,7 @@ A Task/Project management webapp like simplified Asana and Trello
 
 - doc: contains user stories, design notes and development notes.
 - design: contains sketch files and design output files(page png, icon svg, favicon, etc.)
-- webapp/src/proto: contains react static pages based on design pages
+- webapp/src/prototype: contains react static pages based on design pages
 - webapp: react webapp with router, state management and proxy to backend server
 - backend: golang clean architecture based project
 

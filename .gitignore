@@ -4,3 +4,6 @@ dist/
 tmp/
 .eslintcache
 analyzer.html
+svg_min/
+svg_raw/
+Icon/index.jsx
