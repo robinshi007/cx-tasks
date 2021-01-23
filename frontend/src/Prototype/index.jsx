@@ -1,14 +1,19 @@
 import React from 'react';
-import { List } from 'antd';
-import { Link, Switch, Route, useRouteMatch, useParams } from 'react-router-dom';
+import { NavLink, Switch, Route, Redirect, useRouteMatch } from 'react-router-dom';
 
-import Login from './Login';
-import Backlog from './Backlog';
 import Draggable from './Draggable';
 
+import LoginPage from './Login';
+import WebappPage from './Webapp';
+import HomePage from './Webapp/Home';
+import ProjectPage from './Webapp/Project';
+import { Box } from '@/shared/components/Layout';
+import { Link } from '@/shared/components/Element';
+
 const routeData = [
-  { name: 'login', component: Login },
-  { name: 'backlog', component: Backlog },
+  { name: 'login', path: 'login', component: LoginPage },
+  { name: 'home', path: 'webapp/home', component: HomePage },
+  { name: 'project', path: 'webapp/project', component: ProjectPage },
 ];
 
 const PrototypePage = () => {
@@ -17,41 +22,52 @@ const PrototypePage = () => {
     <>
       <div>
         <Draggable>
-          <List
-            size="small"
-            dataSource={routeData}
-            renderItem={(item) => (
-              <List.Item>
-                <Link to={`${url}/${item.name}`}>{item.name} page</Link>
-              </List.Item>
-            )}
-          />
+          {routeData.map((item) => (
+            <Box display="block">
+              <Link
+                as={NavLink}
+                exact={true}
+                to={`${url}/${item.path}`}
+                px={1}
+                fontSize="14px"
+                ml={3}
+              >
+                {item.name} page
+              </Link>
+            </Box>
+          ))}
         </Draggable>
       </div>
       <Switch>
-        <Route path={`${path}/:pageName`}>
-          <Page />
+        <Route path={`${path}/login`}>
+          <LoginPage />
+        </Route>
+        <Route path={`${path}/webapp`}>
+          <WebappPage />
+        </Route>
+        <Route exact path={`${path}`}>
+          <Redirect to={`${path}/login`} />
         </Route>
       </Switch>
     </>
   );
 };
 
-const findPageComponent = (pageName) => {
-  const len = routeData.length;
-  for (let i = 0; i < len; i++) {
-    let item = routeData[i];
-    if (item && item.name && item.name === pageName) {
-      if (item.component) {
-        return <item.component />;
-      }
-    }
-  }
-  return <></>;
-};
-const Page = () => {
-  let { pageName } = useParams();
-  return findPageComponent(pageName);
-};
+// const findPageComponent = (pageName) => {
+//   const len = routeData.length;
+//   for (let i = 0; i < len; i++) {
+//     let item = routeData[i];
+//     if (item && item.name && item.name === pageName) {
+//       if (item.component) {
+//         return <item.component />;
+//       }
+//     }
+//   }
+//   return <></>;
+// };
+// const Page = () => {
+//   let { pageName } = useParams();
+//   return findPageComponent(pageName);
+// };
 
 export default PrototypePage;

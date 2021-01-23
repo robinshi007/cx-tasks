@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import usePortal from 'react-useportal';
 
-import { DragObjectIcon } from '@/shared/components/Icon';
+import { DragObjectIcon } from '@/shared/components/Element';
 
 const HandleWrapper = styled.span`
   padding: 4px 0;
@@ -39,8 +39,8 @@ const DraggableHandle = ({ onDrag, children }) => {
 
 const DraggableListWrapper = styled.div`
   position: fixed;
-  top: 0px;
-  left: 0px;
+  top: 4px;
+  right: 4px;
   padding: 4px;
   z-index: 2147483640;
   display: -webkit-box;
@@ -59,7 +59,9 @@ const HeadingWrapper = styled.span`
   font-weight: 600;
   padding: 4px 2px;
 `;
-const BodyWrapper = styled.span``;
+const BodyWrapper = styled.span`
+  margin-bottom: 8px;
+`;
 
 const DraggableList = ({ children }) => {
   const listRef = useRef(null);
@@ -68,15 +70,15 @@ const DraggableList = ({ children }) => {
     const list = listRef.current;
     if (!list) return;
 
-    const { x, y } = list.getBoundingClientRect();
-    list.style.left = `${x + movementX}px`;
+    const { x, y, width } = list.getBoundingClientRect();
+    list.style.right = `${window.innerWidth - x - width - movementX}px`;
     list.style.top = `${y + movementY}px`;
   };
 
   return (
     <DraggableListWrapper ref={listRef}>
       <DraggableHandle onDrag={handleDrag}>
-        <DragObjectIcon size={16} />
+        <DragObjectIcon size={16} display="inline-block" />
         <HeadingWrapper>Page list</HeadingWrapper>
       </DraggableHandle>
       <BodyWrapper>{children}</BodyWrapper>

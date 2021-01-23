@@ -1,15 +1,15 @@
-//import './index.less';
-import NormalizeStyles from './NormalizeStyles';
-import BaseStyles from './BaseStyles';
+import { ThemeProvider } from 'styled-components';
+import theme from '@/shared/theme';
+
+import CssBaseline from '@/shared/components/CssBaseline';
 import Routes from './Routes';
 
 function App() {
   return (
-    <>
-      <NormalizeStyles />
-      <BaseStyles />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       <Routes />
-    </>
+    </ThemeProvider>
   );
 }
 

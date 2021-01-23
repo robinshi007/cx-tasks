@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { color, font } from '@/shared/utils/styles';
+//import { color, font } from '@/shared/utils/styles';
 //import { Icon } from 'shared/components';
 
 //import imageBackground from './assets/background-forest.jpg';
@@ -25,7 +25,7 @@ export const ErrorBox = styled.div`
   max-width: 480px;
   padding: 32px;
   border-radius: 3px;
-  border: 1px solid ${color.borderLight};
+  border: 1px solid #c1c7d0;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
   background: rgba(255, 255, 255, 0.9);
 `;
@@ -41,5 +41,4 @@ export const ErrorBox = styled.div`
 export const Title = styled.h1`
   margin-bottom: 16px;
   padding-left: 42px;
-  ${font.size(29)}
 `;

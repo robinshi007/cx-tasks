@@ -77,6 +77,7 @@ const icons = [
   'CircleRing',
   'StatusCircleCheckmark',
   'StatusCircleErrorX',
+  'BacklogList',
 ];
 
 icons.forEach((i) => {

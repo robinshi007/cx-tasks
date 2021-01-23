@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@compositor/kit": "^1.0.47",
     "@craco/craco": "^6.0.0",
+    "@storybook/addon-info": "^5.3.21",
+    "@styled-system/theme-get": "^5.1.2",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -13,8 +16,10 @@
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
+    "react-use": "^15.3.8",
     "react-useportal": "^1.0.13",
     "styled-components": "^5.2.1",
+    "styled-system": "^5.1.5",
     "web-vitals": "^0.2.4"
   },
   "scripts": {
@@ -22,7 +27,9 @@
     "build": "craco build",
     "analyzer": "env BUILD_ANALYZER=true yarn start",
     "test": "craco test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "storybook": "start-storybook -p 6006 -s public",
+    "build-storybook": "build-storybook -s public"
   },
   "eslintConfig": {
     "extends": [
@@ -44,6 +51,13 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.12.12",
+    "@storybook/addon-actions": "^6.1.14",
+    "@storybook/addon-essentials": "^6.1.14",
+    "@storybook/addon-knobs": "^6.1.14",
+    "@storybook/addon-links": "^6.1.14",
+    "@storybook/node-logger": "^6.1.14",
+    "@storybook/preset-create-react-app": "^3.1.5",
+    "@storybook/react": "^6.1.14",
     "babel-plugin-import": "^1.13.3",
     "circular-dependency-plugin": "^5.2.2",
     "craco-less": "^1.17.1",
