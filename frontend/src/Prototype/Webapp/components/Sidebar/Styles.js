@@ -66,7 +66,7 @@ export const NotImplemented = styled.div`
   text-align: left;
   vertical-align: middle;
   color: inherit;
-  background: inherit;
+  background: #ececec;
   opacity: 0;
   ${LinkItem}:hover & {
     opacity: 1;

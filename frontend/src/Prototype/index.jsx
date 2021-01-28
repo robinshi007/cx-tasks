@@ -23,7 +23,7 @@ const PrototypePage = () => {
       <div>
         <Draggable>
           {routeData.map((item) => (
-            <Box display="block">
+            <Box display="block" key={item.path}>
               <Link
                 as={NavLink}
                 exact={true}

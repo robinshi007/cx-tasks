@@ -9,7 +9,7 @@ const PageError = () => (
         <Title>There’s been a glitch…</Title>
         <p>
           {'We’re not quite sure what went wrong. Please contact us or try looking on our '}
-          <a href="https://support.atlassian.com/jira-software-cloud/">Help Center</a>
+          <a href="https://localhost/">Help Center</a>
           {' if you need a hand.'}
         </p>
       </ErrorBox>

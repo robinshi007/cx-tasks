@@ -1,7 +1,14 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-import { SearchIcon, AddIcon, HomeIcon, RingerIcon, HelpIcon } from '@/shared/components/Element';
+import {
+  Avatar,
+  SearchIcon,
+  AddIcon,
+  HomeIcon,
+  RingerIcon,
+  HelpIcon,
+} from '@/shared/components/Element';
 import { Box, Spacer } from '@/shared/components/Layout';
 
 import { NavLeft, LogoLink, StyledLogo, Item } from './Styles';
@@ -33,6 +40,9 @@ const NavbarLeft = () => (
     </Item>
     <Item>
       <HelpIcon size={24} />
+    </Item>
+    <Item>
+      <Avatar initials="WS" size={32} bg="purple" color="white" />
     </Item>
     <Box height={20} />
   </NavLeft>

@@ -2,5 +2,6 @@
 
 - [React](https://github.com/facebook/react)
 - [React-Router](https://github.com/ReactTraining/react-router)
-- [AntDesign](https://github.com/ant-design/ant-design)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Styled-Components](https://styled-components.com/)
 - [ReactUse](https://github.com/streamich/react-use)

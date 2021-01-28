@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 
 import { ProjectCategoryCopy } from '@/shared/constants/projects';
 import { ProjectLogo32Icon, Text } from '@/shared/components/Element';
-import { Divider } from '@/shared/components/Layout';
+import { Box, Divider } from '@/shared/components/Layout';
 
 import {
   SidebarStyles,
@@ -45,14 +45,14 @@ const renderLinkItem = (path, text, IconComponent, isImplemented) => {
   const linkItemProps = isImplemented ? { as: NavLink, exact: true, to: `${path}` } : { as: 'div' };
 
   return (
-    <>
+    <Box key={path}>
       {text === 'Settings' ? <Divider my="4px" /> : ''}
-      <LinkItem variation="fill" color="text.light" {...linkItemProps} key={path}>
+      <LinkItem variation="fill" color="text.light" {...linkItemProps}>
         <IconComponent size={18} mr={14} />
         {text}
         {isImplemented ? '' : <NotImplemented>NOT IMPLEMENTED</NotImplemented>}
       </LinkItem>
-    </>
+    </Box>
   );
 };
 

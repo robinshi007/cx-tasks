@@ -5,6 +5,7 @@ export { default as Link } from './Link';
 export { default as Input, Label } from './Input';
 export { default as Image } from './Image';
 export { default as BackgroundImage } from './BackgroundImage';
+export { default as Avatar } from './Avatar';
 
 export {
   PointStarIcon,
@@ -119,6 +120,8 @@ export {
   SortLinesIcon,
   SortLinesAscendingIcon,
   SortUpIcon,
+  SquareShapeIcon,
+  SquareShapeSolidIcon,
   StackIcon,
   StatusCircleCheckmarkIcon,
   StatusCircleErrorXIcon,
@@ -142,5 +145,6 @@ export {
   WaffleOffice365Icon,
   WarningIcon,
   WorkItemIcon,
+  FilterIcon,
 } from './Icons';
 

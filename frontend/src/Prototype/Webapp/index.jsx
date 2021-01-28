@@ -10,7 +10,10 @@ import ProjectPage from './Project';
 //const paddingLeft = sizes.appNavBarLeftWidth + sizes.secondarySideBarWidth + 40;
 
 export const WebappWrapper = styled.div`
-  padding: 25px 32px 50px 48px;
+  padding: 24px 42px 42px 42px;
+`;
+export const MainWrapper = styled.div`
+  padding-left: 265px;
 `;
 
 const WebappPage = () => {
@@ -22,17 +25,19 @@ const WebappPage = () => {
   return (
     <WebappWrapper>
       <NavbarLeft />
-      <Switch>
-        <Route path={`${path}/home`}>
-          <HomePage />
-        </Route>
-        <Route path={`${path}/project`}>
-          <ProjectPage />
-        </Route>
-        <Route exact path={`${path}`}>
-          <Redirect to={`${path}/home`} />
-        </Route>
-      </Switch>
+      <MainWrapper>
+        <Switch>
+          <Route path={`${path}/home`}>
+            <HomePage />
+          </Route>
+          <Route path={`${path}/project`}>
+            <ProjectPage />
+          </Route>
+          <Route exact path={`${path}`}>
+            <Redirect to={`${path}/home`} />
+          </Route>
+        </Switch>
+      </MainWrapper>
     </WebappWrapper>
   );
 };
