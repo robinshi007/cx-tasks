@@ -38,18 +38,11 @@ const DraggableHandle = ({ onDrag, children }) => {
 };
 
 const DraggableListWrapper = styled.div`
-  position: fixed;
+  position: absolute;
   top: 4px;
   right: 4px;
   padding: 4px;
   z-index: 2147483640;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: column;
-  flex-direction: column;
   cursor: pointer;
   background: #fff;
   box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 8px;

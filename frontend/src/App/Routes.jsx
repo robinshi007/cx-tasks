@@ -10,8 +10,8 @@ const Routes = () => (
   <Router history={createBrowserHistory()}>
     <Switch>
       <Route path="/prototype" component={PrototypePage} />
-      <Route component={PageError} />
       <Redirect exact from="/" to="/prototype" />
+      <Route component={PageError} />
     </Switch>
   </Router>
 );

@@ -1,91 +1,32 @@
-/* craco.config.js */
-/* refer https://juejin.cn/post/6871148364919111688 */
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const WebpackBar = require('webpackbar');
-const CircularDependencyPlugin = require('circular-dependency-plugin');
-const CracoLessPlugin = require('craco-less');
-const { whenDev, whenProd, when } = require('@craco/craco');
 const path = require('path');
+const fs = require('fs');
 
-const isBuildAnalyzer = process.env.BUILD_ANALYZER === 'true';
-const pathResolve = (pathUrl) => path.join(__dirname, pathUrl);
+const CircularDependencyPlugin = require('circular-dependency-plugin');
+const WebpackBar = require('webpackbar');
+
+const appDirectory = fs.realpathSync(process.cwd());
+const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
 
 module.exports = {
-  babel: {
-    presets: [],
-    plugins: [
-      [
-        '@babel/plugin-proposal-decorators',
-        {
-          legacy: true,
-        },
-      ], // support decorators
-      [
-        'import',
-        {
-          libraryName: 'antd',
-          libraryDirectory: 'es',
-          style: true, // true to support less
-        },
-        'antd',
-      ],
-    ],
+  style: {
+    postcss: {
+      plugins: [require('tailwindcss')(resolveApp('tailwind.config.js')), require('autoprefixer')],
+    },
   },
   webpack: {
-    configure: (webpackConfig, { env, paths }) => {
-      // config file extension
-      webpackConfig.resolve.extensions = [
-        ...webpackConfig.resolve.extensions,
-        ...['jsx', '.scss', '.less'],
-      ];
-      return webpackConfig;
-    },
-    // alias
-    alias: {
-      '@': pathResolve('src'),
-    },
     plugins: [
-      new WebpackBar({ profile: true }),
-      // add circular dependency check
-      ...whenDev(
-        () => [
-          new CircularDependencyPlugin({
-            exclude: /node_modules/,
-            include: /src/,
-            failOnError: true,
-            allowAsyncCycles: false,
-            cwd: process.cwd(),
-          }),
-        ],
-        []
-      ),
-      ...when(
-        isBuildAnalyzer,
-        () => [
-          new BundleAnalyzerPlugin({
-            analyzerMode: 'static',
-            openAnalyzer: false,
-            reportFilename: path.resolve(__dirname, `analyzer.html`),
-          }),
-        ],
-        []
-      ),
+      new WebpackBar(),
+      new CircularDependencyPlugin({
+        exclude: /node_modules/,
+        include: /src/,
+        failOnError: true,
+        allowAsyncCycles: false,
+        cwd: process.cwd(),
+      }),
     ],
-  },
-  plugins: [
-    // support less
-    {
-      plugin: CracoLessPlugin,
-      options: {
-        lessLoaderOptions: {
-          lessOptions: {
-            modifyVars: {
-              '@border-radius-base': '2px',
-            },
-            javascriptEnabled: true,
-          },
-        },
-      },
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+      '@images': path.resolve(__dirname, 'src/assets/images/'),
     },
-  ],
+  },
 };
