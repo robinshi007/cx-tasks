@@ -1,19 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink, Switch, Route, Redirect, useRouteMatch } from 'react-router-dom';
 
 import { Box } from '@/shared/components/Layout';
 import { Link } from '@/shared/components/Element';
-import Draggable from './Draggable';
+//import Draggable from './Draggable';
 
-//import LoginPage from './Login';
-// import WebappPage from './Webapp';
-// import HomePage from './Webapp/Home';
-// import ProjectPage from './Webapp/Project';
 import LoginPage from './pages/Login';
 import MyWorkPage from './pages/home/MyWork';
 import ProjectsPage from './pages/home/Projects';
 import FavoritePage from './pages/home/Favirate';
-import HomeSettingsPage from './pages/home/Settings';
+//import HomeSettingsPage from './pages/home/Settings';
 import ProjectBacklogPage from './pages/project/Backlog';
 import ProjectBoardPage from './pages/project/Board';
 import ProjectNewPage from './pages/project/New';
@@ -27,7 +23,7 @@ const routeData = [
   { name: 'home/mywork', path: 'home/mywork' },
   { name: 'home/projects', path: 'home/projects' },
   { name: 'home/favorite', path: 'home/favorite' },
-  { name: 'home/settings', path: 'home/settings' },
+  // { name: 'home/settings', path: 'home/settings' },
   { name: 'project/new', path: 'project/new' },
   { name: 'project/backlog', path: 'project/backlog' },
   { name: 'project/board', path: 'project/board' },
@@ -41,8 +37,9 @@ const routeData = [
 
 const PrototypePage = () => {
   let { path, url } = useRouteMatch();
+  let [showMenu, setShowMenu] = useState(false);
   return (
-    <div>
+    <div className="relative">
       <div className="bg-gradient-to-br from-pink-300 via-fuchsia-500 to-purple-500 min-h-screen h-full overflow-y-auto">
         <Switch>
           <Route path={`${path}/login`}>
@@ -56,9 +53,6 @@ const PrototypePage = () => {
           </Route>
           <Route path={`${path}/home/favorite`}>
             <FavoritePage />
-          </Route>
-          <Route path={`${path}/home/settings`}>
-            <HomeSettingsPage />
           </Route>
           <Route path={`${path}/project/new`}>
             <ProjectNewPage />
@@ -86,22 +80,31 @@ const PrototypePage = () => {
           </Route>
         </Switch>
       </div>
-      <Draggable>
-        {routeData.map((item) => (
-          <Box display="block" key={item.path}>
-            <Link
-              as={NavLink}
-              exact={true}
-              to={`${url}/${item.path}`}
-              px={1}
-              fontSize="14px"
-              ml={3}
-            >
-              {item.name} page
-            </Link>
-          </Box>
-        ))}
-      </Draggable>
+      <div className="absolute top-0 right-4">
+        <div className="absolute top-0 right-0 shadow-lg animate-ping w-3 h-3 bg-purple-400 rounded-full opacity-75 z-10" />
+        <div
+          className="absolute top-0 right-0 shadow-lg w-3 h-3 bg-purple-500 rounded-full cursor-pointer z-10"
+          onClick={() => setShowMenu(!showMenu)}
+        />
+        <div
+          className={`absolute top-0 right-0 w-44 bg-white ${showMenu ? 'visible' : 'invisible'}`}
+        >
+          {routeData.map((item) => (
+            <Box display="block" key={item.path}>
+              <Link
+                as={NavLink}
+                exact={true}
+                to={`${url}/${item.path}`}
+                px={1}
+                fontSize="14px"
+                ml={3}
+              >
+                {item.name} page
+              </Link>
+            </Box>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

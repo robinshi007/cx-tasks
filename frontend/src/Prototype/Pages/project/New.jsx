@@ -13,8 +13,34 @@ const Content = () => (
       <div className="flex items-center justify-start h-11 w-full  mt-3 mb-2">
         <h2 className="text-gray-600 font-medium text-lg">New Project</h2>
       </div>
-      <div className="w-full bg-gray-100 mb-4 h-9"></div>
-      <div className="h-36 w-full"></div>
+      <div className="h-36 w-full">
+        <form className="bg-white text-center rounded " style={{ maxWidth: '420px' }}>
+          <div>
+            <label for="name" className="sr-only">
+              Name
+            </label>
+            <input
+              id="name"
+              className="w-full rounded py-1 px-4 mb-6 bg-gray-100 border-gray-300 border-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:z-10 focus:bg-white transition ease-out duration-200"
+              type="text"
+              placeholder="name"
+            />
+          </div>
+          <div>
+            <label htmlFor="description" className="sr-only">
+              description
+            </label>
+            <textarea
+              id="description"
+              className="w-full rounded py-1 px-4 mb-6 bg-gray-100 border-gray-300 border-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:z-10 focus:bg-white transition ease-out duration-200"
+              placeholder="description"
+            />
+          </div>
+          <button className="flex items-center justify-center rounded bg-blue-600 text-white text-md font-medium px-4 py-1 cursor-pointer mb-6 transition ease-out duration-200 focus:outline-none focus:bg-blue-700 hover:bg-blue-500 hover:text-white group ">
+            Create
+          </button>
+        </form>
+      </div>
     </div>
   </div>
 );

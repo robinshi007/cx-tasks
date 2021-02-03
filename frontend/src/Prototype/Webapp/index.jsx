@@ -5,7 +5,6 @@ import styled from 'styled-components';
 //import { sizes } from '@/shared/utils/styles';
 import NavbarLeft from './components/NavbarLeft';
 import HomePage from './Home';
-import ProjectPage from './Project';
 
 //const paddingLeft = sizes.appNavBarLeftWidth + sizes.secondarySideBarWidth + 40;
 
@@ -20,7 +19,6 @@ const WebappPage = () => {
   // const match = useRouteMatch();
   // const history = useHistory();
   let { path } = useRouteMatch();
-  console.log('path', path);
 
   return (
     <WebappWrapper>
@@ -29,9 +27,6 @@ const WebappPage = () => {
         <Switch>
           <Route path={`${path}/home`}>
             <HomePage />
-          </Route>
-          <Route path={`${path}/project`}>
-            <ProjectPage />
           </Route>
           <Route exact path={`${path}`}>
             <Redirect to={`${path}/home`} />
