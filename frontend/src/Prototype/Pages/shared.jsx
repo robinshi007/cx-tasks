@@ -77,18 +77,17 @@ const SidebarLink = ({ title, Icon, active }) => {
   );
 };
 
+// <>
+//   {obj.name === 'Settings' ? (
+//     <div className="w-full bg-gray-300 border-solid h-px"></div>
+//   ) : (
+//     ''
+//   )}
 const SidebarLinks = ({ navList }) => {
   return (
     <>
       {navList.map((obj, index) => (
-        <>
-          {obj.name === 'Settings' ? (
-            <div className="w-full bg-gray-300 border-solid h-px"></div>
-          ) : (
-            ''
-          )}
-          <SidebarLink title={obj.name} Icon={obj.icon} active={obj.active} key={index} />
-        </>
+        <SidebarLink title={obj.name} Icon={obj.icon} active={obj.active} key={index} />
       ))}
     </>
   );

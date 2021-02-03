@@ -4,24 +4,72 @@ import {
   SettingsIcon,
   SearchIcon,
   FabricFolderIcon,
+  BoxCheckmarkSolidIcon,
+  UpIcon,
+  DownIcon,
+  SingleBookmarkIcon,
   Avatar,
-  SquareShapeIcon,
 } from '@/shared/components/Element';
 
 import { Nav, Sidebar } from '../shared';
-
-const Row = ({ title, dueDate }) => {
+const List = ({ title, count, cards }) => {
   return (
-    <li className="flex items-center justify-between font-sm text-gray-600 py-1">
-      <div className="flex items-center">
-        <SquareShapeIcon size={20} className="mr-2" />
-        <div className="text-sm font-normal">{title}</div>
+    <div
+      className="bg-gray-100 flex flex-col items-center h-10 mr-2 px-1 py-1 rounded"
+      style={{ minHeight: '400px', width: '230px' }}
+    >
+      <div className="header flex items-center w-full h-8 uppercase truncate text-gray-500 text-sm font-base px-1">
+        <div className="">{title}</div>
+        <span className="ml-2 text-sm">{count}</span>
       </div>
-      <div className="flex items-center">
-        <div className="w-8 mr-4 text-right text-gray-400 text-sm">{dueDate}</div>
-        <Avatar initials="WS" bg="purple" color="white" size={28} />
+      <div className="content w-full"></div>
+      {cards.map((obj, index) => (
+        <Card
+          title={obj.title}
+          label={obj.label}
+          kind={obj.kind}
+          priority={obj.priority}
+          key={index}
+        />
+      ))}
+    </div>
+  );
+};
+
+const Card = ({ title, label, kind, priority }) => {
+  console.log('kind', kind);
+  return (
+    <div className="card shadow-sm w-full flex flex-col items-start bg-white p-2 text-gray-700 rounded select-none mb-1">
+      <div className="w-full mb-1.5">{title}</div>
+      <div className="mb-1.5">
+        {label ? (
+          <div className="text-center font-semibold text-xs rounded px-1  uppercase select-none bg-blue-600 text-white">
+            {label}
+          </div>
+        ) : (
+          ''
+        )}
       </div>
-    </li>
+      <div className="flex items-center justify-between w-full">
+        <div className="flex items-center">
+          {kind && kind === 'story' ? (
+            <SingleBookmarkIcon size={18} color="green" className="mr-1" />
+          ) : (
+            <BoxCheckmarkSolidIcon size={18} color="blue" className="mr-1" />
+          )}
+          {priority && priority === 'high' ? (
+            <UpIcon size={18} color="red" />
+          ) : priority === 'low' ? (
+            <DownIcon size={18} color="green" />
+          ) : (
+            ''
+          )}
+        </div>
+        <div>
+          <Avatar initials="WS" bg="purple" color="white" size={24} />
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -33,23 +81,31 @@ const Content = () => (
       </div>
       <div className="w-full bg-white mb-4">
         <div className="py-2 flex items-center justify-between text-sm">
-          <div>
-            <label for="search" className="sr-only">
-              Search
-            </label>
-            <div class="relative rounded">
-              <div class="absolute left-0 pl-2 pt-1.5 flex items-center pointer-events-none">
-                <span class="text-gray-500">
-                  <SearchIcon size={20} />
-                </span>
+          <div className="flex items-center">
+            <div>
+              <label htmlFor="search" className="sr-only">
+                Search
+              </label>
+              <div className="relative rounded">
+                <div className="absolute left-0 pl-2 pt-1.5 flex items-center pointer-events-none">
+                  <span className="text-gray-500">
+                    <SearchIcon size={20} />
+                  </span>
+                </div>
+                <input
+                  id="search"
+                  className="w-42 rounded py-1.5 pl-8 px-4.5 bg-gray-100 border-gray-300 border-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:z-10 focus:bg-white transition ease-out duration-200"
+                  type="text"
+                  placeholder="Search"
+                />
               </div>
-              <input
-                id="search"
-                className="w-42 rounded py-1.5 pl-8 px-4.5 bg-gray-100 border-gray-300 border-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:z-10 focus:bg-white transition ease-out duration-200"
-                type="text"
-                placeholder="Search"
-              />
             </div>
+            <a
+              className={`flex items-center justify-start ml-2 rounded text-sm py-1.5 px-4 my-0.5 hover:bg-gray-200 focus:bg-gray-300 cursor-pointer text-gray-600`}
+              href="/"
+            >
+              Recently updated
+            </a>
           </div>
 
           <button className="hover:bg-green-500 focus:bg-green-700 group flex items-center rounded-md bg-green-600 text-white text-sm font-medium px-3 py-1.5 cursor-pointer select-none transition ease-out duration-200">
@@ -60,25 +116,17 @@ const Content = () => (
           </button>
         </div>
       </div>
-      <div className="h-36 w-full">
-        <div className="header relative">
-          <div className="flex items-center w-full text-gray-500 text-sm font-normal">
-            <div className="flex cursor-pointer py-2 text-blue-600 mr-4 relative" href="/">
-              Projects
-              <span className="absolute bottom-0 left-0 right-0 bg-blue-500 h-0.5 z-10"></span>
-            </div>
-          </div>
-          <div className="absolute bg-gray-200 w-full h-0.5 bottom-0 left-0 right-0 z-0"></div>
-        </div>
-        <div className="content p-2 ">
-          <ul>
-            <Row title="Decide the design color" dueDate="3/8" />
-            <Row title="Redesign the kanban page this week" dueDate="3/12" />
-            <Row title="Test the cover of the card" dueDate="3/20" />
-            <Row title="Decide the design color" dueDate="3/8" />
-            <Row title="Redesign the kanban page this week" dueDate="3/12" />
-            <Row title="Test the cover of the card" dueDate="3/20" />
-          </ul>
+      <div className="">
+        <div className="flex items-center">
+          <List
+            title="backlog"
+            count={2}
+            cards={[
+              { title: 'Decide the design colors', label: 'dev', kind: 'story', priority: 'high' },
+              { title: 'Redesign the kanban this week for review', kind: 'task', priority: 'low' },
+            ]}
+          />
+          <List title="todo" count={3} cards={[{ title: 'Decide the design colors' }]} />
         </div>
       </div>
     </div>

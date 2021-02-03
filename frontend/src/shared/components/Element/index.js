@@ -146,5 +146,7 @@ export {
   WarningIcon,
   WorkItemIcon,
   FilterIcon,
+  BoxCheckmarkSolidIcon,
+  CheckboxIcon,
+  CheckboxCompositeIcon,
 } from './Icons';
-

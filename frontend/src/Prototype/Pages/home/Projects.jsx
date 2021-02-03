@@ -35,7 +35,7 @@ const Content = () => (
       <div className="w-full bg-white mb-4">
         <div className="py-2 flex items-center justify-between text-sm">
           <div>
-            <label for="search" className="sr-only">
+            <label htmlFor="search" className="sr-only">
               Search
             </label>
             <div class="relative rounded">

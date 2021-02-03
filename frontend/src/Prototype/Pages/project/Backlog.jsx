@@ -1,3 +1,4 @@
+import { formatDistance } from 'date-fns';
 import {
   BacklogListIcon,
   TaskboardIcon,
@@ -6,23 +7,54 @@ import {
   FabricFolderIcon,
   Avatar,
   SquareShapeIcon,
+  MoreIcon,
 } from '@/shared/components/Element';
 
 import { Nav, Sidebar } from '../shared';
 
-const Row = ({ title, dueDate }) => {
+const Row = ({ title, dueDate, status, selected }) => {
   return (
-    <li className="flex items-center justify-between font-sm text-gray-600 py-1">
+    <li
+      className={`flex items-center justify-between font-sm text-gray-600 py-1 w-full border-b border-gray-200 ${
+        selected ? 'bg-blue-100 bg-opacity-70' : ''
+      }`}
+    >
       <div className="flex items-center">
         <SquareShapeIcon size={20} className="mr-2" />
-        <div className="text-sm font-normal">{title}</div>
+        <div className="text-sm font-normal truncate">{title}</div>
       </div>
       <div className="flex items-center">
-        <div className="w-8 mr-4 text-right text-gray-400 text-sm">{dueDate}</div>
-        <Avatar initials="WS" bg="purple" color="white" size={28} />
+        <div className="flex flex-shrink items-center justify-start w-28 text-gray-400 text-sm truncate mr-2">
+          <div
+            className={`text-center font-semibold text-xs rounded px-2 py-0.5 uppercase select-none ${statusClass(
+              status
+            )}`}
+          >
+            {status}
+          </div>
+        </div>
+        <div className="flex flex-shrink w-28 text-gray-400 text-sm mr-2">{timeAgo(dueDate)}</div>
+        <div className="flex flex-shrink">
+          <Avatar initials="WS" bg="purple" color="white" size={28} />
+        </div>
       </div>
     </li>
   );
+};
+const statusClass = (status) => {
+  const lcStatus = status.toLowerCase();
+  if (lcStatus === 'todo') {
+    return 'bg-gray-200 text-gray-700';
+  } else if (lcStatus === 'done') {
+    return 'bg-green-200 text-green-700';
+  } else {
+    return 'bg-blue-600 text-white';
+  }
+};
+
+const timeAgo = (timeString) => {
+  const time = Date.parse(timeString);
+  return formatDistance(time, new Date());
 };
 
 const Content = () => (
@@ -34,12 +66,12 @@ const Content = () => (
       <div className="w-full bg-white mb-4">
         <div className="py-2 flex items-center justify-between text-sm">
           <div>
-            <label for="search" className="sr-only">
+            <label htmlFor="search" className="sr-only">
               Search
             </label>
-            <div class="relative rounded">
-              <div class="absolute left-0 pl-2 pt-1.5 flex items-center pointer-events-none">
-                <span class="text-gray-500">
+            <div className="relative rounded">
+              <div className="absolute left-0 pl-2 pt-1.5 flex items-center pointer-events-none">
+                <span className="text-gray-500">
                   <SearchIcon size={20} />
                 </span>
               </div>
@@ -51,33 +83,54 @@ const Content = () => (
               />
             </div>
           </div>
-
           <button className="hover:bg-green-500 focus:bg-green-700 group flex items-center rounded-md bg-green-600 text-white text-sm font-medium px-3 py-1.5 cursor-pointer select-none transition ease-out duration-200">
             <svg width="16" height="20" fill="currentColor" className="group-hover:text-white">
               <path d="M6 5a1 1 0 011 1v3h3a1 1 0 110 2H7v3a1 1 0 11-2 0v-3H2a1 1 0 110-2h3V6a1 1 0 011-1z"></path>
             </svg>
-            Create project
+            Create section
           </button>
         </div>
       </div>
-      <div className="h-36 w-full">
+      <div className="w-full">
         <div className="header relative">
-          <div className="flex items-center w-full text-gray-500 text-sm font-normal">
-            <div className="flex cursor-pointer py-2 text-blue-600 mr-4 relative" href="/">
-              Projects
-              <span className="absolute bottom-0 left-0 right-0 bg-blue-500 h-0.5 z-10"></span>
+          <div className="flex items-center justify-between w-full text-sm font-normal">
+            <div className="flex items-center justify-start">
+              <div
+                className="flex cursor-pointer py-2 text-gray-600 font-semibold mr-4 relative"
+                href="/"
+              >
+                [Backlog]
+              </div>
+              <div className="text-gray-400 text-sm pt-0.5">3 tasks</div>
+            </div>
+            <div className="flex items-center justify-right">
+              <div className="text-gray-500 text-xs bg-gray-200 text-sm rounded-full px-1.5 min-w-4 ml-1 select-none">
+                1
+              </div>
+              <div className="text-white text-xs bg-blue-600 text-sm rounded-full px-1.5 min-w-4 ml-1 select-none">
+                2
+              </div>
+              <div className="text-white text-xs bg-green-600 text-sm rounded-full px-1.5 min-w-4 ml-1 select-none">
+                1
+              </div>
+              <div className="ml-2 bg-gray-100 hover:bg-gray-200 p-1 cursor-pointer">
+                <MoreIcon size="24" />
+              </div>
             </div>
           </div>
           <div className="absolute bg-gray-200 w-full h-0.5 bottom-0 left-0 right-0 z-0"></div>
         </div>
-        <div className="content p-2 ">
-          <ul>
-            <Row title="Decide the design color" dueDate="3/8" />
-            <Row title="Redesign the kanban page this week" dueDate="3/12" />
-            <Row title="Test the cover of the card" dueDate="3/20" />
-            <Row title="Decide the design color" dueDate="3/8" />
-            <Row title="Redesign the kanban page this week" dueDate="3/12" />
-            <Row title="Test the cover of the card" dueDate="3/20" />
+        <div className="content ">
+          <ul className="border-gray-200">
+            <Row title="Decide the design color" dueDate="2021/1/29" status="Done" />
+            <Row
+              title="Redesign the kanban page this week"
+              dueDate="2021/2/4"
+              status="Dev"
+              selected
+            />
+            <Row title="Test the cover of the card" dueDate="2021/2/20" status="Testing" />
+            <Row title="Test the cover of the card" dueDate="2021/3/20" status="Todo" />
           </ul>
         </div>
       </div>

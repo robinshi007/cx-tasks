@@ -81,6 +81,14 @@ export const BacklogListIcon = createIcon({
 });
 
 
+export const BoxCheckmarkSolidIcon = createIcon({
+  displayName: 'BoxCheckmarkSolidIcon',
+  viewBox: '0 0 2048 2048',
+  d:
+    'M0 0h1920v1920H0V0zm768 1416l794-795-135-135-659 658-275-274-135 135 410 411z',
+});
+
+
 export const BulletedListIcon = createIcon({
   displayName: 'BulletedListIcon',
   viewBox: '0 0 2048 2048',
@@ -142,6 +150,22 @@ export const CheckListIcon = createIcon({
   viewBox: '0 0 2048 2048',
   d:
     'M2048 896H640V768h1408v128zM640 512V384h1408v128H640zm1408 768H640v-128h1408v128zm0 384H640v-128h1408v128zM109 387l83 82 211-210 90 90-301 301L19 477l90-90zm0 384l83 82 211-210 90 90-301 301L19 861l90-90zm0 384l83 82 211-210 90 90-301 301-173-173 90-90zm0 384l83 82 211-210 90 90-301 301-173-173 90-90z',
+});
+
+
+export const CheckboxIcon = createIcon({
+  displayName: 'CheckboxIcon',
+  viewBox: '0 0 2048 2048',
+  d:
+    'M0 0h2048v2048H0V0zm1920 1920V128H128v1792h1792z',
+});
+
+
+export const CheckboxCompositeIcon = createIcon({
+  displayName: 'CheckboxCompositeIcon',
+  viewBox: '0 0 2048 2048',
+  d:
+    'M0 0h2048v2048H0V0zm1920 1920V128H128v1792h1792zM1709 685l-941 942-429-430 90-90 339 338 851-850 90 90z',
 });
 
 
