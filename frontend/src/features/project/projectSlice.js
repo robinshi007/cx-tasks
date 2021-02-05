@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { createSelector } from 'reselect';
 import { differenceInDays } from 'date-fns';
 import { default as initState } from './state';
+import { orderBy } from 'lodash';
 
 const defaultFilters = {
   filterTerm: '',
@@ -14,7 +15,49 @@ const projectSlice = createSlice({
     filters: defaultFilters,
   },
   reducers: {
+    updateCardDragged: (state, { type, payload }) => {
+      console.log(type, payload);
+      if (
+        payload.source.listIndex === payload.destination.listIndex &&
+        payload.source.cardIndex === payload.destination.cardIndex
+      ) {
+        return;
+      }
+      const sourceListIndex = state.lists.findIndex(
+        (o) => o.id.toString() === payload.source.listIndex
+      );
+      const destListIndex = state.lists.findIndex(
+        (o) => o.id.toString() === payload.destination.listIndex
+      );
+      if (sourceListIndex >= 0 && destListIndex >= 0) {
+        let newOrder = 0;
+        const step = 100;
+        // update the order in the same list
+        const { previousCardOrder, nextCardOrder } = payload.position;
+        if (previousCardOrder === 0 && nextCardOrder !== 0) {
+          newOrder = nextCardOrder - step;
+        } else if (previousCardOrder !== 0 && nextCardOrder === 0) {
+          newOrder = previousCardOrder + step;
+        } else if (previousCardOrder !== 0 && nextCardOrder !== 0) {
+          newOrder = Math.floor((previousCardOrder + nextCardOrder) / 2);
+        }
+        console.log('newOrder', newOrder);
+        // if (sourceListIndex !== destListIndex) {
+        const newCardIndex = state.lists[sourceListIndex].cards.findIndex(
+          (c) => c.id === payload.position.cardId
+        );
+        if (newCardIndex >= 0) {
+          const [newCard] = state.lists[sourceListIndex].cards.splice(newCardIndex, 1);
+          newCard.order = newOrder;
+          state.lists[destListIndex].cards.splice(payload.destination.cardIndex, 0, newCard);
+        }
+        // } else {
+        // }
+      }
+      return state;
+    },
     setFilterTerm: (state, action) => {
+      //console.log(action.type, action.payload);
       state.filters.filterTerm = action.payload;
       return state;
     },
@@ -33,9 +76,14 @@ export const selectProject = (state) => state.project;
 export const selectLists = (state) => state.project.lists;
 export const selectFilterTerm = (state) => state.project.filters.filterTerm;
 export const selectFilterRecent = (state) => state.project.filters.filterRecent;
-//export const selectFilters = (state) => state.project.filters;
+export const selectCountedLists = createSelector([selectLists], (lists) => {
+  return lists.map((list) => {
+    const count = list.cards.length;
+    return { ...list, count: count };
+  });
+});
 export const selectFilteredRecentLists = createSelector(
-  [selectLists, selectFilterRecent],
+  [selectCountedLists, selectFilterRecent],
   (lists, recent) => {
     if (recent) {
       return lists.map((list) => {
@@ -54,7 +102,7 @@ export const selectFilteredRecentAndTermLists = createSelector(
     if (term !== '') {
       return lists.map((list) => {
         const cards = list.cards.filter((card) => {
-          return card.title.includes(term);
+          return card.title.toLowerCase().includes(term.toLowerCase());
         });
         return { ...list, cards };
       });
@@ -63,6 +111,21 @@ export const selectFilteredRecentAndTermLists = createSelector(
     }
   }
 );
+// sort all cards by order field
+export const selectFilteredAllOrderedLists = createSelector(
+  [selectFilteredRecentAndTermLists],
+  (lists) => {
+    return lists.map((list) => {
+      const cards = orderBy(list.cards, (c) => c.order, 'asc');
+      return { ...list, cards };
+    });
+  }
+);
 
-export const { setFilterTerm, setFilterRecent, setFilterReset } = projectSlice.actions;
+export const {
+  updateCardDragged,
+  setFilterTerm,
+  setFilterRecent,
+  setFilterReset,
+} = projectSlice.actions;
 export default projectSlice.reducer;

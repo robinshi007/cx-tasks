@@ -9,11 +9,9 @@ export function createIcon(options) {
   defaultProps = defaultProps || {};
 
   const Comp = React.forwardRef((props, ref) => (
-    <div style={{ display: props.display ? props.display : 'inherit' }}>
-      <StyledIcon ref={ref} viewBox={viewBox} {...defaultProps} {...props}>
-        {path ?? <path fill="currentColor" d={d} />}
-      </StyledIcon>
-    </div>
+    <StyledIcon ref={ref} viewBox={viewBox} {...defaultProps} {...props}>
+      {path ?? <path fill="currentColor" d={d} />}
+    </StyledIcon>
   ));
 
   Comp.displayName = displayName;

@@ -95,7 +95,7 @@ const SidebarLinks = ({ navList }) => {
 const SidebarHeader = ({ title, description, Icon }) => {
   return (
     <>
-      <Icon size={32} className="text-gray-600 mr-2" />
+      <Icon size={32} className="text-gray-600 mr-2 flex-none" />
       <div className="">
         <h4 className="text-gray-600 text-sm font-medium truncate w-28">{title}</h4>
         <p className="text-xs text-gray-500 truncate w-28">{description}</p>
