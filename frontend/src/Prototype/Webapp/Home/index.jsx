@@ -11,6 +11,7 @@ import {
 } from '@/shared/components/Element';
 
 import MyWorkPage from './MyWork';
+import ProjectsPage from './Projects';
 
 export const HomeWrapper = styled.div``;
 

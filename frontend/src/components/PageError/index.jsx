@@ -6,7 +6,7 @@ const PageError = () => (
   <ErrorPage>
     <ErrorPageInner>
       <ErrorBox>
-        <Title>There’s been a glitch…</Title>
+        <Title>Something went wrong</Title>
         <p>
           {'We’re not quite sure what went wrong. Please contact us or try looking on our '}
           <a href="https://localhost/">Help Center</a>
