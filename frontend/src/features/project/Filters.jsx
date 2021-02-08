@@ -68,7 +68,7 @@ const Filters = () => {
         </div>
       </div>
       <div
-        className={`flex items-center justify-start mr-2 rounded text-sm py-1.5 px-4 my-0.5 hover:bg-gray-200 focus:bg-gray-300 cursor-pointer text-gray-600 ${
+        className={`flex items-center justify-start mr-2 rounded text-sm py-1.5 px-4 my-0.5 hover:bg-gray-200 focus:bg-gray-300 cursor-pointer text-gray-600 select-none truncate ${
           filterRecent ? 'bg-gray-300' : ''
         }`}
         onClick={handleFilterRecent}
@@ -80,7 +80,7 @@ const Filters = () => {
         className={`h-6 bg-gray-300 border-solid w-px mr-2 ${clearFilter ? '' : 'hidden'}`}
       ></div>
       <div
-        className={`flex items-center justify-start rounded text-sm py-1.5 mr-2 px-4 my-0.5 hover:bg-gray-200 focus:bg-gray-300 cursor-pointer text-gray-600 ${
+        className={`flex items-center justify-start rounded text-sm py-1.5 mr-2 px-4 my-0.5 hover:bg-gray-200 focus:bg-gray-300 cursor-pointer text-gray-600 select-none truncate ${
           clearFilter ? '' : 'hidden'
         }`}
         onClick={handleClearFilter}

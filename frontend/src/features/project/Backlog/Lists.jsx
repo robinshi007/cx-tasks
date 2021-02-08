@@ -4,12 +4,12 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { isEmpty } from 'lodash';
 
 import { updateCardDragged } from '@/features/project/projectSlice';
-import Card from './Card';
+import Row from './Row';
 
 const Lists = ({ lists }) => {
   const dispatch = useDispatch();
 
-  const queryAttr = 'data-rbd-drag-handle-draggable-id';
+  const queryAttr = 'data-rbd-draggable-id';
   const [placeholderProps, setPlaceholderProps] = useState({});
 
   const getDraggedDom = (draggableId) => {
@@ -21,7 +21,6 @@ const Lists = ({ lists }) => {
 
   //https://codesandbox.io/s/react-beautiful-dnd-custom-placeholder-2lmf1?file=/src/App.js:4461-4477
   const handleDragStart = (event) => {
-    console.log('dragStart:', event);
     const draggedDOM = getDraggedDom(event.draggableId);
 
     if (!draggedDOM) {
@@ -29,10 +28,11 @@ const Lists = ({ lists }) => {
     }
 
     const { clientHeight, clientWidth } = draggedDOM;
+    const draggedListNode = draggedDOM.parentNode;
     const sourceIndex = event.source.index;
     var clientY =
-      parseFloat(window.getComputedStyle(draggedDOM.parentNode).paddingTop) +
-      [...draggedDOM.parentNode.children].slice(0, sourceIndex).reduce((total, curr) => {
+      parseFloat(window.getComputedStyle(draggedListNode).paddingTop) +
+      [...draggedListNode.children].slice(0, sourceIndex).reduce((total, curr) => {
         const style = curr.currentStyle || window.getComputedStyle(curr);
         const marginBottom = parseFloat(style.marginBottom);
         return total + curr.clientHeight + marginBottom;
@@ -42,7 +42,7 @@ const Lists = ({ lists }) => {
       clientHeight,
       clientWidth,
       clientY,
-      clientX: parseFloat(window.getComputedStyle(draggedDOM.parentNode).paddingLeft),
+      clientX: parseFloat(window.getComputedStyle(draggedListNode).paddingLeft),
     });
   };
 
@@ -55,10 +55,11 @@ const Lists = ({ lists }) => {
       return;
     }
     const { clientHeight, clientWidth } = draggedDOM;
+    const draggedListNode = draggedDOM.parentNode;
     const destinationIndex = event.destination.index;
     const sourceIndex = event.source.index;
 
-    const childrenArray = [...draggedDOM.parentNode.children];
+    const childrenArray = [...draggedListNode.children];
     const movedItem = childrenArray[sourceIndex];
     childrenArray.splice(sourceIndex, 1);
 
@@ -69,7 +70,7 @@ const Lists = ({ lists }) => {
     ];
 
     var clientY =
-      parseFloat(window.getComputedStyle(draggedDOM.parentNode).paddingTop) +
+      parseFloat(window.getComputedStyle(draggedListNode).paddingTop) +
       updatedArray.slice(0, destinationIndex).reduce((total, curr) => {
         const style = curr.currentStyle || window.getComputedStyle(curr);
         const marginBottom = parseFloat(style.marginBottom);
@@ -80,7 +81,7 @@ const Lists = ({ lists }) => {
       clientHeight,
       clientWidth,
       clientY,
-      clientX: parseFloat(window.getComputedStyle(draggedDOM.parentNode).paddingLeft),
+      clientX: parseFloat(window.getComputedStyle(draggedListNode).paddingLeft),
     });
   };
 
@@ -164,12 +165,41 @@ const Lists = ({ lists }) => {
       })
     );
   };
+
+  const columns = {
+    tags: {
+      title: 'Tags',
+      width: 'w-24',
+    },
+    dueDate: {
+      title: 'Due date',
+      width: 'w-24',
+    },
+    assignee: {
+      title: 'Assignee',
+      width: 'w-24',
+    },
+  };
   return (
     <DragDropContext
       onDragStart={handleDragStart}
       onDragUpdate={handleDragUpdate}
       onDragEnd={handleDragEnd}
     >
+      <div className="header flex items-center justify-between w-full text-gray-500 border-t border-b border-gray-200 text-xs">
+        <div className="border-r border-gray-200 py-2 last:border-r-0 w-full">Task name</div>
+        <div className="flex items-center justify-center">
+          {Object.keys(columns).map((key, index) => (
+            <div
+              className={`border-r border-gray-200 py-2 last:border-r-0 px-2 ${columns[key]['width']}`}
+              key={index}
+            >
+              {columns[key]['title']}
+            </div>
+          ))}
+          <div className="border-r border-gray-200 py-2 last:border-r-0 w-12 px-2"></div>
+        </div>
+      </div>
       {lists.map((list, idx) => (
         <List
           title={list.title}
@@ -178,6 +208,7 @@ const Lists = ({ lists }) => {
           cards={list.cards}
           id={list.id}
           key={idx}
+          columns={columns}
           placeholderProps={placeholderProps}
         />
       ))}
@@ -185,14 +216,11 @@ const Lists = ({ lists }) => {
   );
 };
 
-const List = ({ title, cards, id, count, filteredCount, placeholderProps }) => {
+const List = ({ title, cards, id, count, filteredCount, columns, placeholderProps }) => {
   return (
-    <div
-      className="bg-gray-100 flex flex-col items-center mr-2 px-1 py-1 rounded"
-      style={{ minHeight: '450px', width: '230px', minWidth: '230px' }}
-    >
-      <div className="header flex flex-shrink-0 items-center w-full h-8 truncate text-gray-500 text-xs px-1 select-none">
-        <div className="font-medium mr-2 uppercase">{title}</div>
+    <div className="bg-white flex flex-col items-center mr-2 py-1 mb-2 w-full rounded">
+      <div className="header flex flex-shrink-0 items-center w-full h-8 truncate text-gray-500 text-xs select-none">
+        <div className="font-semibold mr-2 uppercase">{title}</div>
         <span className="font-medium tracking-tighter">
           {count !== filteredCount ? `${filteredCount} of ${count}` : count}
         </span>
@@ -200,24 +228,27 @@ const List = ({ title, cards, id, count, filteredCount, placeholderProps }) => {
       <Droppable droppableId={id.toString()} className="">
         {(provided, snapshot) => (
           <div
-            className="relative content w-full overflow-y-hidden overflow-x-hidden"
+            className="relative w-full overflow-y-hidden overflow-x-hidden"
             ref={provided.innerRef}
             {...provided.droppableProps}
-            style={{ minHeight: '250px' }}
+            style={{ minHeight: '30px' }}
           >
             {cards.map((obj, idx) => (
               <Draggable draggableId={obj.id.toString()} index={idx} key={obj.id}>
                 {(p, snapshot) => (
-                  <Card
+                  <Row
                     title={obj.title}
                     label={obj.label}
                     kind={obj.kind}
                     priority={obj.priority}
+                    status={obj.status}
                     key={obj.id}
+                    dueDate={obj.due_date}
                     isDragging={snapshot.isDragging}
                     parentRef={p.innerRef}
+                    dhProps={p.dragHandleProps}
                     {...p.draggableProps}
-                    {...p.dragHandleProps}
+                    columns={columns}
                   />
                 )}
               </Draggable>
@@ -225,7 +256,7 @@ const List = ({ title, cards, id, count, filteredCount, placeholderProps }) => {
             {provided.placeholder}
             {!isEmpty(placeholderProps) && snapshot.isDraggingOver && (
               <div
-                className="absolute border-2 border-blue-600 border-dashed rounded"
+                className="absolute border-2 border-blue-600 border-dashed"
                 style={{
                   top: placeholderProps.clientY,
                   left: placeholderProps.clientX,

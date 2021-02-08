@@ -37,20 +37,22 @@ const Project = () => {
     <>
       <Nav />
       <Sidebar navHeader={navHeader} navList={navList} />
-      <Switch>
-        <Route path={`${path}/board`}>
-          <BoardPage />
-        </Route>
-        <Route path={`${path}/backlog`}>
-          <BacklogPage />
-        </Route>
-        <Route path={`${path}/settings`}>
-          <SettingsPage />
-        </Route>
-        <Route exact path={`${path}/`}>
-          <Redirect to={`${path}/board`} />
-        </Route>
-      </Switch>
+      <div className="ml-60 min-w-96 bg-white min-h-screen overflow-y-auto">
+        <Switch>
+          <Route path={`${path}/board`}>
+            <BoardPage />
+          </Route>
+          <Route path={`${path}/backlog`}>
+            <BacklogPage />
+          </Route>
+          <Route path={`${path}/settings`}>
+            <SettingsPage />
+          </Route>
+          <Route exact path={`${path}/`}>
+            <Redirect to={`${path}/board`} />
+          </Route>
+        </Switch>
+      </div>
     </>
   );
 };

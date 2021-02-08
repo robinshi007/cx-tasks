@@ -23,6 +23,9 @@ Current status:
 - [done] [product] Do research on product design of Asana, Trello and Clickup
 - [done] [product] Write use stories based on the research
 - [done] [design] Design the high-fidelity pages in sketch app
-- [doing] [frontend] Implement static pages using react
-- [todo] [frontend] Implement dynamic pages(router, state management, async fetch) with mock data using react
+- [done] [frontend] Implement static pages using react
+- [doing] [frontend] Implement dynamic pages(router, state management, async fetch) with mock data using react
+- [doing] [frontend] Add modal and select components
+- [doing] [frontend] Add new forms for project and todo
+- [doing] [frontend] Finish phase 1 features: login -> my work -> projects -> project board with filters and dragdrop -> new project/task form
 - [todo] [interface] Design the backend API spec

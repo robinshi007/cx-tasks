@@ -3,11 +3,11 @@ import tw, { styled, css } from 'twin.macro';
 
 const linkActiveStyles = () => css`
   &.active {
-    ${tw`bg-gray-200 text-blue-600`}
+    ${tw`bg-gray-200 text-blue-700`}
   }
 `;
 export const LinkItem = styled.div(() => [
-  tw`flex items-center justify-start rounded text-sm py-2.5 px-4 my-0.5 w-full hover:bg-gray-200 focus:bg-gray-300 cursor-pointer text-gray-600`,
+  tw`flex items-center justify-start rounded text-sm py-2.5 my-0.5 w-full hover:bg-gray-200 focus:bg-gray-300 cursor-pointer text-gray-600`,
   linkActiveStyles,
 ]);
 
@@ -39,28 +39,30 @@ const SidebarLinks = ({ navList }) => {
 const SidebarHeader = ({ name, description, Icon }) => {
   return (
     <>
-      <Icon size={32} className="text-gray-600 mr-2 flex-none" />
-      <div className="">
-        <h4 className="text-gray-600 text-sm font-medium truncate w-28">{name}</h4>
-        <p className="text-xs text-gray-500 truncate w-28">{description}</p>
+      <Icon size={32} className="text-gray-600 flex-none mr-2" />
+      <div className="w-28">
+        <h4 className="text-gray-600 text-sm font-medium truncate">{name}</h4>
+        <p className="text-xs text-gray-500 truncate">{description}</p>
       </div>
     </>
   );
 };
 
 export const Sidebar = ({ navHeader, navList }) => (
-  <div className="fixed top-0 left-12 w-52 bg-gray-100 h-screen flex flex-col">
-    <div className="px-4 pb-6">
-      <div className="flex items-center justify-start h-11 w-full bg-gray-100 mt-3 mb-2 px-6">
+  <div className="fixed top-0 left-12 w-48 bg-gray-100 h-screen flex">
+    <div className="w-4 h-full"></div>
+    <div className="flex flex-col pb-6 w-full">
+      <div className="flex items-center justify-start h-11 w-full bg-gray-100 mt-3 mb-2 px-2">
         <SidebarHeader
           name={navHeader.name}
           description={navHeader.description}
           Icon={navHeader.icon}
         />
       </div>
-      <div className="flex flex-col items-center justify-start h-72 w-full bg-gray-100">
+      <div className="flex flex-col items-center justify-start bg-gray-100">
         <SidebarLinks navList={navList} />
       </div>
     </div>
+    <div className="w-4 h-full"></div>
   </div>
 );
