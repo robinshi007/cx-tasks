@@ -23,8 +23,8 @@ const StyledImage = styled(Flex)`
 function Avatar({ className, title, subtitle, src, initials, size, color, bg }) {
   return (
     <Flex className={className}>
-      <StyledImage src={src} size={size} color={color} bg={bg} p={2}>
-        {!src && initials && <Text fontSize={1}>{initials.toUpperCase()}</Text>}
+      <StyledImage src={src} size={size} color={color} bg={bg}>
+        {!src && initials && <Text fontSize={2}>{initials.toUpperCase()}</Text>}
         {!src && !initials && <AddIcon />}
       </StyledImage>
       {title && (

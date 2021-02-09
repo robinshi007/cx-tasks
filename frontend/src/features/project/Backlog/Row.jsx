@@ -37,7 +37,7 @@ const Row = ({
             {status}
           </div>
         </div>
-        <div className="border-r border-gray-200 py-2 last:border-r-0 px-2 w-24 text-gray-400 text-sm truncate">
+        <div className="border-r border-gray-200 py-2 last:border-r-0 px-2 w-24 text-gray-500 text-sm truncate">
           {timeAgo(dueDate)}
         </div>
         <div className="border-r border-gray-200 py-2 last:border-r-0 px-2 w-24">
