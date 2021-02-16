@@ -9,10 +9,11 @@ import Card from './Card';
 const Lists = ({ lists }) => {
   const dispatch = useDispatch();
 
-  const queryAttr = 'data-rbd-drag-handle-draggable-id';
+  const queryDragAttr = 'data-rbd-drag-handle-draggable-id';
+  const queryDropAttr = 'data-rbd-droppable-id';
   const [placeholderProps, setPlaceholderProps] = useState({});
 
-  const getDraggedDom = (draggableId) => {
+  const getDraggedDom = (queryAttr, draggableId) => {
     const domQuery = `[${queryAttr}='${draggableId}']`;
     const draggedDOM = document.querySelector(domQuery);
 
@@ -21,8 +22,7 @@ const Lists = ({ lists }) => {
 
   //https://codesandbox.io/s/react-beautiful-dnd-custom-placeholder-2lmf1?file=/src/App.js:4461-4477
   const handleDragStart = (event) => {
-    console.log('dragStart:', event);
-    const draggedDOM = getDraggedDom(event.draggableId);
+    const draggedDOM = getDraggedDom(queryDragAttr, event.draggableId);
 
     if (!draggedDOM) {
       return;
@@ -50,26 +50,32 @@ const Lists = ({ lists }) => {
     if (!event.destination) {
       return;
     }
-    const draggedDOM = getDraggedDom(event.draggableId);
+    //console.log('update event', event);
+    const draggedDOM = getDraggedDom(queryDragAttr, event.draggableId);
     if (!draggedDOM) {
       return;
     }
     const { clientHeight, clientWidth } = draggedDOM;
+    const draggedListNode = getDraggedDom(queryDropAttr, event.destination.droppableId);
+    if (!draggedListNode) {
+      return;
+    }
     const destinationIndex = event.destination.index;
     const sourceIndex = event.source.index;
 
-    const childrenArray = [...draggedDOM.parentNode.children];
-    const movedItem = childrenArray[sourceIndex];
-    childrenArray.splice(sourceIndex, 1);
-
+    const childrenArray = [...draggedListNode.children];
+    // remove item first if in the same list
+    if (event.source.droppableId === event.destination.droppableId) {
+      childrenArray.splice(sourceIndex, 1);
+    }
     const updatedArray = [
       ...childrenArray.slice(0, destinationIndex),
-      movedItem,
+      draggedDOM,
       ...childrenArray.slice(destinationIndex + 1),
     ];
 
     var clientY =
-      parseFloat(window.getComputedStyle(draggedDOM.parentNode).paddingTop) +
+      parseFloat(window.getComputedStyle(draggedListNode).paddingTop) +
       updatedArray.slice(0, destinationIndex).reduce((total, curr) => {
         const style = curr.currentStyle || window.getComputedStyle(curr);
         const marginBottom = parseFloat(style.marginBottom);
@@ -80,7 +86,7 @@ const Lists = ({ lists }) => {
       clientHeight,
       clientWidth,
       clientY,
-      clientX: parseFloat(window.getComputedStyle(draggedDOM.parentNode).paddingLeft),
+      clientX: parseFloat(window.getComputedStyle(draggedListNode).paddingLeft),
     });
   };
 

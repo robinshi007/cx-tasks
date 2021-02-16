@@ -15,8 +15,33 @@ const projectSlice = createSlice({
     filters: defaultFilters,
   },
   reducers: {
+    updateListDragged: (state, { type, payload }) => {
+      //console.log(type, payload);
+      if (payload.source.listIndex === payload.destination.listIndex) {
+        return;
+      }
+      let newOrder = 0;
+      const step = 100;
+      // update the order in the same list
+      const { previousOrder, nextOrder } = payload.position;
+      if (previousOrder === 0 && nextOrder !== 0) {
+        newOrder = nextOrder - step;
+      } else if (previousOrder !== 0 && nextOrder === 0) {
+        newOrder = previousOrder + step;
+      } else if (previousOrder !== 0 && nextOrder !== 0) {
+        newOrder = Math.floor((previousOrder + nextOrder) / 2);
+      }
+      // if (sourceListIndex !== destListIndex) {
+      const newIndex = state.lists.findIndex((c) => c.id === payload.position.listId);
+      if (newIndex >= 0) {
+        const [newList] = state.lists.splice(newIndex, 1);
+        newList.order = newOrder;
+        state.lists.splice(payload.destination.listIndex, 0, newList);
+      }
+      return state;
+    },
     updateCardDragged: (state, { type, payload }) => {
-      console.log(type, payload);
+      //console.log(type, payload);
       if (
         payload.source.listIndex === payload.destination.listIndex &&
         payload.source.cardIndex === payload.destination.cardIndex
@@ -41,7 +66,6 @@ const projectSlice = createSlice({
         } else if (previousCardOrder !== 0 && nextCardOrder !== 0) {
           newOrder = Math.floor((previousCardOrder + nextCardOrder) / 2);
         }
-        console.log('newOrder', newOrder);
         // if (sourceListIndex !== destListIndex) {
         const newCardIndex = state.lists[sourceListIndex].cards.findIndex(
           (c) => c.id === payload.position.cardId
@@ -65,7 +89,7 @@ const projectSlice = createSlice({
       state.filters.filterRecent = action.payload;
       return state;
     },
-    setFilterReset: (state, action) => {
+    setFilterReset: (state) => {
       state.filters = defaultFilters;
       return state;
     },
@@ -73,7 +97,10 @@ const projectSlice = createSlice({
 });
 
 export const selectProject = (state) => state.project;
-export const selectLists = (state) => state.project.lists;
+export const selectLists = (state) => {
+  //return state.project.lists;
+  return orderBy(state.project.lists, (c) => c.order, 'asc');
+};
 export const selectFilterTerm = (state) => state.project.filters.filterTerm;
 export const selectFilterRecent = (state) => state.project.filters.filterRecent;
 export const selectCountedLists = createSelector([selectLists], (lists) => {
@@ -124,6 +151,7 @@ export const selectFilteredAllOrderedLists = createSelector(
 
 export const {
   updateCardDragged,
+  updateListDragged,
   setFilterTerm,
   setFilterRecent,
   setFilterReset,

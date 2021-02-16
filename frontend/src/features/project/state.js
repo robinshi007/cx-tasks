@@ -7,6 +7,7 @@ const initState = {
     {
       id: 11,
       title: 'backlog',
+      order: 1612281200,
       cards: [
         {
           id: 22,
@@ -44,6 +45,7 @@ const initState = {
     {
       id: 12,
       title: 'todo',
+      order: 1612281400,
       cards: [
         {
           id: 20,
@@ -59,6 +61,7 @@ const initState = {
     {
       id: 13,
       title: 'in progress',
+      order: 1612281600,
       cards: [
         {
           id: 25,
@@ -86,6 +89,7 @@ const initState = {
     {
       id: 14,
       title: 'done',
+      order: 1612281800,
       cards: [],
     },
   ],

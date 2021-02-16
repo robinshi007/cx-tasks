@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { isEmpty } from 'lodash';
 
-import { updateCardDragged } from '@/features/project/projectSlice';
-import Row from './Row';
+import { updateCardDragged, updateListDragged } from '@/features/project/projectSlice';
+import List from './List';
 
 const Lists = ({ lists }) => {
   const dispatch = useDispatch();
@@ -50,6 +49,7 @@ const Lists = ({ lists }) => {
     if (!event.destination) {
       return;
     }
+    //const draggedDOM = getDraggedDom(event.draggableId);
     const draggedDOM = getDraggedDom(event.draggableId);
     if (!draggedDOM) {
       return;
@@ -60,12 +60,15 @@ const Lists = ({ lists }) => {
     const sourceIndex = event.source.index;
 
     const childrenArray = [...draggedListNode.children];
-    const movedItem = childrenArray[sourceIndex];
+
+    // remove item first if in the same list
+    //if (event.source.droppableId === event.destination.droppableId) {
     childrenArray.splice(sourceIndex, 1);
+    //}
 
     const updatedArray = [
       ...childrenArray.slice(0, destinationIndex),
-      movedItem,
+      draggedDOM,
       ...childrenArray.slice(destinationIndex + 1),
     ];
 
@@ -98,72 +101,111 @@ const Lists = ({ lists }) => {
     ) {
       return;
     }
-    // caculate prev/next card order
-    const droppedListIndex = lists.findIndex(
-      (l) => l.id.toString() === result.destination.droppableId
-    );
-    const draggedListIndex = lists.findIndex((l) => l.id.toString() === result.source.droppableId);
-    const draggedCardId = lists[draggedListIndex].cards[result.source.index].id;
-    let previousCardOrder, nextCardOrder;
-    // dropped index
-    const cIndex = result.destination.index;
-    // dropped list
-    const dList = lists[droppedListIndex];
-    // in the same list
-    if (result.source.droppableId === result.destination.droppableId) {
-      if (cIndex === 0) {
+    if (result.type === 'list') {
+      //console.log('list', result);
+      let sIndex = result.source.index;
+      let dIndex = result.destination.index;
+      const draggedListId = lists[sIndex].id;
+      let previousOrder, nextOrder;
+      if (dIndex === 0) {
         /* dropped at the top */
-        previousCardOrder = 0;
-        nextCardOrder = dList.cards[cIndex].order;
-      } else if (cIndex === dList.cards.length - 1) {
+        previousOrder = 0;
+        nextOrder = lists[dIndex].order;
+      } else if (dIndex === lists.length - 1) {
         /* dropped at the bottom */
-        previousCardOrder = dList.cards[cIndex].order;
-        nextCardOrder = 0;
-      } else if (cIndex > result.source.index) {
+        previousOrder = lists[dIndex].order;
+        nextOrder = 0;
+      } else if (dIndex > sIndex) {
         /* drag up and dropped at the middle of the list */
-        previousCardOrder = dList.cards[cIndex].order;
-        nextCardOrder = dList.cards[cIndex + 1].order;
+        previousOrder = lists[dIndex].order;
+        nextOrder = lists[dIndex + 1].order;
       } else {
         /* drag down and dropped at the middle of the list */
-        previousCardOrder = dList.cards[cIndex - 1].order;
-        nextCardOrder = dList.cards[cIndex].order;
+        previousOrder = lists[dIndex - 1].order;
+        nextOrder = lists[dIndex].order;
       }
+      dispatch(
+        updateListDragged({
+          source: { listIndex: result.source.index },
+          destination: {
+            listIndex: result.destination.index,
+          },
+          position: {
+            listId: draggedListId,
+            previousOrder,
+            nextOrder,
+          },
+        })
+      );
     } else {
-      /* not in the same list */
-      if (cIndex === 0 && dList.cards.length === 0) {
-        /* dropped at the empty list */
-        previousCardOrder = 0;
-        nextCardOrder = 0;
-      } else if (cIndex === 0 && dList.cards.length !== 0) {
-        /* dropped at the top of the list */
-        previousCardOrder = 0;
-        nextCardOrder = dList.cards[cIndex].order;
-      } else if (cIndex === dList.cards.length) {
-        /* dropped at the end of the list */
-        previousCardOrder = dList.cards[cIndex - 1].order;
-        nextCardOrder = 0;
+      // caculate prev/next card order
+      const droppedListIndex = lists.findIndex(
+        (l) => l.id.toString() === result.destination.droppableId
+      );
+      const draggedListIndex = lists.findIndex(
+        (l) => l.id.toString() === result.source.droppableId
+      );
+      const draggedCardId = lists[draggedListIndex].cards[result.source.index].id;
+      let previousCardOrder, nextCardOrder;
+      // dropped index
+      const cIndex = result.destination.index;
+      // dropped list
+      const dList = lists[droppedListIndex];
+      // in the same list
+      if (result.source.droppableId === result.destination.droppableId) {
+        if (cIndex === 0) {
+          /* dropped at the top */
+          previousCardOrder = 0;
+          nextCardOrder = dList.cards[cIndex].order;
+        } else if (cIndex === dList.cards.length - 1) {
+          /* dropped at the bottom */
+          previousCardOrder = dList.cards[cIndex].order;
+          nextCardOrder = 0;
+        } else if (cIndex > result.source.index) {
+          /* drag up and dropped at the middle of the list */
+          previousCardOrder = dList.cards[cIndex].order;
+          nextCardOrder = dList.cards[cIndex + 1].order;
+        } else {
+          /* drag down and dropped at the middle of the list */
+          previousCardOrder = dList.cards[cIndex - 1].order;
+          nextCardOrder = dList.cards[cIndex].order;
+        }
       } else {
-        /* dropped at the middle of the list */
-        previousCardOrder = dList.cards[cIndex - 1].order;
-        nextCardOrder = dList.cards[cIndex].order;
+        /* not in the same list */
+        if (cIndex === 0 && dList.cards.length === 0) {
+          /* dropped at the empty list */
+          previousCardOrder = 0;
+          nextCardOrder = 0;
+        } else if (cIndex === 0 && dList.cards.length !== 0) {
+          /* dropped at the top of the list */
+          previousCardOrder = 0;
+          nextCardOrder = dList.cards[cIndex].order;
+        } else if (cIndex === dList.cards.length) {
+          /* dropped at the end of the list */
+          previousCardOrder = dList.cards[cIndex - 1].order;
+          nextCardOrder = 0;
+        } else {
+          /* dropped at the middle of the list */
+          previousCardOrder = dList.cards[cIndex - 1].order;
+          nextCardOrder = dList.cards[cIndex].order;
+        }
       }
+      // dispatch the dropped event
+      dispatch(
+        updateCardDragged({
+          source: { listIndex: result.source.droppableId, cardIndex: result.source.index },
+          destination: {
+            listIndex: result.destination.droppableId,
+            cardIndex: result.destination.index,
+          },
+          position: {
+            cardId: draggedCardId,
+            previousCardOrder,
+            nextCardOrder,
+          },
+        })
+      );
     }
-
-    // dispatch the dropped event
-    dispatch(
-      updateCardDragged({
-        source: { listIndex: result.source.droppableId, cardIndex: result.source.index },
-        destination: {
-          listIndex: result.destination.droppableId,
-          cardIndex: result.destination.index,
-        },
-        position: {
-          cardId: draggedCardId,
-          previousCardOrder,
-          nextCardOrder,
-        },
-      })
-    );
   };
 
   const columns = {
@@ -200,75 +242,37 @@ const Lists = ({ lists }) => {
           <div className="border-r border-gray-200 py-2 last:border-r-0 w-12 px-2"></div>
         </div>
       </div>
-      {lists.map((list, idx) => (
-        <List
-          title={list.title}
-          count={list.count}
-          filteredCount={list.cards.length}
-          cards={list.cards}
-          id={list.id}
-          key={idx}
-          columns={columns}
-          placeholderProps={placeholderProps}
-        />
-      ))}
-    </DragDropContext>
-  );
-};
-
-const List = ({ title, cards, id, count, filteredCount, columns, placeholderProps }) => {
-  return (
-    <div className="bg-white flex flex-col items-center mr-2 py-1 mb-2 w-full rounded">
-      <div className="header flex flex-shrink-0 items-center w-full h-8 truncate text-gray-500 text-xs select-none">
-        <div className="font-semibold mr-2 uppercase">{title}</div>
-        <span className="font-medium tracking-tighter">
-          {count !== filteredCount ? `${filteredCount} of ${count}` : count}
-        </span>
-      </div>
-      <Droppable droppableId={id.toString()} className="">
-        {(provided, snapshot) => (
+      <Droppable droppableId="board" type="list">
+        {(provided) => (
           <div
-            className="relative w-full overflow-y-hidden overflow-x-hidden"
+            className="container relative w-full"
             ref={provided.innerRef}
             {...provided.droppableProps}
-            style={{ minHeight: '30px' }}
           >
-            {cards.map((obj, idx) => (
-              <Draggable draggableId={obj.id.toString()} index={idx} key={obj.id}>
-                {(p, snapshot) => (
-                  <Row
-                    title={obj.title}
-                    label={obj.label}
-                    kind={obj.kind}
-                    priority={obj.priority}
-                    status={obj.status}
-                    key={obj.id}
-                    dueDate={obj.due_date}
-                    isDragging={snapshot.isDragging}
-                    parentRef={p.innerRef}
-                    dhProps={p.dragHandleProps}
-                    {...p.draggableProps}
-                    columns={columns}
-                  />
+            {lists.map((list, idx) => (
+              <Draggable draggableId={list.id.toString()} index={idx} key={list.id}>
+                {(p) => (
+                  <div ref={p.innerRef} {...p.draggableProps}>
+                    <List
+                      title={list.title}
+                      count={list.count}
+                      filteredCount={list.cards.length}
+                      cards={list.cards}
+                      id={list.id}
+                      key={idx}
+                      columns={columns}
+                      placeholderProps={placeholderProps}
+                      dhProps={p.dragHandleProps}
+                    />
+                  </div>
                 )}
               </Draggable>
             ))}
             {provided.placeholder}
-            {!isEmpty(placeholderProps) && snapshot.isDraggingOver && (
-              <div
-                className="absolute border-2 border-blue-600 border-dashed"
-                style={{
-                  top: placeholderProps.clientY,
-                  left: placeholderProps.clientX,
-                  height: placeholderProps.clientHeight,
-                  width: placeholderProps.clientWidth,
-                }}
-              />
-            )}
           </div>
         )}
       </Droppable>
-    </div>
+    </DragDropContext>
   );
 };
 

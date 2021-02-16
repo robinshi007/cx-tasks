@@ -21,7 +21,7 @@ const Row = ({
       {...props}
     >
       <div className="flex items-center h-full" {...dhProps} style={{ width: '20px' }}>
-        <GripperDotsVerticalIcon className="text-gray-500" />
+        <GripperDotsVerticalIcon className="text-gray-500 cursor-pointer" />
       </div>
       <div className="flex items-center w-full border-r border-gray-200 py-2 last:border-r-0">
         <SquareShapeIcon size={20} className="mr-2" />
