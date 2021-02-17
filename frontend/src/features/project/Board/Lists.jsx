@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { isEmpty } from 'lodash';
+import { useWindowSize } from 'react-use';
 
 import { updateCardDragged } from '@/features/project/projectSlice';
 import Card from './Card';
@@ -192,10 +193,11 @@ const Lists = ({ lists }) => {
 };
 
 const List = ({ title, cards, id, count, filteredCount, placeholderProps }) => {
+  const { height } = useWindowSize();
   return (
     <div
       className="bg-gray-100 flex flex-col items-center mr-2 px-1 py-1 rounded"
-      style={{ minHeight: '450px', width: '230px', minWidth: '230px' }}
+      style={{ minHeight: '300px', width: '230px' }}
     >
       <div className="header flex flex-shrink-0 items-center w-full h-8 truncate text-gray-500 text-xs px-1 select-none">
         <div className="font-medium mr-2 uppercase">{title}</div>
@@ -206,10 +208,10 @@ const List = ({ title, cards, id, count, filteredCount, placeholderProps }) => {
       <Droppable droppableId={id.toString()} className="">
         {(provided, snapshot) => (
           <div
-            className="relative content w-full overflow-y-hidden overflow-x-hidden"
+            className="relative content w-full overflow-y-auto overflow-x-hidden"
             ref={provided.innerRef}
             {...provided.droppableProps}
-            style={{ minHeight: '250px' }}
+            style={{ height: height - 184 + 'px' }}
           >
             {cards.map((obj, idx) => (
               <Draggable draggableId={obj.id.toString()} index={idx} key={obj.id}>
