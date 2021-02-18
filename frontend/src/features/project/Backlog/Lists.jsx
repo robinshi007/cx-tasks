@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-import { updateCardDragged, updateListDragged } from '@/features/project/projectSlice';
+import {
+  updateCardDragged,
+  updateListDragged,
+  selectGroupBy,
+} from '@/features/project/projectSlice';
 import List from './List';
 
 const Lists = ({ lists }) => {
@@ -10,6 +14,7 @@ const Lists = ({ lists }) => {
 
   const queryAttr = 'data-rbd-draggable-id';
   const [placeholderProps, setPlaceholderProps] = useState({});
+  const groupBy = useSelector(selectGroupBy);
 
   const getDraggedDom = (draggableId) => {
     const domQuery = `[${queryAttr}='${draggableId}']`;
@@ -135,6 +140,8 @@ const Lists = ({ lists }) => {
             previousOrder,
             nextOrder,
           },
+          group: groupBy === '' ? 'section' : groupBy,
+          order: 'order',
         })
       );
     } else {
@@ -203,23 +210,33 @@ const Lists = ({ lists }) => {
             previousCardOrder,
             nextCardOrder,
           },
+          group: groupBy === '' ? 'section' : groupBy,
+          order: 'order',
         })
       );
     }
   };
 
   const columns = {
-    tags: {
-      title: 'Tags',
+    taskKind: {
+      title: 'Type',
       width: 'w-24',
+    },
+    status: {
+      title: 'Status',
+      width: 'w-28',
+    },
+    priority: {
+      title: 'Priority',
+      width: 'w-16 flex items-center justify-center',
     },
     dueDate: {
       title: 'Due date',
-      width: 'w-24',
+      width: 'w-28',
     },
     assignee: {
       title: 'Assignee',
-      width: 'w-24',
+      width: 'w-20 flex items-center justify-center',
     },
   };
   return (
@@ -229,7 +246,9 @@ const Lists = ({ lists }) => {
       onDragEnd={handleDragEnd}
     >
       <div className="header flex items-center justify-between w-full text-gray-500 border-t border-b border-gray-200 text-xs">
-        <div className="border-r border-gray-200 py-2 last:border-r-0 w-full">Task name</div>
+        <div className="border-r border-gray-200 py-2 last:border-r-0 w-full min-w-1/3 ">
+          Task name
+        </div>
         <div className="flex items-center justify-center">
           {Object.keys(columns).map((key, index) => (
             <div

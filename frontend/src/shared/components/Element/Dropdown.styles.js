@@ -4,7 +4,7 @@ import tw, { styled, css } from 'twin.macro';
 import { ClearIcon as CIcon, ChevronDownIcon } from './Icons';
 
 export const StyledSelect = styled.div(() => [
-  tw`relative rounded cursor-pointer inline-block text-sm text-gray-700 border border-gray-200 focus:outline-none`,
+  tw`relative rounded cursor-pointer inline-block text-sm text-gray-700 focus:outline-none`,
 ]);
 
 export const ValueContainer = styled.div((props) => [
@@ -29,13 +29,16 @@ export const AddMore = styled.div(() => [
 export const AddMoreLink = styled.div(() => [tw`hover:underline`]);
 
 export const Dropdown = styled.div((props) => [
-  tw`z-10 absolute left-0 rounded bg-white shadow`,
+  tw`z-10 absolute left-0 rounded bg-white shadow py-0.5`,
   css`
     ${props.width ? `width: ${props.width}px;` : 'width: 100%;'}
   `,
 ]);
-export const DropdownInput = styled.input(() => [
+export const DropdownInput = styled.input((props) => [
   tw`p-2 w-full border-none text-gray-500 focus:outline-none`,
+  css`
+    ${props.withSearch ? '' : 'display: none;'}
+  `,
 ]);
 
 export const ClearIcon = tw(CIcon)`ml-1 p-0.5 text-sm text-gray-600 select-none cursor-pointer`;
@@ -49,10 +52,13 @@ export const Options = styled.div(() => [
 ]);
 
 export const Option = styled.div(() => [
-  tw`py-2 px-3 break-words cursor-pointer last:pb-2`,
+  tw`py-2 px-3 break-words cursor-pointer`,
   css`
+    &:first-of-type {
+      margin-top: 2px;
+    }
     &:last-of-type {
-      margin-bottom: 8px;
+      margin-bottom: 2px;
     }
     &.select-option-is-active {
       background: rgb(210, 229, 254);

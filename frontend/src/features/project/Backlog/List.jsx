@@ -21,7 +21,7 @@ const List = ({ title, cards, id, count, filteredCount, columns, placeholderProp
             ref={provided.innerRef}
             {...provided.droppableProps}
             isDraggingOver={snapshot.isDraggingOver}
-            style={{ minHeight: '32px' }}
+            style={{ minHeight: '38px' }}
           >
             {cards.map((obj, idx) => (
               <Draggable draggableId={obj.id.toString()} index={idx} key={obj.id}>
@@ -30,8 +30,14 @@ const List = ({ title, cards, id, count, filteredCount, columns, placeholderProp
                     title={obj.title}
                     label={obj.label}
                     kind={obj.kind}
+                    taskKindTitle={obj.taskKindTitle}
                     priority={obj.priority}
                     status={obj.status}
+                    statusText={obj.statusText}
+                    assignee={obj.assignee}
+                    assigneeName={obj.assigneeName}
+                    priority={obj.priority}
+                    priorityTitle={obj.priorityTitle}
                     key={obj.id}
                     dueDate={obj.due_date}
                     isDragging={snapshot.isDragging}

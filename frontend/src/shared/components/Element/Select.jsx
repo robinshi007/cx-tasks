@@ -65,6 +65,7 @@ const Select = ({
   onChange,
   onCreate,
   isMulti,
+  withSearch,
   withClearValue,
   renderValue: propsRenderValue,
   renderOption: propsRenderOption,
@@ -206,6 +207,7 @@ const Select = ({
           options={options}
           onChange={handleChange}
           onCreate={onCreate}
+          withSearch={withSearch}
           isMulti={isMulti}
           withClearValue={withClearValue}
           propsRenderOption={propsRenderOption}

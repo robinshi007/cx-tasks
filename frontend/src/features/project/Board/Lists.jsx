@@ -120,19 +120,19 @@ const Lists = ({ lists }) => {
       if (cIndex === 0) {
         /* dropped at the top */
         previousCardOrder = 0;
-        nextCardOrder = dList.cards[cIndex].order;
+        nextCardOrder = dList.cards[cIndex].bdorder;
       } else if (cIndex === dList.cards.length - 1) {
         /* dropped at the bottom */
-        previousCardOrder = dList.cards[cIndex].order;
+        previousCardOrder = dList.cards[cIndex].bdorder;
         nextCardOrder = 0;
       } else if (cIndex > result.source.index) {
         /* drag up and dropped at the middle of the list */
-        previousCardOrder = dList.cards[cIndex].order;
-        nextCardOrder = dList.cards[cIndex + 1].order;
+        previousCardOrder = dList.cards[cIndex].bdorder;
+        nextCardOrder = dList.cards[cIndex + 1].bdorder;
       } else {
         /* drag down and dropped at the middle of the list */
-        previousCardOrder = dList.cards[cIndex - 1].order;
-        nextCardOrder = dList.cards[cIndex].order;
+        previousCardOrder = dList.cards[cIndex - 1].bdorder;
+        nextCardOrder = dList.cards[cIndex].bdorder;
       }
     } else {
       /* not in the same list */
@@ -143,15 +143,15 @@ const Lists = ({ lists }) => {
       } else if (cIndex === 0 && dList.cards.length !== 0) {
         /* dropped at the top of the list */
         previousCardOrder = 0;
-        nextCardOrder = dList.cards[cIndex].order;
+        nextCardOrder = dList.cards[cIndex].bdorder;
       } else if (cIndex === dList.cards.length) {
         /* dropped at the end of the list */
-        previousCardOrder = dList.cards[cIndex - 1].order;
+        previousCardOrder = dList.cards[cIndex - 1].bdorder;
         nextCardOrder = 0;
       } else {
         /* dropped at the middle of the list */
-        previousCardOrder = dList.cards[cIndex - 1].order;
-        nextCardOrder = dList.cards[cIndex].order;
+        previousCardOrder = dList.cards[cIndex - 1].bdorder;
+        nextCardOrder = dList.cards[cIndex].bdorder;
       }
     }
 
@@ -168,6 +168,8 @@ const Lists = ({ lists }) => {
           previousCardOrder,
           nextCardOrder,
         },
+        group: 'status',
+        order: 'bdorder',
       })
     );
   };
@@ -196,8 +198,8 @@ const List = ({ title, cards, id, count, filteredCount, placeholderProps }) => {
   const { height } = useWindowSize();
   return (
     <div
-      className="bg-gray-100 flex flex-col items-center mr-2 px-1 py-1 rounded"
-      style={{ minHeight: '300px', width: '230px' }}
+      className="bg-gray-100 flex flex-col items-center mr-2 px-0.5 py-1 rounded"
+      style={{ minHeight: '300px', width: '260px' }}
     >
       <div className="header flex flex-shrink-0 items-center w-full h-8 truncate text-gray-500 text-xs px-1 select-none">
         <div className="font-medium mr-2 uppercase">{title}</div>
@@ -208,10 +210,10 @@ const List = ({ title, cards, id, count, filteredCount, placeholderProps }) => {
       <Droppable droppableId={id.toString()} className="">
         {(provided, snapshot) => (
           <div
-            className="relative content w-full overflow-y-auto overflow-x-hidden"
+            className="relative content w-full overflow-y-auto overflow-x-hidden px-0.5"
             ref={provided.innerRef}
             {...provided.droppableProps}
-            style={{ height: height - 184 + 'px' }}
+            style={{ height: height - 172 + 'px' }}
           >
             {cards.map((obj, idx) => (
               <Draggable draggableId={obj.id.toString()} index={idx} key={obj.id}>
@@ -220,7 +222,12 @@ const List = ({ title, cards, id, count, filteredCount, placeholderProps }) => {
                     title={obj.title}
                     label={obj.label}
                     kind={obj.kind}
+                    taskKindTitle={obj.taskKindTitle}
                     priority={obj.priority}
+                    section={obj.section}
+                    sectionTitle={obj.sectionTitle}
+                    assignee={obj.assignee}
+                    assigneeName={obj.assigneeName}
                     key={obj.id}
                     isDragging={snapshot.isDragging}
                     parentRef={p.innerRef}

@@ -4,6 +4,8 @@ import { uniq } from 'lodash';
 
 import { KeyCodes } from '@/shared/constants/keyCodes';
 
+import Center from '../Layout/Center';
+
 import {
   ClearIcon,
   Dropdown,
@@ -25,6 +27,7 @@ const propTypes = {
   onChange: PropTypes.func.isRequired,
   onCreate: PropTypes.func,
   isMulti: PropTypes.bool.isRequired,
+  withSearch: PropTypes.bool.isRequired,
   withClearValue: PropTypes.bool.isRequired,
   propsRenderOption: PropTypes.func,
 };
@@ -34,6 +37,7 @@ const defaultProps = {
   value: undefined,
   onCreate: undefined,
   propsRenderOption: undefined,
+  withSearch: true,
 };
 
 const SelectDropdown = ({
@@ -48,6 +52,7 @@ const SelectDropdown = ({
   onChange,
   onCreate,
   isMulti,
+  withSearch,
   withClearValue,
   propsRenderOption,
 }) => {
@@ -186,11 +191,10 @@ const SelectDropdown = ({
         placeholder="Search"
         ref={$inputRef}
         autoFocus
+        withSearch={withSearch}
         onKeyDown={handleInputKeyDown}
         onChange={(event) => setSearchValue(event.target.value)}
       />
-
-      {!isValueEmpty && withClearValue && <ClearIcon type="close" onClick={clearOptionValues} />}
 
       <Options ref={$optionsRef}>
         {filteredOptions.map((option) => (
@@ -215,7 +219,11 @@ const SelectDropdown = ({
           </Option>
         )}
       </Options>
-
+      {!isValueEmpty && withClearValue && (
+        <Center>
+          <ClearIcon type="close" onClick={clearOptionValues} size={20} />
+        </Center>
+      )}
       {filteredOptions.length === 0 && <OptionsNoResults>No results</OptionsNoResults>}
     </Dropdown>
   );

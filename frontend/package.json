@@ -5,7 +5,7 @@
   "scripts": {
     "build:css": "postcss src/assets/styles/tailwind.css -o src/assets/styles/styles.css",
     "watch:css": "postcss src/assets/styles/tailwind.css -o src/assets/styles/styles.css",
-    "start": "craco start",
+    "start": "BROWSER=none craco start",
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",

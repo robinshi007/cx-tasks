@@ -6,6 +6,7 @@ export { default as Input, Label } from './Input';
 export { default as Image } from './Image';
 export { default as BackgroundImage } from './BackgroundImage';
 export { default as Avatar } from './Avatar';
+export { default as Select } from './Select';
 
 export {
   PointStarIcon,
@@ -19,6 +20,8 @@ export {
   AttachIcon,
   BackIcon,
   BacklogListIcon,
+  BlockedIcon,
+  BugIcon,
   BulletedListIcon,
   BulletedList2Icon,
   CalculatorIcon,
@@ -72,6 +75,7 @@ export {
   GripperBarVerticalIcon,
   GripperDotsVerticalIcon,
   GroupIcon,
+  GroupListIcon,
   HeartIcon,
   HelpIcon,
   HistoryIcon,

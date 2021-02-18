@@ -1,10 +1,16 @@
 import { formatDistance } from 'date-fns';
-import { Avatar, SquareShapeIcon, GripperDotsVerticalIcon } from '@/shared/components/Element';
+import { Avatar, GripperDotsVerticalIcon } from '@/shared/components/Element';
+import { Priority } from '../shared';
 
 const Row = ({
   title,
   priority,
+  taskKindTitle,
   status,
+  statusText,
+  assignee,
+  assigneeName,
+  priorityTitle,
   parentRef,
   isDragging,
   dueDate,
@@ -23,25 +29,33 @@ const Row = ({
       <div className="flex items-center h-full" {...dhProps} style={{ width: '20px' }}>
         <GripperDotsVerticalIcon className="text-gray-500 cursor-pointer" />
       </div>
-      <div className="flex items-center w-full border-r border-gray-200 py-2 last:border-r-0">
-        <SquareShapeIcon size={20} className="mr-2" />
+      {/*div className="flex items-center h-full" style={{ width: '20px' }}>
+        <Kind value={taskKindTitle} />
+      </div> */}
+      <div className="flex items-center w-full border-r border-gray-200 py-2 last:border-r-0 min-w-1/3">
         <div className="text-sm font-normal truncate">{title}</div>
       </div>
       <div className="flex items-center">
-        <div className="flex items-center justify-start border-r border-gray-200 py-2 last:border-r-0 px-2 w-24 text-gray-400 text-sm truncate">
+        <div className="border-r border-gray-200 py-2 last:border-r-0 px-2 w-24 text-gray-500 text-sm truncate">
+          {taskKindTitle}
+        </div>
+        <div className="flex items-center justify-start border-r border-gray-200 py-2 last:border-r-0 px-2 w-28 text-gray-400 text-sm truncate">
           <div
             className={`text-center font-semibold text-xs rounded px-2 py-0.5 uppercase select-none ${statusClass(
               status
             )}`}
           >
-            {status}
+            {statusText}
           </div>
         </div>
-        <div className="border-r border-gray-200 py-2 last:border-r-0 px-2 w-24 text-gray-500 text-sm truncate">
+        <div className="border-r border-gray-200 py-2 last:border-r-0 px-2 w-16 text-gray-500 text-sm truncate flex items-center justify-center ">
+          <Priority value={priority} />
+        </div>
+        <div className="border-r border-gray-200 py-2 last:border-r-0 px-2 w-28 text-gray-500 text-sm truncate">
           {timeAgo(dueDate)}
         </div>
-        <div className="border-r border-gray-200 py-2 last:border-r-0 px-2 w-24">
-          <Avatar initials="WS" bg="purple" color="white" size={20} />
+        <div className="border-r border-gray-200 py-2 last:border-r-0 px-2 w-20 flex items-center justify-center">
+          <Avatar initials={assigneeName} bg="purple" color="white" size={20} />
         </div>
         <div className="border-r border-gray-200 py-2 last:border-r-0 w-12 px-2"></div>
       </div>
@@ -49,10 +63,10 @@ const Row = ({
   );
 };
 const statusClass = (status) => {
-  const lcStatus = status.toLowerCase();
-  if (lcStatus === 'todo') {
+  const lcStatus = status;
+  if (lcStatus === 12) {
     return 'bg-gray-200 text-gray-700';
-  } else if (lcStatus === 'done') {
+  } else if (lcStatus === 14) {
     return 'bg-green-200 text-green-700';
   } else {
     return 'bg-blue-600 text-white';
