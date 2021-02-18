@@ -7,6 +7,7 @@ export { default as Image } from './Image';
 export { default as BackgroundImage } from './BackgroundImage';
 export { default as Avatar } from './Avatar';
 export { default as Select } from './Select';
+export { default as Modal } from './Modal';
 
 export {
   PointStarIcon,

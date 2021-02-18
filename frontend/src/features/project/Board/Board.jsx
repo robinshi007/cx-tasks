@@ -1,15 +1,17 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { Route, useRouteMatch, useLocation, useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
+import { Modal } from '@/shared/components/Element';
 import { selectFilteredAllOrderedBoardLists } from '@/features/project/projectSlice';
 
 import Lists from './Lists';
 import Filters from '../Filters';
+import TaskDetail from '../Task/TaskDetail';
 
 const Board = () => {
-  let location = useLocation();
-  let isBoard = location.pathname.endsWith('/board');
+  const match = useRouteMatch();
+  const history = useHistory();
   const lists = useSelector(selectFilteredAllOrderedBoardLists);
   return (
     <div className="px-8 pb-1">
@@ -18,14 +20,27 @@ const Board = () => {
       </div>
       <div className="w-full bg-white mb-4">
         <div className="py-2 flex items-center justify-between text-sm">
-          <Filters isBoard={isBoard} />
+          <Filters />
         </div>
       </div>
-      <div className="">
-        <div className="flex items-start justify-start">
-          <Lists lists={lists} />
-        </div>
+      <div className="flex items-start justify-start">
+        <Lists lists={lists} />
       </div>
+
+      <Route
+        path={`${match.path}/tasks/:taskId`}
+        render={(routeProps) => (
+          <Modal
+            isOpen={true}
+            width={720}
+            withCloseIcon={true}
+            onClose={() => history.push(match.url)}
+            renderContent={(modal) => (
+              <TaskDetail taskId={routeProps.match.params.taskId} modalClose={modal.close} />
+            )}
+          />
+        )}
+      />
     </div>
   );
 };

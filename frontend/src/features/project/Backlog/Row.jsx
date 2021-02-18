@@ -39,7 +39,7 @@ const Row = ({
         <div className="border-r border-gray-200 py-2 last:border-r-0 px-2 w-24 text-gray-500 text-sm truncate">
           {taskKindTitle}
         </div>
-        <div className="flex items-center justify-start border-r border-gray-200 py-2 last:border-r-0 px-2 w-28 text-gray-400 text-sm truncate">
+        <div className="flex items-center justify-start border-r border-gray-200 py-2 last:border-r-0 px-2 w-28 text-gray-500 text-sm truncate">
           <div
             className={`text-center font-semibold text-xs rounded px-2 py-0.5 uppercase select-none ${statusClass(
               status

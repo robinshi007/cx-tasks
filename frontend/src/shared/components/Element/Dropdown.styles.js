@@ -9,7 +9,9 @@ export const StyledSelect = styled.div(() => [
 
 export const ValueContainer = styled.div((props) => [
   tw`flex items-center w-full py-1 px-4 rounded`,
-  !props.isMulti && !props.isValueEmpty && tw`bg-gray-200 hover:bg-gray-300`,
+  !props.isMulti &&
+    !props.isValueEmpty &&
+    tw`bg-gray-200 hover:bg-gray-300 transition ease-out duration-200`,
   css`
     min-height: 32px;
   `,

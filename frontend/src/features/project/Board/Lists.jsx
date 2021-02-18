@@ -219,6 +219,7 @@ const List = ({ title, cards, id, count, filteredCount, placeholderProps }) => {
               <Draggable draggableId={obj.id.toString()} index={idx} key={obj.id}>
                 {(p, snapshot) => (
                   <Card
+                    taskId={obj.id}
                     title={obj.title}
                     label={obj.label}
                     kind={obj.kind}

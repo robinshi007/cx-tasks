@@ -1,14 +1,14 @@
 //import styled, { css } from 'styled-components';
 import tw, { styled, css } from 'twin.macro';
 
-import { ClearIcon } from '@/shared/components/Element';
+import { ClearIcon } from './Icons';
 
 export const ScrollOverlay = styled.div(() => [
   tw`fixed z-10 left-0 top-0 h-full w-full overflow-y-auto`,
 ]);
 
 export const ClickableOverlay = styled.div(({ variant }) => [
-  tw`min-h-full bg-gray-500 bg-opacity-40`,
+  tw`min-h-full bg-gray-700 bg-opacity-40`,
   variant && clickOverlayStyles[variant],
 ]);
 
@@ -23,7 +23,7 @@ const clickOverlayStyles = {
 };
 
 export const StyledModal = styled.div(({ variant, width }) => [
-  tw`relative inline-block align-bottom bg-white text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:max-w-lg sm:w-full`,
+  tw`relative inline-block align-bottom bg-white text-left overflow-hidden shadow-xl transition-all ease-out duration-500 sm:align-middle sm:max-w-lg sm:w-full`,
   variant && modalStyles(variant, width),
 ]);
 
@@ -43,5 +43,5 @@ const modalStyles = (variant, width) => {
 
 export const CloseIcon = tw(
   ClearIcon
-)`absolute text-sm text-gray-500 right-0 top-0 z-10 cursor-pointer transition duration-200 px-1 w-4 hover:bg-gray-200 rounded`;
+)`absolute text-sm text-gray-500 right-0 top-0 z-10 cursor-pointer transition duration-200 px-1 w-6 h-6 hover:bg-gray-200 rounded`;
 //${mixin.clickable}

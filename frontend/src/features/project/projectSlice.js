@@ -111,7 +111,6 @@ export const selectTasks = (state) => {
 export const selectGroupBy = (state) => state.project.groupBy;
 export const selectSortBy = (state) => state.project.sortBy;
 export const selectTasksSortBy = createSelector([selectTasks, selectSortBy], (tasks, sort) => {
-  console.log(tasks);
   if (sort && sort.field !== '' && sort.direction !== '') {
     if (sort.field === 'none') {
       return orderBy(Object.values(tasks), (t) => t.order, 'asc');

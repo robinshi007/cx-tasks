@@ -34,7 +34,7 @@ const Content = () => (
               onChange={() => {}}
             />
           </div>
-          <button className="flex items-center justify-center rounded bg-blue-600 text-white text-md font-medium px-4 py-2 cursor-pointer mb-6 transition ease-out duration-200 focus:outline-none focus:bg-blue-700 hover:bg-blue-500 hover:text-white group ">
+          <button className="flex items-center justify-center rounded bg-blue-600 text-white text-md font-medium px-4 py-1.5 cursor-pointer mb-2 transition ease-out duration-200 focus:outline-none focus:bg-blue-700 hover:bg-blue-500 hover:text-white group">
             Save
           </button>
         </form>
