@@ -1,10 +1,10 @@
 const Content = () => (
-  <div className="py-2 flex items-center justify-between text-sm ">
-    <div className="px-8 pb-4 w-full">
-      <div className="flex items-center justify-start h-11 w-full  mt-3 mb-2">
+  <div className="px-8 py-4 flex items-center justify-between text-sm ">
+    <div className="w-full">
+      <div className="flex items-center justify-start h-11 w-full">
         <h2 className="text-gray-600 font-medium text-lg">Settings</h2>
       </div>
-      <div className="h-36 w-full">
+      <div className="h-36 w-full py-2">
         <form
           className="bg-white text-center text-gray-600 text-sm rounded "
           style={{ maxWidth: '420px' }}

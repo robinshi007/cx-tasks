@@ -15,6 +15,8 @@ import {
   selectFilterDueThisWeek,
 } from '@/features/project/projectSlice';
 
+import { Button } from './shared';
+
 const Filters = ({ isBacklog }) => {
   const dispatch = useDispatch();
   const filterTerm = useSelector(selectFilterTerm);
@@ -85,34 +87,36 @@ const Filters = ({ isBacklog }) => {
             />
           </div>
         </div>
-        <div
-          className={`flex items-center justify-start mr-2 rounded text-sm py-1.5 px-2 hover:bg-gray-200 focus:bg-gray-300 cursor-pointer text-gray-600 select-none truncate ${
-            filterRecent ? 'bg-gray-300' : ''
-          }`}
+        <Button
+          variant="text"
+          color="light"
+          selected={filterRecent}
           onClick={handleFilterRecent}
+          className="mr-2"
         >
           Recently updated
-        </div>
-        <div
-          className={`flex items-center justify-start mr-2 rounded text-sm py-1.5 px-2 hover:bg-gray-200 focus:bg-gray-300 cursor-pointer text-gray-600 select-none truncate ${
-            filterDueThisWeek ? 'bg-gray-300' : ''
-          }`}
+        </Button>
+        <Button
+          variant="text"
+          color="light"
+          selected={filterDueThisWeek}
           onClick={handleFilterDueThisWeek}
+          className="mr-2"
         >
           Due this week
-        </div>
+        </Button>
         <div
           className={`h-6 bg-gray-300 border-solid w-px mr-2 ${clearFilter ? '' : 'hidden'}`}
         ></div>
-        <div
-          className={`flex items-center justify-start rounded text-sm py-1.5 mr-2 px-2 hover:bg-gray-200 focus:bg-gray-300 cursor-pointer text-gray-600 select-none truncate ${
-            clearFilter ? '' : 'hidden'
-          }`}
+        <Button
+          variant="text"
+          color="light"
+          hidden={!clearFilter}
           onClick={handleClearFilter}
+          className="mr-2"
         >
           Clear filters
-        </div>
-
+        </Button>
         {isBacklog ? (
           <>
             <div className={`flex items-center justify-start`}>
@@ -161,9 +165,9 @@ const Filters = ({ isBacklog }) => {
         )}
       </div>
       {isBacklog ? (
-        <button className="flex items-center justify-center rounded bg-blue-600 text-white text-md font-medium px-4 py-1.5 cursor-pointer transition ease-out duration-200 focus:outline-none focus:bg-blue-700 hover:bg-blue-500 hover:text-white group">
+        <Button variant="contained" color="primary">
           Create section
-        </button>
+        </Button>
       ) : (
         ''
       )}

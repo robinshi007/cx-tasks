@@ -35,6 +35,7 @@ module.exports = {
           900: '#0d47a1',
         },
       },
+      backgroundColor: ['active'],
       minWidth: {
         '1/4': '25%',
         '1/2': '50%',

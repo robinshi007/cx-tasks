@@ -1,3 +1,4 @@
+import tw, { styled } from 'twin.macro';
 import {
   BoxCheckmarkSolidIcon,
   ChevronUpIcon,
@@ -38,4 +39,21 @@ export const Kind = ({ value }) => {
   } else {
     return <BoxCheckmarkSolidIcon size={18} className="mr-1 text-blue-500" />;
   }
+};
+
+const StyledButton = styled.button(({ variant, color, selected, hidden }) => [
+  tw`flex items-center justify-center px-3 py-1.5 rounded font-normal text-sm focus:outline-none cursor-pointer select-none truncate`,
+  variant === 'text' &&
+    color === 'light' &&
+    !selected &&
+    tw`text-gray-600 bg-white hover:bg-gray-200 active:bg-gray-300`,
+  variant === 'text' && color === 'light' && selected && tw`bg-gray-300`,
+  variant === 'text' && color === 'light' && hidden && tw`hidden`,
+  variant === 'contained' &&
+    color === 'primary' &&
+    tw`bg-blue-600 text-white hover:bg-blue-500 active:bg-blue-700 hover:text-white`,
+  tw`transition ease-out duration-200`,
+]);
+export const Button = ({ children, ...props }) => {
+  return <StyledButton {...props}>{children}</StyledButton>;
 };
