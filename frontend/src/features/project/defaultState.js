@@ -9,7 +9,7 @@ const defaultState = {
     '22': {
       id: 22,
       title: 'Redesign the kanban this week for review',
-      description: '',
+      description: 'Hi description',
       taskKind: 71,
       section: 51,
       priority: 32,
@@ -126,18 +126,18 @@ const defaultState = {
       order: 1612281500,
     },
     '32': {
-      id: 31,
+      id: 32,
       title: 'high',
       order: 1612281600,
     },
     '33': {
-      id: 31,
+      id: 33,
       title: 'medium',
       order: 1612281700,
     },
     '34': {
-      id: 31,
-      title: 'medium',
+      id: 34,
+      title: 'low',
       order: 1612281800,
     },
   },

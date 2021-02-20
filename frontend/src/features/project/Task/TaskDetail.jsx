@@ -1,43 +1,163 @@
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { map } from 'lodash';
+
+import { ClearIcon, Select } from '@/shared/components/Element';
+import { timeAgo, Button, Kind, RenderUserOption, RenderPriorityOption } from '../shared';
+import {
+  selectTaskById,
+  selectStatus,
+  selectPriority,
+  selectAssignee,
+  setTaskStatus,
+  setTaskPriority,
+  setTaskAssignee,
+} from '@/features/project/projectSlice';
 
 export const TaskLink = styled(Link)`
   display: inline-flex;
 `;
 
 const TaskDetail = ({ taskId, modalClose }) => {
+  const dispatch = useDispatch();
+  const task = useSelector(selectTaskById(taskId));
+  const status = useSelector(selectStatus);
+  const priority = useSelector(selectPriority);
+  const assignee = useSelector(selectAssignee);
+
+  const [taskCache, setTaskCache] = useState(task);
+
+  const [dirty, setDirty] = useState(false);
+  const [changeSet, setChangeSet] = useState([]);
+  const addChangeFn = (fn) => {
+    setChangeSet([...changeSet, fn]);
+  };
+  const cancel = () => {
+    setChangeSet([]);
+    setTaskCache(task);
+    setDirty(false);
+  };
+  const submit = () => {
+    changeSet.forEach((fn) => fn());
+    modalClose();
+  };
   return (
     <>
-      <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-        <div className="sm:flex sm:items-start">
-          <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-            <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
-              {`Task ${taskId}`}
-            </h3>
-            <div className="mt-2">
-              <p className="text-sm text-gray-500">
-                Are you sure you want to deactivate your account? All of your data will be
-                permanently removed. This action cannot be undone.
-              </p>
-            </div>
-          </div>
+      <div className="flex items-center justify-between px-2 py-3 text-gray-500">
+        <div className="flex items-center ml-2 text-sm">
+          <Kind value={task.taskKindTitle} />
+          <div>{`${task.taskKindTitle}-${taskId}`}</div>
+        </div>
+        <div className="flex items-center">
+          {dirty ? (
+            <>
+              <Button className="mr-2" variant="text" color="light" onClick={cancel}>
+                Cancel
+              </Button>
+              <Button className="mr-2" variant="contained" color="primary" onClick={submit}>
+                Save
+              </Button>
+            </>
+          ) : (
+            ''
+          )}
+          <Button variant="text" color="light" onClick={modalClose} className="mr-2">
+            <ClearIcon size={20} />
+          </Button>
         </div>
       </div>
-      <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-        <button
-          type="button"
-          className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
-          onClick={modalClose}
-        >
-          Deactivate
-        </button>
-        <button
-          type="button"
-          className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-          onClick={modalClose}
-        >
-          Cancel
-        </button>
+      <div className="bg-white px-4 pb-4 text-gray-700">
+        <div className="flex items-start justify-between">
+          <div className="">
+            <h3 className="text-lg leading-6 font-medium">{task.title}</h3>
+            <div className="py-2">
+              <p className="text-sm">{task.description}</p>
+            </div>
+          </div>
+          <div className="w-40">
+            <div className="">
+              <p className="text-gray-500 text-xs font-medium uppercase mr-2">status</p>
+              <Select
+                variant="empty"
+                placeholder="None"
+                dropdownWidth={120}
+                withClearValue={false}
+                withSearch={false}
+                name="status"
+                value={taskCache.status.toString()}
+                options={map(status, (val, key) => ({
+                  value: key,
+                  label: val.title,
+                }))}
+                onChange={(val) => {
+                  setDirty(true);
+                  setTaskCache({ ...taskCache, status: val });
+                  addChangeFn(() =>
+                    dispatch(setTaskStatus({ id: task.id, status: parseInt(val) }))
+                  );
+                }}
+              />
+            </div>
+            <div className="pt-3">
+              <p className="text-gray-500 text-xs font-medium uppercase mr-2">assignee</p>
+              <Select
+                variant="empty"
+                placeholder="Unassigned"
+                dropdownWidth={120}
+                withClearValue={false}
+                withSearch={false}
+                name="assignee"
+                value={taskCache.assignee && taskCache.assignee.toString()}
+                options={map(assignee, (val, key) => ({
+                  value: key,
+                  label: val.name,
+                }))}
+                onChange={(val) => {
+                  setDirty(true);
+                  setTaskCache({ ...taskCache, assignee: val });
+                  addChangeFn(() =>
+                    dispatch(setTaskAssignee({ id: task.id, assignee: parseInt(val) }))
+                  );
+                }}
+                renderValue={({ value: assigneeId }) => RenderUserOption(assignee[assigneeId])}
+                renderOption={({ value: assigneeId }) => RenderUserOption(assignee[assigneeId])}
+              />
+            </div>
+            <div className="pt-3">
+              <p className="text-gray-500 text-xs font-medium uppercase mr-2">priority</p>
+              <Select
+                variant="empty"
+                placeholder="None"
+                dropdownWidth={120}
+                withClearValue={false}
+                withSearch={false}
+                name="priority"
+                value={taskCache.priority && taskCache.priority.toString()}
+                options={map(priority, (val, key) => ({
+                  value: key,
+                  label: val.title,
+                }))}
+                onChange={(val) => {
+                  setDirty(true);
+                  setTaskCache({ ...taskCache, priority: val });
+                  addChangeFn(() =>
+                    dispatch(setTaskPriority({ id: task.id, priority: parseInt(val) }))
+                  );
+                }}
+                renderValue={({ value: priorityId }) => RenderPriorityOption(priority[priorityId])}
+                renderOption={({ value: priorityId }) => RenderPriorityOption(priority[priorityId])}
+              />
+            </div>
+            <div className="pt-3">
+              <p className="text-gray-500 text-xs font-medium uppercase mr-2">Due date</p>
+              <div className="text-sm">{task.due_date}</div>
+            </div>
+            <div className="pt-3 text-xs">Updated at {timeAgo(task.updated_at)} </div>
+          </div>
+        </div>
+        <div className="placeholder pt-3 h-20"></div>
       </div>
     </>
   );

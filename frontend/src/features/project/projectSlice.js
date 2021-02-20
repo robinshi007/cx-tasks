@@ -89,13 +89,47 @@ const projectSlice = createSlice({
       state.filters = defaultFilters;
       return state;
     },
+    setTaskStatus: (state, action) => {
+      const task = state.tasks[action.payload.id];
+      task.status = action.payload.status;
+      return state;
+    },
+    setTaskAssignee: (state, action) => {
+      const task = state.tasks[action.payload.id];
+      task.assignee = action.payload.assignee;
+      return state;
+    },
+    setTaskPriority: (state, action) => {
+      const task = state.tasks[action.payload.id];
+      task.priority = action.payload.priority;
+      return state;
+    },
   },
 });
 
 export const selectProject = (state) => state.project;
 export const selectStatus = (state) => state.project.status;
+export const selectPriority = (state) => state.project.priority;
 export const selectSection = (state) => state.project.section;
 export const selectAssignee = (state) => state.project.assignee;
+export const selectTaskById = (id) => (state) => {
+  const t = state.project.tasks[id];
+  return {
+    ...t,
+    taskKindTitle: t.taskKind ? state.project.taskKind[t.taskKind.toString()].title : 'Task',
+    statusText: state.project.status[t.status.toString()].title,
+    assigneeName: t.assignee ? state.project.assignee[t.assignee.toString()].name : '',
+    sectionTitle: t.section ? state.project.section[t.section.toString()].title : '',
+    priorityTitle: t.priority ? state.project.priority[t.priority.toString()].title : '',
+  };
+};
+
+export const selectAssigneeById = (id) => (state) => {
+  const a = state.project.assignee[id];
+  return {
+    ...a,
+  };
+};
 export const selectTasks = (state) => {
   return map(state.project.tasks, (t) => {
     return {
@@ -250,5 +284,8 @@ export const {
   setFilterDueThisWeek,
   setSortBy,
   setGroupBy,
+  setTaskStatus,
+  setTaskAssignee,
+  setTaskPriority,
 } = projectSlice.actions;
 export default projectSlice.reducer;

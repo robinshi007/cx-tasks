@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, useRouteMatch, useLocation, useHistory } from 'react-router-dom';
+import { Route, useRouteMatch, useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import { Modal } from '@/shared/components/Element';
@@ -32,12 +32,13 @@ const Board = () => {
         render={(routeProps) => (
           <Modal
             isOpen={true}
-            width={720}
-            withCloseIcon={true}
+            width={800}
+            withCloseIcon={false}
             onClose={() => history.push(match.url)}
             renderContent={(modal) => (
               <TaskDetail taskId={routeProps.match.params.taskId} modalClose={modal.close} />
             )}
+            style={{ minHeight: '300px' }}
           />
         )}
       />

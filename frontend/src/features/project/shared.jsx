@@ -1,3 +1,4 @@
+import { formatDistance } from 'date-fns';
 import tw, { styled } from 'twin.macro';
 import {
   BoxCheckmarkSolidIcon,
@@ -5,8 +6,15 @@ import {
   ChevronDownIcon,
   BlockedIcon,
   BugIcon,
+  EqualIcon,
   SingleBookmarkIcon,
+  Avatar,
 } from '@/shared/components/Element';
+
+export const timeAgo = (timeString) => {
+  const time = Date.parse(timeString);
+  return formatDistance(time, new Date(), { addSuffix: true });
+};
 
 export const Label = ({ value, color, rounded }) => {
   return (
@@ -26,9 +34,9 @@ export const Priority = ({ value }) => {
   } else if (value === 32) {
     return <ChevronUpIcon size={18} className="text-red-500" />;
   } else if (value === 34) {
-    return <ChevronDownIcon size={18} className="text-blue-500" />;
+    return <ChevronDownIcon size={18} className="text-gray-500" />;
   } else {
-    return '';
+    return <EqualIcon size={18} className="text-blue-500" />;
   }
 };
 export const Kind = ({ value }) => {
@@ -56,4 +64,21 @@ const StyledButton = styled.button(({ variant, color, selected, hidden }) => [
 ]);
 export const Button = ({ children, ...props }) => {
   return <StyledButton {...props}>{children}</StyledButton>;
+};
+
+export const RenderUserOption = (user) => {
+  return (
+    <div className="flex items-center" key={user.id}>
+      <Avatar initials={user.name} bg="purple" color="white" size={24} />
+      <span className="ml-1.5">{user.name}</span>
+    </div>
+  );
+};
+export const RenderPriorityOption = (priority) => {
+  return (
+    <div className="flex items-center" key={priority.id}>
+      <Priority value={priority.id} />
+      <span className="ml-1.5">{priority.title}</span>
+    </div>
+  );
 };

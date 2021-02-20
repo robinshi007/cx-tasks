@@ -213,7 +213,7 @@ const List = ({ title, cards, id, count, filteredCount, placeholderProps }) => {
             className="relative content w-full overflow-y-auto overflow-x-hidden px-0.5"
             ref={provided.innerRef}
             {...provided.droppableProps}
-            style={{ height: height - 172 + 'px' }}
+            style={{ height: height - 180 + 'px' }}
           >
             {cards.map((obj, idx) => (
               <Draggable draggableId={obj.id.toString()} index={idx} key={obj.id}>

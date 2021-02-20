@@ -8,7 +8,7 @@ import Text from './Text';
 // import { Flex, Heading, Text } from '..'
 
 //import { User } from 'pcln-icons'
-import { AddIcon } from './Icons';
+import { UserFollowedIcon } from './Icons';
 
 const StyledImage = styled(Flex)`
   justify-content: center;
@@ -24,8 +24,8 @@ function Avatar({ className, title, subtitle, src, initials, size, color, bg }) 
   return (
     <Flex className={className}>
       <StyledImage src={src} size={size} color={color} bg={bg}>
-        {!src && initials && <Text fontSize={2}>{initials.toUpperCase()}</Text>}
-        {!src && !initials && <AddIcon />}
+        {!src && initials && <Text fontSize={2}>{initials.toUpperCase().slice(0, 2)}</Text>}
+        {!src && !initials && <UserFollowedIcon size={size - 6} />}
       </StyledImage>
       {title && (
         <Flex flexDirection="column" justifyContent="center" ml={3}>

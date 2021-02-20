@@ -31,7 +31,7 @@ export const AddMore = styled.div(() => [
 export const AddMoreLink = styled.div(() => [tw`hover:underline`]);
 
 export const Dropdown = styled.div((props) => [
-  tw`z-10 absolute left-0 rounded bg-white shadow py-0.5`,
+  tw`z-50 absolute left-0 rounded bg-white shadow py-0.5`,
   css`
     ${props.width ? `width: ${props.width}px;` : 'width: 100%;'}
   `,

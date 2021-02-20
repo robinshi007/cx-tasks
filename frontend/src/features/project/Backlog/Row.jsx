@@ -1,6 +1,5 @@
-import { formatDistance } from 'date-fns';
 import { Avatar, GripperDotsVerticalIcon } from '@/shared/components/Element';
-import { Priority } from '../shared';
+import { Priority, timeAgo } from '../shared';
 
 const Row = ({
   title,
@@ -54,8 +53,8 @@ const Row = ({
         <div className="border-r border-gray-200 py-2 last:border-r-0 px-2 w-28 text-gray-500 text-sm truncate">
           {timeAgo(dueDate)}
         </div>
-        <div className="border-r border-gray-200 py-2 last:border-r-0 px-2 w-20 flex items-center justify-center">
-          <Avatar initials={assigneeName} bg="purple" color="white" size={20} />
+        <div className="border-r border-gray-200 py-1 last:border-r-0 px-2 w-20 flex items-center justify-center">
+          <Avatar initials={assigneeName} bg="purple" color="white" size={28} />
         </div>
         <div className="border-r border-gray-200 py-2 last:border-r-0 w-12 px-2"></div>
       </div>
@@ -73,8 +72,4 @@ const statusClass = (status) => {
   }
 };
 
-const timeAgo = (timeString) => {
-  const time = Date.parse(timeString);
-  return formatDistance(time, new Date(), { addSuffix: true });
-};
 export default Row;

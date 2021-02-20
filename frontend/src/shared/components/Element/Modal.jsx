@@ -41,6 +41,7 @@ const Modal = ({
   onClose: tellParentToClose,
   renderLink,
   renderContent,
+  ...props
 }) => {
   const [stateIsOpen, setStateOpen] = useState(false);
   const isControlled = typeof propsIsOpen === 'boolean';
@@ -82,6 +83,7 @@ const Modal = ({
                 width={width}
                 data-testid={testid}
                 ref={$modalRef}
+                {...props}
               >
                 {withCloseIcon && <CloseIcon type="close" variant={variant} onClick={closeModal} />}
                 {renderContent({ close: closeModal })}
