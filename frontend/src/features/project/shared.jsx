@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useCallback } from 'react';
 import { formatDistance } from 'date-fns';
 import tw, { styled } from 'twin.macro';
 import {
@@ -69,20 +69,28 @@ export const Button = ({ children, ...props }) => {
 const StyledTextArea = styled.textarea(() => [
   tw`p-1 w-full h-full rounded bg-white resize-none overflow-y-auto overflow-x-hidden hover:bg-gray-100 focus:bg-gray-200 focus:outline-none`,
   tw`text-gray-700`,
+  tw`transition ease-out duration-200`,
 ]);
 // textarea with auto resize
 export const TextArea = ({ children, onChange: onNewChange, ...props }) => {
-  const el = useRef(null);
+  // refer https://medium.com/@teh_builder/ref-objects-inside-useeffect-hooks-eb7c15198780
+  const elRef = useRef(null);
+  const el = useCallback((node) => {
+    if (node !== null) {
+      node.style.height = `${node.scrollHeight}px`;
+    }
+    elRef.current = node;
+  }, []);
   const handleOnChange = () => {
-    el.current.style.height = '0';
-    el.current.style.height = `${el.current.scrollHeight}px`;
+    elRef.current.style.height = '0';
+    elRef.current.style.height = `${elRef.current.scrollHeight}px`;
   };
   return (
     <StyledTextArea
       ref={el}
       onChange={(e) => {
         onNewChange && onNewChange(e);
-        handleOnChange(e);
+        handleOnChange();
       }}
       {...props}
       style={{ maxHeight: '320px' }}

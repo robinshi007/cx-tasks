@@ -73,8 +73,9 @@ const TaskDetail = ({ taskId, modalClose }) => {
       <div className="bg-white px-4 pt-2 pb-4 text-gray-700">
         <div className="flex items-start justify-between">
           <div className="w-full mr-4">
-            <h3 className="text-lg leading-6 font-medium">
+            <h3 className="text-lg leading-5 font-medium">
               <TextArea
+                rows={1}
                 value={taskCache.title}
                 placeholder="Task name"
                 onChange={(e) => {

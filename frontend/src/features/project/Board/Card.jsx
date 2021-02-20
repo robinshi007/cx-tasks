@@ -20,7 +20,7 @@ const Card = ({
   const match = useRouteMatch();
   return (
     <TaskLink
-      className={`card shadow-sm w-full flex flex-col items-start bg-white p-2 text-gray-700 rounded select-none mb-1 hover:shadow-md ${
+      className={`card shadow-sm w-full flex flex-col items-start bg-white p-2 text-base text-gray-700 rounded select-none mb-1 hover:shadow-md ${
         isDragging ? 'ring-2 ring-blue-500' : ''
       } transition-shadow ease-out duration-200`}
       ref={parentRef}

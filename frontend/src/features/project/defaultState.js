@@ -38,7 +38,8 @@ const defaultState = {
     },
     '24': {
       id: 24,
-      title: 'Test the cover of the card',
+      title:
+        'Test the cover of the card, this is a long title test for the card and detail page, just have fun.',
       description:
         "Hi description this is a long description for testing, just have fun for it. That'great really. hahahahah. good.",
       taskKind: 72,
@@ -101,44 +102,44 @@ const defaultState = {
   status: {
     '11': {
       id: 11,
-      title: 'backlog',
+      title: 'Backlog',
       order: 1612281200,
     },
     '12': {
       id: 12,
-      title: 'todo',
+      title: 'Todo',
       order: 1612281400,
     },
     '13': {
       id: 13,
-      title: 'in progress',
+      title: 'In progress',
       order: 1612281600,
     },
     '14': {
       id: 14,
-      title: 'done',
+      title: 'Done',
       order: 1612281800,
     },
   },
   priority: {
     '31': {
       id: 31,
-      title: 'block',
+      title: 'Block',
       order: 1612281500,
     },
     '32': {
       id: 32,
-      title: 'high',
+      title: 'High',
       order: 1612281600,
     },
     '33': {
       id: 33,
-      title: 'medium',
+      title: 'Medium',
       order: 1612281700,
     },
     '34': {
       id: 34,
-      title: 'low',
+      title: 'Low',
       order: 1612281800,
     },
   },
