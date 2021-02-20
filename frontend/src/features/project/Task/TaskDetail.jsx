@@ -5,12 +5,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { map } from 'lodash';
 
 import { ClearIcon, Select } from '@/shared/components/Element';
-import { timeAgo, Button, Kind, RenderUserOption, RenderPriorityOption } from '../shared';
+import { timeAgo, Button, Kind, RenderUserOption, RenderPriorityOption, TextArea } from '../shared';
 import {
   selectTaskById,
   selectStatus,
   selectPriority,
   selectAssignee,
+  setTaskTitle,
+  setTaskDescription,
   setTaskStatus,
   setTaskPriority,
   setTaskAssignee,
@@ -68,15 +70,39 @@ const TaskDetail = ({ taskId, modalClose }) => {
           </Button>
         </div>
       </div>
-      <div className="bg-white px-4 pb-4 text-gray-700">
+      <div className="bg-white px-4 pt-2 pb-4 text-gray-700">
         <div className="flex items-start justify-between">
-          <div className="">
-            <h3 className="text-lg leading-6 font-medium">{task.title}</h3>
-            <div className="py-2">
-              <p className="text-sm">{task.description}</p>
+          <div className="w-full mr-4">
+            <h3 className="text-lg leading-6 font-medium">
+              <TextArea
+                value={taskCache.title}
+                placeholder="Task name"
+                onChange={(e) => {
+                  // TODO: add input validate
+                  setDirty(true);
+                  setTaskCache({ ...taskCache, title: e.target.value });
+                  addChangeFn(() =>
+                    dispatch(setTaskTitle({ id: taskCache.id, title: e.target.value }))
+                  );
+                }}
+              />
+            </h3>
+            <div className="py-2 text-sm">
+              <TextArea
+                // TODO: add input validate
+                value={taskCache.description}
+                placeholder="Task description"
+                onChange={(e) => {
+                  setDirty(true);
+                  setTaskCache({ ...taskCache, description: e.target.value });
+                  addChangeFn(() =>
+                    dispatch(setTaskDescription({ id: taskCache.id, description: e.target.value }))
+                  );
+                }}
+              />
             </div>
           </div>
-          <div className="w-40">
+          <div className="w-56">
             <div className="">
               <p className="text-gray-500 text-xs font-medium uppercase mr-2">status</p>
               <Select
@@ -95,7 +121,7 @@ const TaskDetail = ({ taskId, modalClose }) => {
                   setDirty(true);
                   setTaskCache({ ...taskCache, status: val });
                   addChangeFn(() =>
-                    dispatch(setTaskStatus({ id: task.id, status: parseInt(val) }))
+                    dispatch(setTaskStatus({ id: taskCache.id, status: parseInt(val) }))
                   );
                 }}
               />
@@ -118,7 +144,7 @@ const TaskDetail = ({ taskId, modalClose }) => {
                   setDirty(true);
                   setTaskCache({ ...taskCache, assignee: val });
                   addChangeFn(() =>
-                    dispatch(setTaskAssignee({ id: task.id, assignee: parseInt(val) }))
+                    dispatch(setTaskAssignee({ id: taskCache.id, assignee: parseInt(val) }))
                   );
                 }}
                 renderValue={({ value: assigneeId }) => RenderUserOption(assignee[assigneeId])}
@@ -143,7 +169,7 @@ const TaskDetail = ({ taskId, modalClose }) => {
                   setDirty(true);
                   setTaskCache({ ...taskCache, priority: val });
                   addChangeFn(() =>
-                    dispatch(setTaskPriority({ id: task.id, priority: parseInt(val) }))
+                    dispatch(setTaskPriority({ id: taskCache.id, priority: parseInt(val) }))
                   );
                 }}
                 renderValue={({ value: priorityId }) => RenderPriorityOption(priority[priorityId])}

@@ -89,6 +89,16 @@ const projectSlice = createSlice({
       state.filters = defaultFilters;
       return state;
     },
+    setTaskTitle: (state, action) => {
+      const task = state.tasks[action.payload.id];
+      task.title = action.payload.title;
+      return state;
+    },
+    setTaskDescription: (state, action) => {
+      const task = state.tasks[action.payload.id];
+      task.description = action.payload.description;
+      return state;
+    },
     setTaskStatus: (state, action) => {
       const task = state.tasks[action.payload.id];
       task.status = action.payload.status;
@@ -284,6 +294,8 @@ export const {
   setFilterDueThisWeek,
   setSortBy,
   setGroupBy,
+  setTaskTitle,
+  setTaskDescription,
   setTaskStatus,
   setTaskAssignee,
   setTaskPriority,

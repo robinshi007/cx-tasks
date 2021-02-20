@@ -23,7 +23,7 @@ const clickOverlayStyles = {
 };
 
 export const StyledModal = styled.div(({ variant, width }) => [
-  tw`relative inline-block align-bottom bg-white text-left overflow-hidden shadow-xl transition-all ease-out duration-500 sm:align-middle sm:max-w-lg sm:w-full`,
+  tw`relative inline-block align-bottom bg-white text-left overflow-hidden shadow-xl transition-all ease-out duration-500`,
   variant && modalStyles(variant, width),
 ]);
 
@@ -31,11 +31,13 @@ const modalStyles = (variant, width) => {
   if (variant === 'center') {
     return css`
       max-width: ${width}px;
+      width: ${width}px;
       ${tw`align-middle rounded`}
     `;
   } else if (variant === 'aside') {
     return css`
       max-width: ${width}px;
+      width: ${width}px;
       ${tw`min-h-screen shadow-sm`}
     `;
   }

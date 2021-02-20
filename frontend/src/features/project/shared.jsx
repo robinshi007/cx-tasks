@@ -1,3 +1,4 @@
+import React, { useRef } from 'react';
 import { formatDistance } from 'date-fns';
 import tw, { styled } from 'twin.macro';
 import {
@@ -64,6 +65,31 @@ const StyledButton = styled.button(({ variant, color, selected, hidden }) => [
 ]);
 export const Button = ({ children, ...props }) => {
   return <StyledButton {...props}>{children}</StyledButton>;
+};
+const StyledTextArea = styled.textarea(() => [
+  tw`p-1 w-full h-full rounded bg-white resize-none overflow-y-auto overflow-x-hidden hover:bg-gray-100 focus:bg-gray-200 focus:outline-none`,
+  tw`text-gray-700`,
+]);
+// textarea with auto resize
+export const TextArea = ({ children, onChange: onNewChange, ...props }) => {
+  const el = useRef(null);
+  const handleOnChange = () => {
+    el.current.style.height = '0';
+    el.current.style.height = `${el.current.scrollHeight}px`;
+  };
+  return (
+    <StyledTextArea
+      ref={el}
+      onChange={(e) => {
+        onNewChange && onNewChange(e);
+        handleOnChange(e);
+      }}
+      {...props}
+      style={{ maxHeight: '320px' }}
+    >
+      {children}
+    </StyledTextArea>
+  );
 };
 
 export const RenderUserOption = (user) => {

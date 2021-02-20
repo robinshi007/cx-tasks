@@ -32,7 +32,7 @@ const Board = () => {
         render={(routeProps) => (
           <Modal
             isOpen={true}
-            width={800}
+            width={720}
             withCloseIcon={false}
             onClose={() => history.push(match.url)}
             renderContent={(modal) => (

@@ -39,7 +39,8 @@ const defaultState = {
     '24': {
       id: 24,
       title: 'Test the cover of the card',
-      description: '',
+      description:
+        "Hi description this is a long description for testing, just have fun for it. That'great really. hahahahah. good.",
       taskKind: 72,
       section: 54,
       priority: 32,
