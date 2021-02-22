@@ -37,7 +37,7 @@ const Board = () => {
               withCloseIcon={false}
               onClose={() => history.push(match.url)}
               renderContent={(modal) => (
-                <TaskDetail taskId={routeProps.match.params.taskId} modalClose={modal.close} />
+                <TaskDetail id={routeProps.match.params.taskId} modalClose={modal.close} />
               )}
               style={{ minHeight: '300px' }}
             />
@@ -53,7 +53,6 @@ const Board = () => {
               onClose={() => history.push(match.url)}
               renderContent={(modal) => (
                 <TaskDetail
-                  taskId="new"
                   modalClose={modal.close}
                   fields={{ status: routeProps.location.query && routeProps.location.query.status }}
                 />

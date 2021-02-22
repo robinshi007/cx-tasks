@@ -90,6 +90,21 @@ const projectSlice = createSlice({
       state.filters = defaultFilters;
       return state;
     },
+    setProject: (state, action) => {
+      state.title = action.payload.project.title;
+      state.description = action.payload.project.description;
+      return state;
+    },
+    setSectionNew: (state, action) => {
+      const newId = action.payload.id;
+      if (!!state.section[newId]) {
+        // TODO:  sync to backend
+        console.log('Please sync the new task to the backend first');
+      } else {
+        state.section[action.payload.id] = action.payload.section;
+      }
+      return state;
+    },
     setTaskNew: (state, action) => {
       const newId = action.payload.id;
       if (!!state.tasks[newId]) {
@@ -143,21 +158,24 @@ const projectSlice = createSlice({
 });
 
 export const selectProject = (state) => state.project;
+export const selectProjectById = (state) => state.project;
 export const selectStatus = (state) => state.project.status;
 export const selectPriority = (state) => state.project.priority;
 export const selectSection = (state) => state.project.section;
 export const selectAssignee = (state) => state.project.assignee;
 export const selectTaskById = (id, fields) => (state) => {
   let task;
-  if (id === 'new') {
+  if (!id && fields) {
     task = merge(defaultTask(), fields);
+  } else if (!id) {
+    task = defaultTask();
   } else {
     task = state.project.tasks[id];
   }
   return {
     ...task,
     taskKindTitle: task.taskKind ? state.project.taskKind[task.taskKind.toString()].title : 'Task',
-    statusText: state.project.status[task.status.toString()].title,
+    statusText: task.status ? state.project.status[task.status.toString()].title : '',
     assigneeName: task.assignee ? state.project.assignee[task.assignee.toString()].name : '',
     sectionTitle: task.section ? state.project.section[task.section.toString()].title : '',
     priorityTitle: task.priority ? state.project.priority[task.priority.toString()].title : '',
@@ -324,6 +342,8 @@ export const {
   setFilterDueThisWeek,
   setSortBy,
   setGroupBy,
+  setProject,
+  setSectionNew,
   setTaskNew,
   setTaskTitle,
   setTaskDescription,

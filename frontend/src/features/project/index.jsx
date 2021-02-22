@@ -20,7 +20,7 @@ const Project = () => {
   const project = useSelector(selectProject);
 
   const navHeader = {
-    name: project.name,
+    title: project.title,
     description: project.description,
     icon: FabricFolderIcon,
   };

@@ -1,0 +1,17 @@
+body {
+  overflow-x: auto;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+body::-webkit-scrollbar {
+  width: 6px;
+}
+body::-webkit-scrollbar-track {
+  background: rgba(243, 244, 246, 1);
+}
+body::-webkit-scrollbar-thumb {
+  background-color: #999;
+  border-radius: 6px;
+  border: 2px solid #999;
+}

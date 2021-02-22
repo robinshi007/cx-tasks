@@ -23,7 +23,7 @@ const clickOverlayStyles = {
 };
 
 export const StyledModal = styled.div(({ variant, width }) => [
-  tw`relative inline-block align-bottom bg-white text-left overflow-hidden shadow-xl transition-all ease-out duration-500`,
+  tw`relative inline-block align-bottom bg-white text-left shadow-xl transition-all ease-out duration-500`,
   variant && modalStyles(variant, width),
 ]);
 

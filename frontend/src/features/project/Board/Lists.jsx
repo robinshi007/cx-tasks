@@ -223,7 +223,7 @@ const List = ({ title, cards, id, count, filteredCount, placeholderProps }) => {
   return (
     <div
       className="bg-gray-100 flex flex-col items-center mr-2 pl-0.5 py-1 rounded"
-      style={{ minHeight: '300px', width: '260px', maxWidth: '260px' }}
+      style={{ minHeight: '300px', minWidth: '240px', maxWidth: '280px' }}
     >
       <div className="header flex  items-center justify-between w-full h-8 truncate text-gray-500 text-xs px-1 select-none">
         <div className="flex items-center flex-shrink-0 ">

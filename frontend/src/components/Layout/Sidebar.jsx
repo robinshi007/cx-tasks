@@ -36,12 +36,12 @@ const SidebarLinks = ({ navList }) => {
     </>
   );
 };
-const SidebarHeader = ({ name, description, Icon }) => {
+const SidebarHeader = ({ title, description, Icon }) => {
   return (
     <>
       <Icon size={32} className="text-gray-600 flex-none mr-2" />
       <div className="w-28">
-        <h4 className="text-gray-600 text-sm font-medium truncate">{name}</h4>
+        <h4 className="text-gray-600 text-sm font-medium truncate">{title}</h4>
         <p className="text-xs text-gray-500 truncate">{description}</p>
       </div>
     </>
@@ -54,7 +54,7 @@ export const Sidebar = ({ navHeader, navList }) => (
     <div className="flex flex-col pb-6 w-full">
       <div className="flex items-center justify-start h-11 w-full bg-gray-100 mt-3 mb-2 px-2">
         <SidebarHeader
-          name={navHeader.name}
+          title={navHeader.title}
           description={navHeader.description}
           Icon={navHeader.icon}
         />

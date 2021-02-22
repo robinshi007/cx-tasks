@@ -1,7 +1,9 @@
+import { useRouteMatch } from 'react-router-dom';
 import { Avatar, GripperDotsVerticalIcon } from '@/shared/components/Element';
-import { Priority, timeAgo } from '../shared';
+import { RouteLink, Priority, timeAgo } from '../shared';
 
 const Row = ({
+  taskId,
   title,
   priority,
   taskKindTitle,
@@ -17,6 +19,7 @@ const Row = ({
   dhProps,
   ...props
 }) => {
+  const match = useRouteMatch();
   return (
     <li
       className={`flex items-center justify-between text-sm font-normal text-gray-700 w-full border-b border-gray-200 first:border-t first:border-gray-200 ${
@@ -32,20 +35,16 @@ const Row = ({
         <Kind value={taskKindTitle} />
       </div> */}
       <div className="flex items-center w-full border-r border-gray-200 py-2 last:border-r-0 min-w-1/3">
-        <div className="truncate">{title}</div>
+        <RouteLink className="truncate" to={`${match.url}/tasks/${taskId}`}>
+          {title}
+        </RouteLink>
       </div>
       <div className="flex items-center">
         <div className="border-r border-gray-200 py-2 last:border-r-0 px-2 w-24 text-gray-500 truncate">
           {taskKindTitle}
         </div>
         <div className="flex items-center justify-start border-r border-gray-200 py-2 last:border-r-0 px-2 w-28 text-gray-500 text-sm truncate">
-          <div
-            className={`text-center font-semibold text-xs rounded px-2 py-0.5 uppercase select-none ${statusClass(
-              status
-            )}`}
-          >
-            {statusText}
-          </div>
+          <Status id={status} title={statusText} />
         </div>
         <div className="border-r border-gray-200 py-2 last:border-r-0 px-2 w-16 text-gray-500 truncate flex items-center justify-center ">
           <Priority value={priority} />
@@ -63,13 +62,24 @@ const Row = ({
 };
 const statusClass = (status) => {
   const lcStatus = status;
-  if (lcStatus === 12) {
+  if (lcStatus === 11 || lcStatus === 12) {
     return 'bg-gray-200 text-gray-700';
   } else if (lcStatus === 14) {
-    return 'bg-green-200 text-green-700';
+    return 'bg-green-600 text-white';
   } else {
     return 'bg-blue-600 text-white';
   }
+};
+const Status = ({ id, title }) => {
+  return (
+    <div
+      className={`text-center font-semibold text-xs rounded px-2 py-0.5 uppercase select-none ${statusClass(
+        id
+      )}`}
+    >
+      {title}
+    </div>
+  );
 };
 
 export default Row;

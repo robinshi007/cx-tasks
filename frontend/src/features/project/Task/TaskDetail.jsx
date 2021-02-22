@@ -6,7 +6,15 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 import { ClearIcon, DeleteIcon, Select } from '@/shared/components/Element';
-import { timeAgo, Button, Kind, RenderUserOption, RenderPriorityOption, TextArea } from '../shared';
+import {
+  timeAgo,
+  Button,
+  Kind,
+  RenderUserOption,
+  RenderPriorityOption,
+  Input,
+  ErrorMessage,
+} from '../shared';
 import {
   selectTaskById,
   selectStatus,
@@ -24,11 +32,10 @@ import {
   deleteTask,
 } from '@/features/project/projectSlice';
 
-const TaskDetail = ({ taskId, modalClose, fields }) => {
+const TaskDetail = ({ id, modalClose, fields }) => {
   const dispatch = useDispatch();
   // useSelector must be called in this level, will seperate for new task later
-  let task = useSelector(selectTaskById(taskId, { status: fields && parseInt(fields.status) }));
-  //let task = useSelector(selectTaskById(taskId, {}));
+  let task = useSelector(selectTaskById(id, { status: fields && parseInt(fields.status) }));
   const status = useSelector(selectStatus);
   const priority = useSelector(selectPriority);
   const assignee = useSelector(selectAssignee);
@@ -39,9 +46,6 @@ const TaskDetail = ({ taskId, modalClose, fields }) => {
   const [dirty, setDirty] = useState(false);
   const [changeSet, setChangeSet] = useState([]);
   const addChangeFn = (fn) => {
-    if (changeSet.length === 0 && taskCache.id === 0) {
-      dispatch(setTaskNew({ id: taskCache.id.toString(), task }));
-    }
     setChangeSet([...changeSet, fn]);
   };
   const cancel = () => {
@@ -51,6 +55,9 @@ const TaskDetail = ({ taskId, modalClose, fields }) => {
     validate();
   };
   const submit = () => {
+    if (taskCache.id === 0) {
+      dispatch(setTaskNew({ id: taskCache.id.toString(), task }));
+    }
     changeSet.forEach((fn) => fn());
     modalClose();
   };
@@ -85,9 +92,7 @@ const TaskDetail = ({ taskId, modalClose, fields }) => {
         <div className="flex items-center ml-2 text-sm">
           <Kind value={taskCache.taskKindTitle} />
           <div>
-            {taskId === 'new'
-              ? `${taskCache.taskKindTitle} New`
-              : `${taskCache.taskKindTitle}-${taskId}`}
+            {id === 'new' ? `${taskCache.taskKindTitle} New` : `${taskCache.taskKindTitle}-${id}`}
           </div>
         </div>
         <div className="flex items-center">
@@ -109,7 +114,7 @@ const TaskDetail = ({ taskId, modalClose, fields }) => {
           ) : (
             ''
           )}
-          {taskId === 'new' ? (
+          {id === 'new' ? (
             ''
           ) : (
             <Button
@@ -117,6 +122,7 @@ const TaskDetail = ({ taskId, modalClose, fields }) => {
               variant="text"
               color="danger"
               onClick={() => {
+                // TODO: delete task with prompt
                 dispatch(deleteTask({ id: taskCache.id }));
                 modalClose();
               }}
@@ -133,16 +139,9 @@ const TaskDetail = ({ taskId, modalClose, fields }) => {
         <div className="flex items-start justify-between">
           <div className="w-full mr-4">
             <h3 className="text-lg leading-5 font-medium">
-              <TextArea
-                rows={1}
+              <Input
                 value={taskCache.title}
                 placeholder="Task name"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    // prevent "enter" key for title field
-                    e.preventDefault();
-                  }
-                }}
                 onChange={(e) => {
                   // TODO: add input validate
                   !dirty && setDirty(true);
@@ -158,12 +157,12 @@ const TaskDetail = ({ taskId, modalClose, fields }) => {
                   }
                 }}
               />
+              <ErrorMessage field={{ message: titleError }} />
             </h3>
-            <div className="text-xs text-red-500">{titleError}</div>
             <div className="py-2 text-sm">
-              <TextArea
-                rows={1}
+              <Input
                 value={taskCache.description}
+                isMulti={true}
                 placeholder="Task description"
                 onChange={(e) => {
                   // TODO: add input validate
@@ -182,6 +181,7 @@ const TaskDetail = ({ taskId, modalClose, fields }) => {
                   }
                 }}
               />
+              <ErrorMessage field={{ message: descError }} />
             </div>
           </div>
           <div className="w-96">

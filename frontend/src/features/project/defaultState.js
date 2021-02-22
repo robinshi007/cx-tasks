@@ -1,6 +1,6 @@
 const defaultState = {
   id: 1,
-  name: 'Demo',
+  title: 'Demo',
   description: 'Project for testing use',
   filters: {},
   groupBy: 'section',
@@ -167,26 +167,25 @@ const defaultState = {
     '51': {
       id: 51,
       title: 'Design',
+      description: '',
       order: 1612281400,
-    },
-    '52': {
-      id: 52,
-      title: 'Prototype',
-      order: 1612281500,
     },
     '53': {
       id: 53,
       title: 'Frontend',
+      description: '',
       order: 1612281600,
     },
     '54': {
       id: 54,
       title: 'Backend',
+      description: '',
       order: 1612281700,
     },
     '55': {
       id: 55,
       title: 'Deployment',
+      description: '',
       order: 1612281800,
     },
   },

@@ -1,16 +1,21 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { Switch, Route, useLocation, useRouteMatch, useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
+import { Modal } from '@/shared/components/Element';
 import { selectFilteredAllOrderedLists } from '@/features/project/projectSlice';
 
 import Lists from './Lists';
 import Filters from '../Filters';
+import TaskDetail from '../Task/TaskDetail';
+import SectionDetail from '../Section/SectionDetail';
 
 const Backlog = () => {
-  const lists = useSelector(selectFilteredAllOrderedLists);
   const location = useLocation();
-  const isBacklog = location.pathname.endsWith('/backlog');
+  const history = useHistory();
+  const match = useRouteMatch();
+  const lists = useSelector(selectFilteredAllOrderedLists);
+  const isBacklog = location.pathname.includes('/backlog');
   return (
     <div className="px-8 py-4 relative">
       <div className="flex items-center justify-start h-11 w-full">
@@ -26,6 +31,61 @@ const Backlog = () => {
           <Lists lists={lists} />
         </div>
       </div>
+      <Switch>
+        <Route
+          path={`${match.path}/tasks/:taskId`}
+          render={(routeProps) => (
+            <Modal
+              isOpen={true}
+              width={720}
+              withCloseIcon={false}
+              onClose={() => history.push(match.url)}
+              renderContent={(modal) => (
+                <TaskDetail id={routeProps.match.params.taskId} modalClose={modal.close} />
+              )}
+              style={{ minHeight: '300px' }}
+            />
+          )}
+        />
+        <Route
+          path={`${match.path}/tasks_new`}
+          render={(routeProps) => (
+            <Modal
+              isOpen={true}
+              width={720}
+              withCloseIcon={false}
+              onClose={() => history.push(match.url)}
+              renderContent={(modal) => (
+                <TaskDetail
+                  modalClose={modal.close}
+                  fields={{ status: routeProps.location.query && routeProps.location.query.status }}
+                />
+              )}
+              style={{ minHeight: '300px' }}
+            />
+          )}
+        />
+        <Route
+          path={`${match.path}/section_new`}
+          render={(routeProps) => (
+            <Modal
+              isOpen={true}
+              width={520}
+              withCloseIcon={false}
+              onClose={() => history.push(match.url)}
+              renderContent={(modal) => (
+                <SectionDetail
+                  modalClose={modal.close}
+                  fields={{
+                    project: routeProps.location.query && routeProps.location.query.project,
+                  }}
+                />
+              )}
+              style={{ minHeight: '300px' }}
+            />
+          )}
+        />
+      </Switch>
     </div>
   );
 };

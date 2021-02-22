@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useRouteMatch } from 'react-router-dom';
 import { debounce, map } from 'lodash';
 
 import { SearchIcon, SortIcon, GroupListIcon, Select } from '@/shared/components/Element';
@@ -15,9 +16,10 @@ import {
   selectFilterDueThisWeek,
 } from '@/features/project/projectSlice';
 
-import { Button } from './shared';
+import { Button, RouteLink } from './shared';
 
 const Filters = ({ isBacklog }) => {
+  const match = useRouteMatch();
   const dispatch = useDispatch();
   const filterTerm = useSelector(selectFilterTerm);
   const filterRecent = useSelector(selectFilterRecent);
@@ -165,9 +167,11 @@ const Filters = ({ isBacklog }) => {
         )}
       </div>
       {isBacklog ? (
-        <Button variant="contained" color="primary">
-          Create section
-        </Button>
+        <RouteLink to={`${match.url}/section_new`}>
+          <Button variant="contained" color="primary">
+            Create section
+          </Button>
+        </RouteLink>
       ) : (
         ''
       )}

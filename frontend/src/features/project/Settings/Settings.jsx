@@ -1,49 +1,73 @@
-const Content = () => (
-  <div className="px-8 py-4 flex items-center justify-between text-sm ">
-    <div className="w-full">
-      <div className="flex items-center justify-start h-11 w-full">
-        <h2 className="text-gray-600 font-medium text-lg">Settings</h2>
-      </div>
-      <div className="h-36 w-full py-2">
-        <form
-          className="bg-white text-center text-gray-600 text-sm rounded "
-          style={{ maxWidth: '420px' }}
-        >
-          <div>
-            <label htmlFor="name" className="sr-only">
-              Project Name
-            </label>
-            <input
-              id="name"
-              className="w-full rounded py-1.5 px-2 mb-6 bg-gray-100 border-gray-300 border-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:z-10 focus:bg-white transition ease-out duration-200"
-              type="text"
-              value="Demo Project"
-              placeholder="project name"
-              onChange={() => {}}
-            />
-          </div>
-          <div>
-            <label htmlFor="description" className="sr-only">
-              description
-            </label>
-            <textarea
-              id="description"
-              className="w-full rounded py-1.5 px-2 mb-6 bg-gray-100 border-gray-300 border-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:z-10 focus:bg-white transition ease-out duration-200"
-              placeholder="description"
-              value="Project for demo use"
-              onChange={() => {}}
-            />
-          </div>
-          <button className="flex items-center justify-center rounded bg-blue-600 text-white text-md font-medium px-4 py-1.5 cursor-pointer mb-2 transition ease-out duration-200 focus:outline-none focus:bg-blue-700 hover:bg-blue-500 hover:text-white group">
-            Save
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-);
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
+import { Input, ErrorMessage, FormSubmit } from '../shared';
+import { setProject, selectProjectById } from '@/features/project/projectSlice';
 
 const Settings = () => {
-  return <Content />;
+  const dispatch = useDispatch();
+
+  const validationSchema = yup.object().shape({
+    title: yup.string().required().max(128),
+    description: yup.string().max(512),
+  });
+  const { handleSubmit, errors, control, formState } = useForm({
+    mode: 'onChange',
+    resolver: yupResolver(validationSchema),
+  });
+  const { isValid } = formState;
+  const handleSubmitFn = (data) => {
+    //console.log(data);
+    dispatch(setProject({ id: '0', project: { ...data } }));
+  };
+
+  // data
+  let project = useSelector(selectProjectById);
+  // const fields = ['title', 'description'];
+  // fields.forEach((field) => setValue(field, project[field]));
+  return (
+    <div className="px-8 py-4 flex items-center justify-between text-sm ">
+      <div className="w-full">
+        <div className="flex items-center justify-start h-11 w-full">
+          <h2 className="text-gray-600 font-medium text-lg">Settings</h2>
+        </div>
+        <div className="h-36 w-full py-2">
+          <div className="w-96">
+            <form className="last:pt-2" onSubmit={handleSubmit(handleSubmitFn)}>
+              <div>
+                <Controller
+                  name="title"
+                  defaultValue={project.title}
+                  control={control}
+                  render={({ ref, ...props }, { invalid, isDirty }) => (
+                    <Input ref={ref} placeholder="Title" {...props} />
+                  )}
+                />
+                <ErrorMessage field={errors.title} />
+              </div>
+              <div>
+                <Controller
+                  name="description"
+                  defaultValue={project.description}
+                  control={control}
+                  render={({ ref, ...props }, { invalid, isDirty }) => (
+                    <Input ref={ref} isMulti={true} placeholder="Description" {...props} />
+                  )}
+                />
+                <ErrorMessage field={errors.description} />
+              </div>
+              <div>
+                <FormSubmit type="submit" color="primary" disabled={isValid ? false : true} />
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
+
 export default Settings;
