@@ -238,6 +238,10 @@ const Lists = ({ lists }) => {
       title: 'Assignee',
       width: 'w-20 flex items-center justify-center',
     },
+    action: {
+      title: '',
+      width: 'w-12 flex items-center justify-center',
+    },
   };
   return (
     <DragDropContext
@@ -267,6 +271,7 @@ const Lists = ({ lists }) => {
             className="container relative w-full"
             ref={provided.innerRef}
             {...provided.droppableProps}
+            style={{ marginLeft: '-32px' }}
           >
             {lists.map((list, idx) => (
               <Draggable draggableId={list.id.toString()} index={idx} key={list.id}>

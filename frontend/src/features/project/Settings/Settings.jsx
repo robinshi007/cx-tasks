@@ -18,7 +18,7 @@ const Settings = () => {
     mode: 'onChange',
     resolver: yupResolver(validationSchema),
   });
-  const { isValid } = formState;
+  const { isValid, isDirty } = formState;
   const handleSubmitFn = (data) => {
     //console.log(data);
     dispatch(setProject({ id: '0', project: { ...data } }));
@@ -36,7 +36,7 @@ const Settings = () => {
         </div>
         <div className="h-36 w-full py-2">
           <div className="w-96">
-            <form className="last:pt-2" onSubmit={handleSubmit(handleSubmitFn)}>
+            <form onSubmit={handleSubmit(handleSubmitFn)}>
               <div>
                 <Controller
                   name="title"
@@ -59,8 +59,12 @@ const Settings = () => {
                 />
                 <ErrorMessage field={errors.description} />
               </div>
-              <div>
-                <FormSubmit type="submit" color="primary" disabled={isValid ? false : true} />
+              <div className="last:pt-2">
+                <FormSubmit
+                  type="submit"
+                  color="primary"
+                  disabled={isValid && isDirty ? false : true}
+                />
               </div>
             </form>
           </div>

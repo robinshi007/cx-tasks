@@ -116,10 +116,12 @@ export const FormSubmit = styled.input(({ color, disabled }) => [
   disabled && tw`cursor-not-allowed pointer-events-none bg-opacity-60`,
 ]);
 
-const StyledInput = styled.textarea(() => [
+const StyledInput = styled.textarea(({ isHeading, isError }) => [
   tw`block p-1.5 w-full rounded bg-white border-none resize-none overflow-y-auto overflow-x-hidden focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500`,
   tw`text-sm bg-gray-100 text-gray-700`,
   tw`transition ease-out duration-200`,
+  isHeading && tw`text-base`,
+  isError && tw`ring-2 ring-red-600`,
 ]);
 
 export const Input = React.forwardRef(

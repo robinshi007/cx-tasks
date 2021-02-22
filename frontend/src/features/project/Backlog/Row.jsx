@@ -29,7 +29,7 @@ const Row = ({
       {...props}
     >
       <div className="flex items-center h-full" {...dhProps} style={{ width: '20px' }}>
-        <GripperDotsVerticalIcon className="text-gray-500 cursor-pointer" />
+        <GripperDotsVerticalIcon className="text-gray-500 cursor-move" />
       </div>
       {/*div className="flex items-center h-full" style={{ width: '20px' }}>
         <Kind value={taskKindTitle} />
@@ -50,11 +50,12 @@ const Row = ({
           <Priority value={priority} />
         </div>
         <div className="border-r border-gray-200 py-2 last:border-r-0 px-2 w-28 text-sm truncate">
-          {timeAgo(dueDate)}
+          {dueDate ? timeAgo(dueDate) : ''}
         </div>
         <div className="border-r border-gray-200 py-1 last:border-r-0 px-2 w-20 flex items-center justify-center">
           <Avatar initials={assigneeName} bg="purple" color="white" size={28} />
         </div>
+        <div className="border-r border-gray-200 py-1 last:border-r-0 px-2 w-12 flex items-center justify-center"></div>
         {/* }<div className="border-r border-gray-200 py-2 last:border-r-0 w-12 px-2"></div> */}
       </div>
     </li>

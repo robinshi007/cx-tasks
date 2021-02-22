@@ -1,21 +1,41 @@
+import { useRouteMatch } from 'react-router-dom';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { isEmpty } from 'lodash';
 
+import { AddIcon, GripperDotsVerticalIcon } from '@/shared/components/Element';
 import { StyledList } from './List.styles';
 import Row from './Row';
+import { RouteLink } from '../shared';
 
 const List = ({ title, cards, id, count, filteredCount, columns, placeholderProps, dhProps }) => {
+  const match = useRouteMatch();
   return (
-    <div className="bg-white flex flex-col items-center mr-2 py-1 w-full rounded">
-      <div className="relative header flex flex-shrink-0 items-center w-full h-8 truncate text-gray-700 text-xs select-none">
-        <div className="font-semibold mr-2 uppercase cursor-pointer" {...dhProps}>
-          {title}
+    <div className="bg-white flex flex-col items-center ml-8 -mr-8 py-1 w-full rounded">
+      <div className="relative header flex flex-shrink-0 items-center justify-between w-full h-8 truncate text-gray-700 text-xs select-none -ml-8">
+        <div className="flex items-center">
+          <div className="flex items-center h-full" {...dhProps} style={{ width: '20px' }}>
+            <GripperDotsVerticalIcon className="text-gray-500 cursor-move" />
+          </div>
+          <RouteLink className="font-semibold mr-2 uppercase" to={`${match.url}/sections/${id}`}>
+            {title}
+          </RouteLink>
+          <span className="font-medium tracking-tighter">
+            {count !== filteredCount ? `${filteredCount} of ${count}` : count}
+          </span>
         </div>
-        <span className="font-medium tracking-tighter">
-          {count !== filteredCount ? `${filteredCount} of ${count}` : count}
-        </span>
+        <div>
+          <RouteLink
+            to={{
+              pathname: `${match.url}/tasks_new`,
+              query: { section: id.toString() },
+            }}
+            className="p-1 text-gray-600 hover:bg-gray-100 rounded"
+          >
+            <AddIcon size={18} className="" onclick={() => {}} />
+          </RouteLink>
+        </div>
       </div>
-      <Droppable droppableId={id.toString()} className="">
+      <Droppable droppableId={id.toString()} style={{ marginLeft: '-34px' }}>
         {(provided, snapshot) => (
           <StyledList
             ref={provided.innerRef}

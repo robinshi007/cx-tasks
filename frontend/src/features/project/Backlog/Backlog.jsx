@@ -26,10 +26,8 @@ const Backlog = () => {
           <Filters isBacklog={isBacklog} />
         </div>
       </div>
-      <div className="">
-        <div className="flex flex-col items-start justify-start">
-          <Lists lists={lists} />
-        </div>
+      <div className="flex flex-col items-start justify-start">
+        <Lists lists={lists} />
       </div>
       <Switch>
         <Route
@@ -58,8 +56,25 @@ const Backlog = () => {
               renderContent={(modal) => (
                 <TaskDetail
                   modalClose={modal.close}
-                  fields={{ status: routeProps.location.query && routeProps.location.query.status }}
+                  fields={{
+                    section: routeProps.location.query && routeProps.location.query.section,
+                  }}
                 />
+              )}
+              style={{ minHeight: '300px' }}
+            />
+          )}
+        />
+        <Route
+          path={`${match.path}/sections/:sectionId`}
+          render={(routeProps) => (
+            <Modal
+              isOpen={true}
+              width={520}
+              withCloseIcon={false}
+              onClose={() => history.push(match.url)}
+              renderContent={(modal) => (
+                <SectionDetail id={routeProps.match.params.sectionId} modalClose={modal.close} />
               )}
               style={{ minHeight: '300px' }}
             />

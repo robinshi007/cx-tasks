@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 import { differenceInDays, isThisWeek } from 'date-fns';
 import { default as defaultState } from './defaultState';
 import { orderBy, groupBy, map, merge } from 'lodash';
-import { defaultTask } from './shared';
+import { defaultTask, defaultSection } from './shared';
 
 const defaultFilters = {
   filterTerm: '',
@@ -105,6 +105,12 @@ const projectSlice = createSlice({
       }
       return state;
     },
+    setSection: (state, action) => {
+      const section = state.section[action.payload.id];
+      section.title = action.payload.section.title;
+      section.description = action.payload.section.description;
+      return state;
+    },
     setTaskNew: (state, action) => {
       const newId = action.payload.id;
       if (!!state.tasks[newId]) {
@@ -162,6 +168,18 @@ export const selectProjectById = (state) => state.project;
 export const selectStatus = (state) => state.project.status;
 export const selectPriority = (state) => state.project.priority;
 export const selectSection = (state) => state.project.section;
+export const selectSectionById = (id, fields) => (state) => {
+  let section;
+  if (!id && fields) {
+    section = merge(defaultSection(), fields);
+  } else if (!id) {
+    section = defaultSection();
+  } else {
+    section = state.project.section[id];
+  }
+  console.log('section', section);
+  return section;
+};
 export const selectAssignee = (state) => state.project.assignee;
 export const selectTaskById = (id, fields) => (state) => {
   let task;
@@ -172,14 +190,20 @@ export const selectTaskById = (id, fields) => (state) => {
   } else {
     task = state.project.tasks[id];
   }
-  return {
-    ...task,
-    taskKindTitle: task.taskKind ? state.project.taskKind[task.taskKind.toString()].title : 'Task',
-    statusText: task.status ? state.project.status[task.status.toString()].title : '',
-    assigneeName: task.assignee ? state.project.assignee[task.assignee.toString()].name : '',
-    sectionTitle: task.section ? state.project.section[task.section.toString()].title : '',
-    priorityTitle: task.priority ? state.project.priority[task.priority.toString()].title : '',
-  };
+  if (!!task) {
+    return {
+      ...task,
+      taskKindTitle: task.taskKind
+        ? state.project.taskKind[task.taskKind.toString()].title
+        : 'Task',
+      statusText: task.status ? state.project.status[task.status.toString()].title : '',
+      assigneeName: task.assignee ? state.project.assignee[task.assignee.toString()].name : '',
+      sectionTitle: task.section ? state.project.section[task.section.toString()].title : '',
+      priorityTitle: task.priority ? state.project.priority[task.priority.toString()].title : '',
+    };
+  } else {
+    return task;
+  }
 };
 
 export const selectAssigneeById = (id) => (state) => {
@@ -344,6 +368,7 @@ export const {
   setGroupBy,
   setProject,
   setSectionNew,
+  setSection,
   setTaskNew,
   setTaskTitle,
   setTaskDescription,

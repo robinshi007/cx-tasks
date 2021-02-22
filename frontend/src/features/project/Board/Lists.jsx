@@ -238,9 +238,9 @@ const List = ({ title, cards, id, count, filteredCount, placeholderProps }) => {
               pathname: `${match.url}/tasks_new`,
               query: { status: id.toString() },
             }}
-            className="hover:bg-gray-100"
+            className="hover:bg-gray-200 p-1 rounded"
           >
-            <AddIcon size={18} className="" onclick={() => console.log('log')} />
+            <AddIcon size={18} className="" onclick={() => {}} />
           </RouteLink>
         </div>
       </div>
