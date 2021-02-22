@@ -7,7 +7,7 @@ import Row from './Row';
 const List = ({ title, cards, id, count, filteredCount, columns, placeholderProps, dhProps }) => {
   return (
     <div className="bg-white flex flex-col items-center mr-2 py-1 w-full rounded">
-      <div className="relative header flex flex-shrink-0 items-center w-full h-8 truncate text-gray-600 text-xs select-none">
+      <div className="relative header flex flex-shrink-0 items-center w-full h-8 truncate text-gray-700 text-xs select-none">
         <div className="font-semibold mr-2 uppercase cursor-pointer" {...dhProps}>
           {title}
         </div>
@@ -31,7 +31,6 @@ const List = ({ title, cards, id, count, filteredCount, columns, placeholderProp
                     label={obj.label}
                     kind={obj.kind}
                     taskKindTitle={obj.taskKindTitle}
-                    priority={obj.priority}
                     status={obj.status}
                     statusText={obj.statusText}
                     assignee={obj.assignee}

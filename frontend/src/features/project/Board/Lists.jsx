@@ -1,11 +1,34 @@
 import React, { useState } from 'react';
+import { useRouteMatch } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { isEmpty } from 'lodash';
 import { useWindowSize } from 'react-use';
+import tw, { styled, css } from 'twin.macro';
 
+import { AddIcon } from '@/shared/components/Element';
 import { updateCardDragged } from '@/features/project/projectSlice';
 import Card from './Card';
+import { RouteLink } from '../shared';
+
+const StyledDroppable = styled.div(() => [
+  tw`relative content w-full px-0.5 overflow-x-hidden overflow-y-scroll`,
+  css`
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+      width: 3px;
+    }
+    &::-webkit-scrollbar-track {
+      background: rgba(243, 244, 246, 1);
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: #999;
+      border-radius: 2px;
+      border: 2px solid #999;
+    }
+  `,
+]);
 
 const Lists = ({ lists }) => {
   const dispatch = useDispatch();
@@ -195,62 +218,77 @@ const Lists = ({ lists }) => {
 };
 
 const List = ({ title, cards, id, count, filteredCount, placeholderProps }) => {
+  const match = useRouteMatch();
   const { height } = useWindowSize();
   return (
     <div
-      className="bg-gray-100 flex flex-col items-center mr-2 px-0.5 py-1 rounded"
-      style={{ minHeight: '300px', width: '260px' }}
+      className="bg-gray-100 flex flex-col items-center mr-2 pl-0.5 py-1 rounded"
+      style={{ minHeight: '300px', width: '260px', maxWidth: '260px' }}
     >
-      <div className="header flex flex-shrink-0 items-center w-full h-8 truncate text-gray-500 text-xs px-1 select-none">
-        <div className="font-medium mr-2 uppercase">{title}</div>
-        <span className="font-medium tracking-tighter">
-          {count !== filteredCount ? `${filteredCount} of ${count}` : count}
-        </span>
+      <div className="header flex  items-center justify-between w-full h-8 truncate text-gray-500 text-xs px-1 select-none">
+        <div className="flex items-center flex-shrink-0 ">
+          <div className="font-medium mr-2 uppercase">{title}</div>
+          <span className="font-medium tracking-tighter">
+            {count !== filteredCount ? `${filteredCount} of ${count}` : count}
+          </span>
+        </div>
+        <div className="flex items-center m-1">
+          <RouteLink
+            to={{
+              pathname: `${match.url}/tasks_new`,
+              query: { status: id.toString() },
+            }}
+            className="hover:bg-gray-100"
+          >
+            <AddIcon size={18} className="" onclick={() => console.log('log')} />
+          </RouteLink>
+        </div>
       </div>
       <Droppable droppableId={id.toString()} className="">
         {(provided, snapshot) => (
-          <div
-            className="relative content w-full overflow-y-auto overflow-x-hidden px-0.5"
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-            style={{ height: height - 180 + 'px' }}
-          >
-            {cards.map((obj, idx) => (
-              <Draggable draggableId={obj.id.toString()} index={idx} key={obj.id}>
-                {(p, snapshot) => (
-                  <Card
-                    taskId={obj.id}
-                    title={obj.title}
-                    label={obj.label}
-                    kind={obj.kind}
-                    taskKindTitle={obj.taskKindTitle}
-                    priority={obj.priority}
-                    section={obj.section}
-                    sectionTitle={obj.sectionTitle}
-                    assignee={obj.assignee}
-                    assigneeName={obj.assigneeName}
-                    key={obj.id}
-                    isDragging={snapshot.isDragging}
-                    parentRef={p.innerRef}
-                    {...p.draggableProps}
-                    {...p.dragHandleProps}
-                  />
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-            {!isEmpty(placeholderProps) && snapshot.isDraggingOver && (
-              <div
-                className="absolute border-2 border-blue-600 border-dashed rounded"
-                style={{
-                  top: placeholderProps.clientY,
-                  left: placeholderProps.clientX,
-                  height: placeholderProps.clientHeight,
-                  width: placeholderProps.clientWidth,
-                }}
-              />
-            )}
-          </div>
+          <>
+            <StyledDroppable
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              style={{ height: height - 180 + 'px' }}
+            >
+              {cards.map((obj, idx) => (
+                <Draggable draggableId={obj.id.toString()} index={idx} key={obj.id}>
+                  {(p, snapshot) => (
+                    <Card
+                      taskId={obj.id}
+                      title={obj.title}
+                      label={obj.label}
+                      kind={obj.kind}
+                      taskKindTitle={obj.taskKindTitle}
+                      priority={obj.priority}
+                      section={obj.section}
+                      sectionTitle={obj.sectionTitle}
+                      assignee={obj.assignee}
+                      assigneeName={obj.assigneeName}
+                      key={obj.id}
+                      isDragging={snapshot.isDragging}
+                      parentRef={p.innerRef}
+                      {...p.draggableProps}
+                      {...p.dragHandleProps}
+                    />
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+              {!isEmpty(placeholderProps) && snapshot.isDraggingOver && (
+                <div
+                  className="absolute border-2 border-blue-600 border-dashed rounded"
+                  style={{
+                    top: placeholderProps.clientY,
+                    left: placeholderProps.clientX,
+                    height: placeholderProps.clientHeight,
+                    width: placeholderProps.clientWidth,
+                  }}
+                />
+              )}
+            </StyledDroppable>
+          </>
         )}
       </Droppable>
     </div>

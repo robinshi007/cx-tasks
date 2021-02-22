@@ -1,6 +1,7 @@
 import React, { useRef, useCallback } from 'react';
 import { formatDistance } from 'date-fns';
 import tw, { styled } from 'twin.macro';
+import { Link } from 'react-router-dom';
 import {
   BoxCheckmarkSolidIcon,
   ChevronUpIcon,
@@ -12,11 +13,34 @@ import {
   Avatar,
 } from '@/shared/components/Element';
 
+// === utils ===
 export const timeAgo = (timeString) => {
   const time = Date.parse(timeString);
   return formatDistance(time, new Date(), { addSuffix: true });
 };
+export const defaultTask = () => {
+  const newDate = new Date();
+  return {
+    id: 0,
+    title: '',
+    description: '',
+    taskKind: 71,
+    section: 0,
+    priority: 33,
+    status: 11,
+    assignee: 0,
+    tags: [],
+    updated_at: newDate.toISOString(),
+    due_date: '',
+    order: Math.floor(newDate.getTime() / 100),
+    bdorder: Math.floor(newDate.getTime() / 100),
+  };
+};
 
+// === components ===
+export const RouteLink = styled(Link)`
+  display: inline-flex;
+`;
 export const Label = ({ value, color, rounded }) => {
   return (
     <div
@@ -50,21 +74,30 @@ export const Kind = ({ value }) => {
   }
 };
 
-const StyledButton = styled.button(({ variant, color, selected, hidden }) => [
+const StyledButton = styled.button(({ variant, color, selected, hidden, disabled }) => [
   tw`flex items-center justify-center px-3 py-1.5 rounded font-normal text-sm focus:outline-none cursor-pointer select-none truncate`,
   variant === 'text' &&
     color === 'light' &&
     !selected &&
-    tw`text-gray-600 bg-white hover:bg-gray-200 active:bg-gray-300`,
+    tw`text-gray-600 bg-transparent hover:bg-gray-200 active:bg-gray-300`,
   variant === 'text' && color === 'light' && selected && tw`bg-gray-300`,
   variant === 'text' && color === 'light' && hidden && tw`hidden`,
+  variant === 'text' && color === 'danger' && tw`text-red-600 hover:bg-red-100 active:bg-red-200`,
   variant === 'contained' &&
     color === 'primary' &&
     tw`bg-blue-600 text-white hover:bg-blue-500 active:bg-blue-700 hover:text-white`,
+  variant === 'contained' &&
+    color === 'danger' &&
+    tw`bg-red-600 text-white hover:bg-red-500 active:bg-red-700 hover:text-white`,
+  disabled && tw`cursor-not-allowed pointer-events-none bg-opacity-60`,
   tw`transition ease-out duration-200`,
 ]);
-export const Button = ({ children, ...props }) => {
-  return <StyledButton {...props}>{children}</StyledButton>;
+export const Button = ({ children, className, ...props }) => {
+  return (
+    <StyledButton {...props} className={className}>
+      {children}
+    </StyledButton>
+  );
 };
 const StyledTextArea = styled.textarea(() => [
   tw`p-1 w-full h-full rounded bg-white resize-none overflow-y-auto overflow-x-hidden hover:bg-gray-100 focus:bg-gray-200 focus:outline-none`,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, useRouteMatch, useHistory } from 'react-router-dom';
+import { Switch, Route, useRouteMatch, useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import { Modal } from '@/shared/components/Element';
@@ -27,21 +27,42 @@ const Board = () => {
         <Lists lists={lists} />
       </div>
 
-      <Route
-        path={`${match.path}/tasks/:taskId`}
-        render={(routeProps) => (
-          <Modal
-            isOpen={true}
-            width={720}
-            withCloseIcon={false}
-            onClose={() => history.push(match.url)}
-            renderContent={(modal) => (
-              <TaskDetail taskId={routeProps.match.params.taskId} modalClose={modal.close} />
-            )}
-            style={{ minHeight: '300px' }}
-          />
-        )}
-      />
+      <Switch>
+        <Route
+          path={`${match.path}/tasks/:taskId`}
+          render={(routeProps) => (
+            <Modal
+              isOpen={true}
+              width={720}
+              withCloseIcon={false}
+              onClose={() => history.push(match.url)}
+              renderContent={(modal) => (
+                <TaskDetail taskId={routeProps.match.params.taskId} modalClose={modal.close} />
+              )}
+              style={{ minHeight: '300px' }}
+            />
+          )}
+        />
+        <Route
+          path={`${match.path}/tasks_new`}
+          render={(routeProps) => (
+            <Modal
+              isOpen={true}
+              width={720}
+              withCloseIcon={false}
+              onClose={() => history.push(match.url)}
+              renderContent={(modal) => (
+                <TaskDetail
+                  taskId="new"
+                  modalClose={modal.close}
+                  fields={{ status: routeProps.location.query && routeProps.location.query.status }}
+                />
+              )}
+              style={{ minHeight: '300px' }}
+            />
+          )}
+        />
+      </Switch>
     </div>
   );
 };

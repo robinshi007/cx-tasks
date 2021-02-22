@@ -258,7 +258,7 @@ const Lists = ({ lists }) => {
               {columns[key]['title']}
             </div>
           ))}
-          <div className="border-r border-gray-200 py-2 last:border-r-0 w-12 px-2"></div>
+          {/* <div className="border-r border-gray-200 py-2 last:border-r-0 w-12 px-2"></div> */}
         </div>
       </div>
       <Droppable droppableId="board" type="list">

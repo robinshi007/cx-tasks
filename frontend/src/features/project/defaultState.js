@@ -57,7 +57,7 @@ const defaultState = {
       id: 20,
       title: 'Implement the filter function',
       description: '',
-      taskKind: 72,
+      taskKind: 71,
       section: 53,
       priority: 34,
       status: 14,
@@ -85,9 +85,9 @@ const defaultState = {
     },
     '26': {
       id: 26,
-      title: 'Redesigh new logos',
+      title: 'Redesign new logos',
       description: '',
-      taskKind: 72,
+      taskKind: 71,
       section: 51,
       priority: 32,
       status: 11,
@@ -166,27 +166,27 @@ const defaultState = {
   section: {
     '51': {
       id: 51,
-      title: 'design',
+      title: 'Design',
       order: 1612281400,
     },
     '52': {
       id: 52,
-      title: 'prototype',
+      title: 'Prototype',
       order: 1612281500,
     },
     '53': {
       id: 53,
-      title: 'frontend',
+      title: 'Frontend',
       order: 1612281600,
     },
     '54': {
       id: 54,
-      title: 'backend',
+      title: 'Backend',
       order: 1612281700,
     },
     '55': {
       id: 55,
-      title: 'deployment',
+      title: 'Deployment',
       order: 1612281800,
     },
   },
@@ -205,11 +205,11 @@ const defaultState = {
   taskKind: {
     '71': {
       id: 71,
-      title: 'Story',
+      title: 'Task',
     },
     '72': {
       id: 72,
-      title: 'Task',
+      title: 'Story',
     },
     '73': {
       id: 73,

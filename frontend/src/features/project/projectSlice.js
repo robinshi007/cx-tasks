@@ -2,7 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 import { createSelector } from 'reselect';
 import { differenceInDays, isThisWeek } from 'date-fns';
 import { default as defaultState } from './defaultState';
-import { orderBy, groupBy, map } from 'lodash';
+import { orderBy, groupBy, map, merge } from 'lodash';
+import { defaultTask } from './shared';
 
 const defaultFilters = {
   filterTerm: '',
@@ -38,7 +39,7 @@ const projectSlice = createSlice({
       return state;
     },
     updateCardDragged: (state, { type, payload }) => {
-      console.log(type, payload);
+      //console.log(type, payload);
       if (
         payload.source.listIndex === payload.destination.listIndex &&
         payload.source.cardIndex === payload.destination.cardIndex
@@ -89,6 +90,16 @@ const projectSlice = createSlice({
       state.filters = defaultFilters;
       return state;
     },
+    setTaskNew: (state, action) => {
+      const newId = action.payload.id;
+      if (!!state.tasks[newId]) {
+        // TODO:  sync to backend
+        console.log('Please sync the new task to the backend first');
+      } else {
+        state.tasks[action.payload.id] = action.payload.task;
+      }
+      return state;
+    },
     setTaskTitle: (state, action) => {
       const task = state.tasks[action.payload.id];
       task.title = action.payload.title;
@@ -114,6 +125,20 @@ const projectSlice = createSlice({
       task.priority = action.payload.priority;
       return state;
     },
+    setTaskSection: (state, action) => {
+      const task = state.tasks[action.payload.id];
+      task.section = action.payload.section;
+      return state;
+    },
+    setTaskDuedate: (state, action) => {
+      const task = state.tasks[action.payload.id];
+      task.due_date = action.payload.due_date;
+      return state;
+    },
+    deleteTask: (state, action) => {
+      delete state.tasks[action.payload.id];
+      return state;
+    },
   },
 });
 
@@ -122,15 +147,20 @@ export const selectStatus = (state) => state.project.status;
 export const selectPriority = (state) => state.project.priority;
 export const selectSection = (state) => state.project.section;
 export const selectAssignee = (state) => state.project.assignee;
-export const selectTaskById = (id) => (state) => {
-  const t = state.project.tasks[id];
+export const selectTaskById = (id, fields) => (state) => {
+  let task;
+  if (id === 'new') {
+    task = merge(defaultTask(), fields);
+  } else {
+    task = state.project.tasks[id];
+  }
   return {
-    ...t,
-    taskKindTitle: t.taskKind ? state.project.taskKind[t.taskKind.toString()].title : 'Task',
-    statusText: state.project.status[t.status.toString()].title,
-    assigneeName: t.assignee ? state.project.assignee[t.assignee.toString()].name : '',
-    sectionTitle: t.section ? state.project.section[t.section.toString()].title : '',
-    priorityTitle: t.priority ? state.project.priority[t.priority.toString()].title : '',
+    ...task,
+    taskKindTitle: task.taskKind ? state.project.taskKind[task.taskKind.toString()].title : 'Task',
+    statusText: state.project.status[task.status.toString()].title,
+    assigneeName: task.assignee ? state.project.assignee[task.assignee.toString()].name : '',
+    sectionTitle: task.section ? state.project.section[task.section.toString()].title : '',
+    priorityTitle: task.priority ? state.project.priority[task.priority.toString()].title : '',
   };
 };
 
@@ -294,10 +324,14 @@ export const {
   setFilterDueThisWeek,
   setSortBy,
   setGroupBy,
+  setTaskNew,
   setTaskTitle,
   setTaskDescription,
   setTaskStatus,
   setTaskAssignee,
   setTaskPriority,
+  setTaskSection,
+  setTaskDuedate,
+  deleteTask,
 } = projectSlice.actions;
 export default projectSlice.reducer;
