@@ -21,12 +21,6 @@ const SidebarLink = ({ name, Icon, path }) => {
   );
 };
 
-// <>
-//   {obj.name === 'Settings' ? (
-//     <div className="w-full bg-gray-300 border-solid h-px"></div>
-//   ) : (
-//     ''
-//   )}
 const SidebarLinks = ({ navList }) => {
   return (
     <>

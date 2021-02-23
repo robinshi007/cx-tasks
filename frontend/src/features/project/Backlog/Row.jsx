@@ -1,6 +1,6 @@
 import { useRouteMatch } from 'react-router-dom';
 import { Avatar, GripperDotsVerticalIcon } from '@/shared/components/Element';
-import { RouteLink, Priority, timeAgo } from '../shared';
+import { RouteLink, Priority, timeAgo } from '@/features/shared';
 
 const Row = ({
   taskId,

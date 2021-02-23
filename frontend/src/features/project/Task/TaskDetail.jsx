@@ -15,7 +15,7 @@ import {
   RenderPriorityOption,
   Input,
   ErrorMessage,
-} from '../shared';
+} from '@/features/shared';
 import {
   selectTaskById,
   selectStatus,

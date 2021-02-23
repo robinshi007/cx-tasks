@@ -9,6 +9,7 @@ import '@/assets/styles/tailwind.css';
 //import CssBaseline from '@/shared/components/CssBaseline';
 import PrototypePage from '@/prototype';
 import LoginPage from '@/features/auth/Login';
+import HomePage from '@/features/home';
 import ProjectPage from '@/features/project';
 import PageError from '@/components/PageError';
 
@@ -17,6 +18,7 @@ function App() {
     <Router history={createBrowserHistory()}>
       <Switch>
         <Route path="/login" component={LoginPage} />
+        <Route path="/home" component={HomePage} />
         <Route path="/project" component={ProjectPage} />
         <Route path="/prototype" component={PrototypePage} />
         <Redirect exact from="/" to="/login" />

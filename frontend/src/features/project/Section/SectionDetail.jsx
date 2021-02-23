@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 import { ClearIcon } from '@/shared/components/Element';
-import { Button, Input, FormSubmit, ErrorMessage, defaultSection } from '../shared';
+import { Button, Input, FormSubmit, ErrorMessage, defaultSection } from '@/features/shared';
 import { setSectionNew, setSection, selectSectionById } from '@/features/project/projectSlice';
 
 const SectionDetail = ({ id, modalClose }) => {

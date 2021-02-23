@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 import { differenceInDays, isThisWeek } from 'date-fns';
 import { default as defaultState } from './defaultState';
 import { orderBy, groupBy, map, merge } from 'lodash';
-import { defaultTask, defaultSection } from './shared';
+import { defaultTask, defaultSection } from '@/features/shared';
 
 const defaultFilters = {
   filterTerm: '',
@@ -18,7 +18,7 @@ const projectSlice = createSlice({
   },
   reducers: {
     updateListDragged: (state, { type, payload }) => {
-      //console.log(type, payload);
+      // TODO: will reorder the card order if the order difference goes narrow
       if (payload.source.listIndex === payload.destination.listIndex) {
         return;
       }
@@ -39,7 +39,7 @@ const projectSlice = createSlice({
       return state;
     },
     updateCardDragged: (state, { type, payload }) => {
-      //console.log(type, payload);
+      // TODO: will reorder the card order if the order difference goes narrow
       if (
         payload.source.listIndex === payload.destination.listIndex &&
         payload.source.cardIndex === payload.destination.cardIndex

@@ -1,5 +1,7 @@
+# general
 .DS_Store
 
+# frontend
 node_modules/
 dist/
 tmp/
@@ -10,7 +12,14 @@ svg_raw/
 fonts/
 Icon/index.jsx
 frontend/src/assets/styles.css
-
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# backend
+backend/webapp
+bindata.go
+internal/di/wire_gen.go
+internal/app/graphql/gen/*
+internal/app/rpc/v1/protocol/*.pb.go
+

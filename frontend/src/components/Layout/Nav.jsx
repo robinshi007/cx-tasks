@@ -1,4 +1,5 @@
 import logoImage from '@/assets/logo.png';
+import { Link } from 'react-router-dom';
 import {
   Avatar,
   SearchIcon,
@@ -11,21 +12,21 @@ import {
 export const Nav = () => (
   <nav className="bg-blue-700 w-12 fixed top-0 left-0 h-screen flex flex-col items-center justify-center h-full">
     <div className="my-3 cursor-pointer">
-      <a
+      <Link
         className="flex items-center justify-center w-full hover:bg-blue-600 cursor-pointer"
-        href="/"
+        to="/home"
       >
         <img src={logoImage} alt="logo" />
-      </a>
+      </Link>
     </div>
     <div className="flex flex-col items-center justify-between h-full">
       <div className="w-12 flex-grow-0 text-white">
-        <a
+        <Link
           className="flex items-center justify-center w-full hover:bg-blue-600 cursor-pointer py-3"
-          href="/"
+          to="/project"
         >
           <FabricFolderIcon size={24} />
-        </a>
+        </Link>
         <a
           className="flex items-center justify-center w-full hover:bg-blue-600 cursor-pointer py-3"
           href="/"

@@ -5,7 +5,7 @@ import { isEmpty } from 'lodash';
 import { AddIcon, GripperDotsVerticalIcon } from '@/shared/components/Element';
 import { StyledList } from './List.styles';
 import Row from './Row';
-import { RouteLink } from '../shared';
+import { RouteLink } from '@/features/shared';
 
 const List = ({ title, cards, id, count, filteredCount, columns, placeholderProps, dhProps }) => {
   const match = useRouteMatch();

@@ -1,7 +1,7 @@
 import React, { useRef, useCallback } from 'react';
 import { formatDistance } from 'date-fns';
 import tw, { styled } from 'twin.macro';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import {
   BoxCheckmarkSolidIcon,
   ChevronUpIcon,
@@ -50,12 +50,20 @@ export const defaultTask = () => {
 export const RouteLink = styled(Link)`
   display: inline-flex;
 `;
-export const Label = ({ value, color, rounded }) => {
+
+export const RouteTabLink = styled(NavLink)`
+  ${tw`flex relative py-2 cursor-pointer text-gray-600 hover:text-blue-500 mr-4 last:mr-0`}
+  &.active {
+    ${tw`text-blue-600`}
+  }
+`;
+
+export const Label = ({ value, color, rounded, className }) => {
   return (
     <div
-      className={`flex items-center text-xs ${
+      className={`flex items-center truncate text-xs ${
         color ? 'bg-' + color + '-600 text-white' : 'text-gray-600 bg-gray-200'
-      } text-sm px-1.5 select-none ${rounded ? 'rounded-full' : 'rounded'}`}
+      } text-sm px-1.5 select-none ${rounded ? 'rounded-full' : 'rounded'} ${className}`}
       style={{ minWidth: '20px' }}
     >
       {value}
@@ -75,11 +83,11 @@ export const Priority = ({ value }) => {
 };
 export const Kind = ({ value }) => {
   if (value === 'Story') {
-    return <SingleBookmarkIcon size={18} className="mr-1 text-green-500" />;
+    return <SingleBookmarkIcon size={18} className="mr-1 text-green-500 flex flex-shrink-0" />;
   } else if (value === 'Bug') {
-    return <BugIcon size={18} className="mr-1 text-red-500" />;
+    return <BugIcon size={18} className="mr-1 text-red-500 flex flex-shrink-0" />;
   } else {
-    return <BoxCheckmarkSolidIcon size={18} className="mr-1 text-blue-500" />;
+    return <BoxCheckmarkSolidIcon size={18} className="mr-1 text-blue-500 flex flex-shrink-0" />;
   }
 };
 
@@ -90,7 +98,7 @@ const StyledButton = styled.button(({ variant, color, selected, hidden, disabled
     !selected &&
     tw`text-gray-600 bg-transparent hover:bg-gray-200 active:bg-gray-300`,
   variant === 'text' && color === 'light' && selected && tw`bg-gray-300`,
-  variant === 'text' && color === 'light' && hidden && tw`hidden`,
+  variant === 'text' && color === 'light' && hidden && tw`invisible`,
   variant === 'text' && color === 'danger' && tw`text-red-600 hover:bg-red-100 active:bg-red-200`,
   variant === 'contained' &&
     color === 'primary' &&

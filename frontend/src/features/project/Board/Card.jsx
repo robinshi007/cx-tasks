@@ -1,6 +1,6 @@
 import { useRouteMatch } from 'react-router-dom';
 import { Avatar } from '@/shared/components/Element';
-import { Priority, Kind, Label, RouteLink } from '../shared';
+import { Priority, Kind, Label, RouteLink } from '@/features/shared';
 
 const Card = ({
   taskId,

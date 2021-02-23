@@ -9,7 +9,7 @@ import tw, { styled, css } from 'twin.macro';
 import { AddIcon } from '@/shared/components/Element';
 import { updateCardDragged } from '@/features/project/projectSlice';
 import Card from './Card';
-import { RouteLink } from '../shared';
+import { RouteLink } from '@/features/shared';
 
 const StyledDroppable = styled.div(() => [
   tw`relative content w-full px-0.5 overflow-x-hidden overflow-y-scroll`,
