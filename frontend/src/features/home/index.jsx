@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route, Redirect, useRouteMatch } from 'react-router-dom';
 
-import { Nav, Sidebar } from '@/components/Layout';
+import { MainFrame } from '@/components/Layout';
 import { HomeIcon, WorkItemIcon, FabricFolderIcon } from '@/shared/components/Element';
 
 //import { selectProject } from '@/features/project/projectSlice';
@@ -25,23 +25,19 @@ const Home = () => {
   ];
 
   return (
-    <>
-      <Nav />
-      <Sidebar navHeader={navHeader} navList={navList} />
-      <div className="ml-60 min-w-96 bg-white min-h-screen overflow-y-auto">
-        <Switch>
-          <Route path={`${path}/mywork`}>
-            <MyWorkPage />
-          </Route>
-          <Route path={`${path}/projects`}>
-            <ProjectsPage />
-          </Route>
-          <Route exact path={`${path}/`}>
-            <Redirect to={`${path}/mywork`} />
-          </Route>
-        </Switch>
-      </div>
-    </>
+    <MainFrame hasSideNav={true} sideNav={{ header: navHeader, links: navList }}>
+      <Switch>
+        <Route path={`${path}/mywork`}>
+          <MyWorkPage />
+        </Route>
+        <Route path={`${path}/projects`}>
+          <ProjectsPage />
+        </Route>
+        <Route exact path={`${path}/`}>
+          <Redirect to={`${path}/mywork`} />
+        </Route>
+      </Switch>
+    </MainFrame>
   );
 };
 

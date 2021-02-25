@@ -34,3 +34,11 @@ export const cacheTaskWithTitles = (entities, task) => {
     priorityTitle: task.priority ? entities.priorities[task.priority].title : '',
   };
 };
+
+export const generateIdFunc = () => {
+  let base = 200;
+  return function () {
+    base += 1;
+    return base;
+  };
+};

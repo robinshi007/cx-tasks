@@ -83,14 +83,29 @@ export const Button = ({ children, className, ...props }) => {
   );
 };
 export const FormSubmit = styled.input(({ color, disabled }) => [
-  tw`flex items-center justify-center px-3 py-1.5 rounded font-normal text-sm focus:outline-none cursor-pointer select-none truncate`,
+  tw`flex items-center justify-center px-3 py-1.5 rounded font-normal text-sm font-medium focus:outline-none cursor-pointer select-none truncate`,
   tw`transition ease-out duration-200`,
   color === 'primary' &&
     tw`bg-blue-600 text-white hover:bg-blue-500 active:bg-blue-700 hover:text-white`,
   disabled && tw`cursor-not-allowed pointer-events-none bg-opacity-60`,
 ]);
 
-const StyledInput = styled.textarea(({ isHeading, isError }) => [
+const StyledInput = styled.input(({ isError }) => [
+  tw`block px-2 py-1.5 w-full rounded bg-white border-none resize-none overflow-y-auto overflow-x-hidden focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500`,
+  tw`text-sm bg-gray-100 text-gray-700`,
+  tw`transition ease-out duration-200`,
+  isError && tw`ring-2 ring-red-600`,
+]);
+
+export const Input = React.forwardRef(({ children, type, ...props }, ref) => {
+  return (
+    <StyledInput type={type} inputRef={ref} {...props} style={{ maxHeight: '320px' }}>
+      {children}
+    </StyledInput>
+  );
+});
+
+const StyledTextArea = styled.textarea(({ isHeading, isError }) => [
   tw`block p-1.5 w-full rounded bg-white border-none resize-none overflow-y-auto overflow-x-hidden focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500`,
   tw`text-sm bg-gray-100 text-gray-700`,
   tw`transition ease-out duration-200`,
@@ -98,7 +113,7 @@ const StyledInput = styled.textarea(({ isHeading, isError }) => [
   isError && tw`ring-2 ring-red-600`,
 ]);
 
-export const Input = React.forwardRef(
+export const TextArea = React.forwardRef(
   ({ children, isMulti, onChange: onNewChange, rows, ...props }, ref) => {
     // refer https://medium.com/@teh_builder/ref-objects-inside-useeffect-hooks-eb7c15198780
     const elRef = useRef(null);
@@ -122,7 +137,7 @@ export const Input = React.forwardRef(
       }
     };
     return (
-      <StyledInput
+      <StyledTextArea
         ref={el}
         inputRef={ref}
         rows={rows || 1}
@@ -135,7 +150,7 @@ export const Input = React.forwardRef(
         style={{ maxHeight: '320px' }}
       >
         {children}
-      </StyledInput>
+      </StyledTextArea>
     );
   }
 );
@@ -151,16 +166,19 @@ export const RenderUserOption = (user) => {
 export const RenderPriorityOption = (priority) => {
   return (
     <div className="flex items-center" key={priority.id}>
-      <Priority value={priority.id} />
+      <Priority value={priority.title} />
       <span className="ml-1.5">{priority.title}</span>
     </div>
   );
 };
 
 // Error Component
-export const ErrorMessage = ({ field }) => {
+export const ErrorMessage = ({ field, className }) => {
   return (
-    <div className="text-xs text-red-600 pl-2 mt-1" style={{ minHeight: '20px' }}>
+    <div
+      className={`text-xs text-red-600 px-2 mt-1 text-left truncate mb-1.5 truncate${className}`}
+      style={{ minHeight: '20px' }}
+    >
       {field && field.message}
     </div>
   );

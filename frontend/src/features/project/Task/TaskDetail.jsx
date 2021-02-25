@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useRouteMatch } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { map } from 'lodash';
 import * as yup from 'yup';
@@ -13,7 +13,7 @@ import {
   Kind,
   RenderUserOption,
   RenderPriorityOption,
-  Input,
+  TextArea,
   ErrorMessage,
 } from '@/features/shared';
 import {
@@ -38,6 +38,7 @@ import {
 const TaskDetail = ({ id, modalClose, fields }) => {
   const isAddMode = !id;
   const dispatch = useDispatch();
+  const { url } = useRouteMatch();
   // useSelector must be called in this level, will seperate for new task later
   let task = useSelector(
     selectTaskById(id, {
@@ -150,7 +151,7 @@ const TaskDetail = ({ id, modalClose, fields }) => {
             <div className="flex items-start justify-between">
               <div className="w-full mr-4">
                 <h3 className="text-lg leading-5 font-medium">
-                  <Input
+                  <TextArea
                     value={taskCache.title}
                     placeholder="Task name"
                     isHeading={true}
@@ -172,7 +173,7 @@ const TaskDetail = ({ id, modalClose, fields }) => {
                   <ErrorMessage field={{ message: titleError }} />
                 </h3>
                 <div className="py-2 text-sm">
-                  <Input
+                  <TextArea
                     value={taskCache.description}
                     isMulti={true}
                     placeholder="Task description"
@@ -331,7 +332,7 @@ const TaskDetail = ({ id, modalClose, fields }) => {
           </div>
         </>
       ) : (
-        <Redirect to="/project" />
+        <Redirect to={{ pathname: '/not_found', state: { path: url } }} />
       )}
     </>
   );

@@ -11,10 +11,10 @@
     "eject": "react-scripts eject",
     "analyzer": "env BUILD_ANALYZER=true yarn start",
     "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "fakeApi": "json-server --watch src/api/fakeApi.json --port 8080 "
   },
   "dependencies": {
-    "@compositor/kit": "^1.0.47",
     "@craco/craco": "^6.1.0",
     "@emotion/react": "^11.1.4",
     "@hookform/resolvers": "^1.3.4",

@@ -61,7 +61,7 @@ const SearchBox = () => {
         </div>
         <input
           id="search"
-          className="w-32 rounded py-1.5 pl-8 mr-2 px-4.5 bg-gray-100 border-gray-300 border-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:z-10 focus:bg-white transition ease-out duration-200"
+          className="w-32 rounded py-1.5 pl-8 pr-7 mr-2 px-4.5 bg-gray-100 border-gray-300 border-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:z-10 focus:bg-white transition ease-out duration-200"
           type="text"
           placeholder="Search"
           value={searchText}

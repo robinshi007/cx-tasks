@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Switch, Route, Redirect, useRouteMatch } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { Nav, Sidebar } from '@/components/Layout';
+import { MainFrame } from '@/components/Layout';
 import {
   BacklogListIcon,
   TaskboardIcon,
@@ -21,8 +21,8 @@ const Project = ({ id }) => {
   const project = useSelector(selectProjectById(id));
 
   const navHeader = {
-    title: project.title,
-    description: project.description,
+    title: project && project.title,
+    description: project && project.description,
     icon: FabricFolderIcon,
   };
   const navList = [
@@ -34,30 +34,34 @@ const Project = ({ id }) => {
     // { name: 'Feedback', icon: FeedbackIcon },
   ];
   useEffect(() => {
-    console.log('currentProject', id);
-    dispatch(setCurrentProject(id));
-  }, [id, dispatch]);
+    //console.log('currentProject', id);
+    if (!!project) {
+      dispatch(setCurrentProject(project.id));
+    }
+  }, [project, dispatch]);
 
   return (
     <>
-      <Nav />
-      <Sidebar navHeader={navHeader} navList={navList} />
-      <div className="ml-60 min-w-96 bg-white min-h-screen overflow-y-auto">
-        <Switch>
-          <Route path={`${url}/board`}>
-            <BoardPage />
-          </Route>
-          <Route path={`${url}/backlog`}>
-            <BacklogPage />
-          </Route>
-          <Route path={`${url}/settings`}>
-            <SettingsPage id={id} />
-          </Route>
-          <Route exact path={`${url}/`}>
-            <Redirect to={`${url}/board`} />
-          </Route>
-        </Switch>
-      </div>
+      {project ? (
+        <MainFrame hasSideNav={true} sideNav={{ header: navHeader, links: navList }}>
+          <Switch>
+            <Route path={`${url}/board`}>
+              <BoardPage />
+            </Route>
+            <Route path={`${url}/backlog`}>
+              <BacklogPage />
+            </Route>
+            <Route path={`${url}/settings`}>
+              <SettingsPage />
+            </Route>
+            <Route exact path={`${url}/`}>
+              <Redirect to={`${url}/board`} />
+            </Route>
+          </Switch>
+        </MainFrame>
+      ) : (
+        <Redirect to={{ pathname: '/not_found', state: { path: url } }} />
+      )}
     </>
   );
 };

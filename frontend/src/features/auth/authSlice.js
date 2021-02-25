@@ -1,4 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import client from '@/api/client';
 
 const defaultUser = {
   id: '',
@@ -7,11 +8,17 @@ const defaultUser = {
   photo_url: '',
 };
 const initialState = {
-  isAuth: false,
+  isAuthed: false,
   currentUser: defaultUser,
   isLoading: false,
-  errors: [],
+  error: '',
 };
+
+export const loginAsyncAction = createAsyncThunk('auth/login', async (data) => {
+  console.log('request with', data);
+  const response = await client.get('/login');
+  return response;
+});
 
 const authSlice = createSlice({
   name: 'auth',
@@ -22,19 +29,42 @@ const authSlice = createSlice({
     },
     setAuthSuccess: (state, { payload }) => {
       state.currentUser = payload;
-      state.isAuth = true;
+      state.isAuthed = true;
     },
     setAuthFailed: (state, { payload }) => {
       state.errors = payload;
-      state.isAuth = false;
+      state.isAuthed = false;
     },
     setLogout: (state) => {
-      state.isAuth = false;
-      state.currentUser = defaultUser;
+      state.currentUser = null;
+      state.isAuthed = false;
+    },
+  },
+  extraReducers: {
+    [loginAsyncAction.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [loginAsyncAction.fulfilled]: (state, { payload }) => {
+      state.isLoading = false;
+      if (payload.user && payload.user.id !== '') {
+        state.currentUser = payload.user;
+        state.isAuthed = true;
+      } else {
+        state.isAuthed = false;
+      }
+    },
+    [loginAsyncAction.rejected]: (state, { payload }) => {
+      state.isLoading = false;
+      state.isAuthed = false;
+      state.error = payload.error.message;
     },
   },
 });
 
 export const { setAuthStart, setAuthSuccess, setAuthFailed, setLogout } = authSlice.actions;
+
+export const selectAuth = (state) => state.auth;
+export const selectIsAuthed = (state) => state.auth.isAuthed;
+export const selectCurrentUser = (state) => state.auth.currentUser;
 
 export default authSlice.reducer;

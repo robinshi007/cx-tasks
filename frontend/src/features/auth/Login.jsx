@@ -1,46 +1,95 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 
+import { loginAsyncAction, selectAuth } from '@/features/auth/authSlice';
+import { FormSubmit, Input, ErrorMessage } from '@/features/shared';
 import logoTextImage from '@/assets/logo_text.png';
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const validationSchema = yup.object().shape({
+    name: yup.string().required(),
+    password: yup.string().required(),
+  });
+
+  const { error, isLoading } = useSelector(selectAuth);
+
+  const { handleSubmit, errors, control } = useForm({
+    mode: 'onChange',
+    resolver: yupResolver(validationSchema),
+  });
+  const handleSubmitFn = (data) => {
+    dispatch(loginAsyncAction(data));
+  };
   return (
     <div className="flex flex-col min-h-screen justify-between items-center bg-blue-700">
       <div className="flex-initial h-px"></div>
       <div className="flex flex-col items-center justify-center">
-        <div className="flex justify-center items-center h-32 -ml-4">
+        <div className="flex justify-center items-center h-28 -ml-4">
           <img className="object-cover" src={logoTextImage} alt="logo" />
         </div>
         <form
-          className="bg-white text-center rounded py-8 px-10 shadow"
-          style={{ maxWidth: '420px' }}
+          className="bg-white text-center rounded py-6 px-8 shadow"
+          style={{ width: '350px' }}
+          onSubmit={handleSubmit(handleSubmitFn)}
         >
-          <h1 className="text-lg text-gray-600 text-semibold mb-7">Log in to CxTasks</h1>
-          <div>
+          <h1 className="text-lg text-gray-600 text-semibold mb-4">Log in to CxTasks</h1>
+          <ErrorMessage field={error} className="pb-1" />
+          <div className="">
             <label htmlFor="email" className="sr-only">
               Email
             </label>
-            <input
-              id="email"
-              className="w-full rounded py-1 px-4 mb-7 bg-gray-100 border-gray-300 border-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:z-10 focus:bg-white transition ease-out duration-200"
-              type="email"
-              placeholder="Email"
+            <Controller
+              name="name"
+              defaultValue=""
+              control={control}
+              render={({ ref, ...props }) => (
+                <Input
+                  id="name"
+                  ref={ref}
+                  placeholder="User name"
+                  isError={errors.name}
+                  {...props}
+                />
+              )}
             />
+            <ErrorMessage field={errors.name} className="pb-1" />
           </div>
-          <div>
+          <div className="">
             <label htmlFor="password" className="sr-only">
               Password
             </label>
-            <input
-              id="password"
-              className="w-full rounded py-1 px-4 mb-7 bg-gray-100 border-gray-300 border-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:z-10 focus:bg-white transition ease-out duration-200"
-              type="pasword"
-              placeholder="Password"
+
+            <Controller
+              name="password"
+              defaultValue=""
+              control={control}
+              render={({ ref, ...props }) => (
+                <Input
+                  id="password"
+                  ref={ref}
+                  type="password"
+                  placeholder="Password"
+                  isError={errors.password}
+                  {...props}
+                />
+              )}
+            />
+            <ErrorMessage field={errors.password} className="pb-1" />
+          </div>
+          <div className="last:pt-1">
+            <FormSubmit
+              type="submit"
+              disabled={isLoading ? true : false}
+              color="primary"
+              value="Login"
+              className="w-full"
             />
           </div>
-          <button className="flex items-center justify-center rounded bg-blue-600 text-white text-md font-medium px-4 py-1 cursor-pointer w-full mb-7 transition ease-out duration-200 focus:outline-none focus:bg-blue-700 hover:bg-blue-500 hover:text-white group ">
-            Login
-          </button>
-          <div className="text-blue-600 text-sm">
+          <div className="text-blue-600 text-sm pt-6">
             <a className="hover:underline hover:text-blue-500" href="/">
               Cann't log in?
             </a>

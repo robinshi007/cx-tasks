@@ -21,10 +21,10 @@ const SidebarLink = ({ name, Icon, path }) => {
   );
 };
 
-const SidebarLinks = ({ navList }) => {
+const SidebarLinks = ({ links }) => {
   return (
     <>
-      {navList.map((obj, index) => (
+      {links.map((obj, index) => (
         <SidebarLink name={obj.name} Icon={obj.icon} key={index} path={obj.path} />
       ))}
     </>
@@ -42,19 +42,15 @@ const SidebarHeader = ({ title, description, Icon }) => {
   );
 };
 
-export const Sidebar = ({ navHeader, navList }) => (
+export const Sidebar = ({ header, links }) => (
   <div className="fixed top-0 left-12 w-48 bg-gray-100 h-screen flex">
     <div className="w-4 h-full"></div>
     <div className="flex flex-col pb-6 w-full">
       <div className="flex items-center justify-start h-11 w-full bg-gray-100 mt-3 mb-2 px-2">
-        <SidebarHeader
-          title={navHeader.title}
-          description={navHeader.description}
-          Icon={navHeader.icon}
-        />
+        <SidebarHeader title={header.title} description={header.description} Icon={header.icon} />
       </div>
       <div className="flex flex-col items-center justify-start bg-gray-100">
-        <SidebarLinks navList={navList} />
+        <SidebarLinks links={links} />
       </div>
     </div>
     <div className="w-4 h-full"></div>

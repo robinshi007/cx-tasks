@@ -5,11 +5,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 import { ClearIcon } from '@/shared/components/Element';
-import { Input, Button, ErrorMessage, FormSubmit, defaultProject } from '@/features/shared';
+import { TextArea, Button, ErrorMessage, FormSubmit, defaultProject } from '@/features/shared';
 import { setProject, setProjectNew } from '@/features/entity';
-import { selectProjectById } from '@/features/project/projectSlice';
+import { selectProjectById, selectCurrentProjectId } from '@/features/project/projectSlice';
 
-const Settings = ({ id, modalClose }) => {
+const Settings = ({ modalClose }) => {
+  const id = useSelector(selectCurrentProjectId);
   const isAddMode = !id;
   const dispatch = useDispatch();
 
@@ -61,7 +62,7 @@ const Settings = ({ id, modalClose }) => {
                   defaultValue={project.title}
                   control={control}
                   render={({ ref, ...props }, { invalid, isDirty }) => (
-                    <Input ref={ref} placeholder="Title" isError={errors.title} {...props} />
+                    <TextArea ref={ref} placeholder="Title" isError={errors.title} {...props} />
                   )}
                 />
                 <ErrorMessage field={errors.title} />
@@ -72,7 +73,7 @@ const Settings = ({ id, modalClose }) => {
                   defaultValue={project.description}
                   control={control}
                   render={({ ref, ...props }, { invalid, isDirty }) => (
-                    <Input
+                    <TextArea
                       ref={ref}
                       isMulti={true}
                       placeholder="Description"

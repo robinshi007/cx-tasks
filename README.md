@@ -46,10 +46,16 @@ Current status:
 - [done] [product] Write use stories based on the research
 - [done] [design] Design the high-fidelity pages in sketch app
 - [done] [frontend] Implement static pages using react
-- [doing] [frontend] Implement dynamic pages(router, state management, async fetch) with mock data using react
-- [doing] [frontend] Add modal and select components
-- [doing] [frontend] Add new forms for project and todo
-- [doing] [frontend] Finish phase 1 features: login -> my work -> projects -> project board with filters and dragdrop -> new project/task form
+- [done] [frontend] Implement dynamic pages(router, state management, async fetch) with mock data using react
+- [done] [frontend] Add modal and select components
+- [done] [frontend] Add new forms for project and todo
+- [done] [frontend] Finish phase 1 features: login -> my work -> projects -> project board with filters and dragdrop -> new project/task form
+- [done] [frontend] Add redirect to 404 page if entity is not found or server internal error
+- [done] [frontend] Replace the project with alpha transparency support
+- [todo] [frontend] Add context select list at side nav
+- [todo] [frontend] Add section association to each project
+- [todo] [frontend] Bolish the task form using react-hook-form library
+- [todo] [frontend] Implement a toast component for action feedback
 - [todo] [interface] Design the backend API spec
 
 ## Refer apps

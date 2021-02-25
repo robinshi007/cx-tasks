@@ -21,7 +21,7 @@ const Card = ({ title, count, color, url }) => {
         </h5>
 
         <div className="flex justify-between text-gray-500 text-sm mt-1">
-          <div className="text-sm">My open issues:</div>
+          <div className="text-sm">My open tasks:</div>
           <div className="text-gray-500 text-xs bg-gray-200 text-sm rounded-full px-1.5 min-w-4 select-none">
             {count}
           </div>

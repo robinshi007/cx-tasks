@@ -1,18 +1,19 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useRouteMatch } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 import { ClearIcon } from '@/shared/components/Element';
-import { Button, Input, FormSubmit, ErrorMessage, defaultSection } from '@/features/shared';
+import { Button, TextArea, FormSubmit, ErrorMessage, defaultSection } from '@/features/shared';
 import { selectSectionById } from '@/features/project/projectSlice';
 import { setSectionNew, setSection } from '@/features/entity';
 
 const SectionDetail = ({ id, modalClose }) => {
   const isAddMode = !id;
   const dispatch = useDispatch();
+  const { url } = useRouteMatch();
 
   const section = useSelector(selectSectionById(id));
 
@@ -36,6 +37,7 @@ const SectionDetail = ({ id, modalClose }) => {
     }
     modalClose();
   };
+
   // const [section, setSection] = useState({});
   // useEffect(() => {
   //   if (!isAddMode) {
@@ -65,7 +67,7 @@ const SectionDetail = ({ id, modalClose }) => {
                   defaultValue={section.title}
                   control={control}
                   render={({ ref, ...props }, { invalid, isDirty }) => (
-                    <Input ref={ref} placeholder="Title" isError={errors.title} {...props} />
+                    <TextArea ref={ref} placeholder="Title" isError={errors.title} {...props} />
                   )}
                 />
                 <ErrorMessage field={errors.title} />
@@ -76,7 +78,7 @@ const SectionDetail = ({ id, modalClose }) => {
                   defaultValue={section.description}
                   control={control}
                   render={({ ref, ...props }, { invalid, isDirty }) => (
-                    <Input
+                    <TextArea
                       ref={ref}
                       isMulti={true}
                       placeholder="Description"
@@ -98,7 +100,7 @@ const SectionDetail = ({ id, modalClose }) => {
           </div>
         </>
       ) : (
-        <Redirect to="/project" />
+        <Redirect to={{ pathname: '/not_found', state: { path: url } }} />
       )}
     </>
   );

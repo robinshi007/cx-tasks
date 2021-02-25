@@ -10,10 +10,7 @@ const Login = () => {
         <div className="flex justify-center items-center h-32 -ml-4">
           <img className="object-cover" src={logoTextImage} alt="logo" />
         </div>
-        <form
-          className="bg-white text-center rounded py-8 px-10 shadow"
-          style={{ maxWidth: '420px' }}
-        >
+        <form className="bg-white text-center rounded py-8 px-10 shadow" style={{ width: '350px' }}>
           <h1 className="text-lg text-gray-600 text-semibold mb-7">Log in to CxTasks</h1>
           <div>
             <label htmlFor="email" className="sr-only">
@@ -21,7 +18,7 @@ const Login = () => {
             </label>
             <input
               id="email"
-              className="w-full rounded py-1 px-4 mb-7 bg-gray-100 border-gray-300 border-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:z-10 focus:bg-white transition ease-out duration-200"
+              className="w-full rounded py-1 px-4 mb-7 bg-gray-100 border-gray-300 text-sm border-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:z-10 focus:bg-white transition ease-out duration-200"
               type="email"
               placeholder="Email"
             />
@@ -32,12 +29,12 @@ const Login = () => {
             </label>
             <input
               id="password"
-              className="w-full rounded py-1 px-4 mb-7 bg-gray-100 border-gray-300 border-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:z-10 focus:bg-white transition ease-out duration-200"
-              type="pasword"
+              className="w-full rounded py-1 px-4 mb-7 bg-gray-100 border-gray-300 text-sm border-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:z-10 focus:bg-white transition ease-out duration-200"
+              type="password"
               placeholder="Password"
             />
           </div>
-          <button className="flex items-center justify-center rounded bg-blue-600 text-white text-md font-medium px-4 py-1 cursor-pointer w-full mb-7 transition ease-out duration-200 focus:outline-none focus:bg-blue-700 hover:bg-blue-500 hover:text-white group ">
+          <button className="flex items-center justify-center rounded bg-blue-600 text-white text-sm font-medium px-4 py-1 cursor-pointer w-full mb-7 transition ease-out duration-200 focus:outline-none focus:bg-blue-700 hover:bg-blue-500 hover:text-white group ">
             Login
           </button>
           <div className="text-blue-600 text-sm">

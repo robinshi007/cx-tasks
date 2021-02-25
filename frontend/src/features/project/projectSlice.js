@@ -47,7 +47,7 @@ const projectSlice = createSlice({
   },
 });
 
-//export const selectProject = (state) => state.project;
+export const selectCurrentProjectId = (state) => state.project.currentProjectId;
 export const selectProjectById = (id) => (state) => {
   let project;
   if (!id) {
