@@ -4,10 +4,13 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
-import { Input, ErrorMessage, FormSubmit } from '@/features/shared';
-import { setProject, selectProjectById } from '@/features/project/projectSlice';
+import { ClearIcon } from '@/shared/components/Element';
+import { Input, Button, ErrorMessage, FormSubmit, defaultProject } from '@/features/shared';
+import { setProject, setProjectNew } from '@/features/entity';
+import { selectProjectById } from '@/features/project/projectSlice';
 
-const Settings = ({ modalClose }) => {
+const Settings = ({ id, modalClose }) => {
+  const isAddMode = !id;
   const dispatch = useDispatch();
 
   const validationSchema = yup.object().shape({
@@ -19,21 +22,35 @@ const Settings = ({ modalClose }) => {
     resolver: yupResolver(validationSchema),
   });
   const { isValid, isDirty } = formState;
+
   const handleSubmitFn = (data) => {
-    //console.log(data);
-    dispatch(setProject({ id: '1', project: { ...data } }));
+    if (isAddMode) {
+      dispatch(setProjectNew({ id: '0', project: { ...defaultProject(), ...data } }));
+    } else {
+      dispatch(setProject({ id: id, project: data }));
+    }
     modalClose && modalClose();
   };
 
   // data
-  let project = useSelector(selectProjectById);
+  let project = useSelector(selectProjectById(id));
   // const fields = ['title', 'description'];
   // fields.forEach((field) => setValue(field, project[field]));
   return (
     <div className="px-8 py-4 flex items-center justify-between text-sm ">
       <div className="w-full">
-        <div className="flex items-center justify-start h-11 w-full">
-          <h2 className="text-gray-600 font-medium text-lg">Settings</h2>
+        <div className="flex items-center justify-between h-11 w-full">
+          <h2 className="text-gray-600 font-medium text-lg">
+            {id ? 'Project settings' : 'New project'}
+          </h2>
+
+          {isAddMode && (
+            <div className="flex items-center">
+              <Button variant="text" color="light" onClick={modalClose} className="">
+                <ClearIcon size={20} />
+              </Button>
+            </div>
+          )}
         </div>
         <div className="h-36 w-full py-2">
           <div className="w-96">

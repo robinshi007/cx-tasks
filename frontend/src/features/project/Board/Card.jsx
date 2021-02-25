@@ -5,9 +5,10 @@ import { Priority, Kind, Label, RouteLink } from '@/features/shared';
 const Card = ({
   taskId,
   title,
-  kind,
-  taskKindTitle,
+  type,
+  typeTitle,
   priority,
+  priorityTitle,
   section,
   sectionTitle,
   assignee,
@@ -30,8 +31,8 @@ const Card = ({
       <div className="mb-1.5">{section ? <Label value={sectionTitle} color="blue" /> : ''}</div>
       <div className="flex items-center justify-between w-full">
         <div className="flex items-center">
-          <Kind value={taskKindTitle} />
-          <Priority value={priority} />
+          <Kind value={typeTitle} />
+          <Priority value={priorityTitle} />
         </div>
         <div>
           <Avatar initials={assigneeName} bg="purple" color="white" size={24} />

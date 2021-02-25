@@ -8,14 +8,16 @@ import { setFilterTerm, selectFilterTermProjects } from './homeSlice';
 import { timeAgo, RouteLink, Button, Tab } from '@/features/shared';
 import { SettingsPage as ProjectDetail } from '../project/Settings';
 
-const Row = ({ title, dueDate, owner }) => {
+const Row = ({ id, title, dueDate, owner }) => {
   return (
     <li className="flex items-center justify-between font-sm text-gray-600 py-1">
       <div className="flex items-center justify-start w-full">
-        <div className="text-sm font-normal truncate flex-shrink">{title}</div>
+        <RouteLink className="text-sm font-normal truncate flex-shrink" to={`/projects/${id}`}>
+          {title}
+        </RouteLink>
         <div className="flex flex-1"></div>
         <div className="mr-2 text-right text-gray-400 text-sm truncate flex-shrink-0">
-          {timeAgo(dueDate)}
+          {dueDate !== '' && timeAgo(dueDate)}
         </div>
         <Avatar initials={owner} bg="purple" color="white" size={28} />
       </div>
@@ -27,7 +29,7 @@ const ProjectList = ({ projects }) => {
   return (
     <ul>
       {Object.values(projects).map(({ id, title, due_date, owner }) => (
-        <Row title={title} dueDate={due_date} key={id} owner={owner} />
+        <Row id={id} title={title} dueDate={due_date} key={id} owner={owner} />
       ))}
     </ul>
   );
@@ -110,20 +112,13 @@ const Projects = () => {
 
       <Route
         path={`${path}/project_new`}
-        render={(routeProps) => (
+        render={() => (
           <Modal
             isOpen={true}
             width={520}
             withCloseIcon={false}
             onClose={() => history.push(url)}
-            renderContent={(modal) => (
-              <ProjectDetail
-                modalClose={modal.close}
-                fields={{
-                  project: routeProps.location.query && routeProps.location.query.project,
-                }}
-              />
-            )}
+            renderContent={(modal) => <ProjectDetail modalClose={modal.close} fields={{}} />}
             style={{ minHeight: '300px' }}
           />
         )}

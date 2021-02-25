@@ -1,0 +1,32 @@
+export const projectSeed = {
+  '1': {
+    id: '1',
+    title: 'Prototoye design for CxTasks',
+    description: 'description',
+    color: 'orange',
+    my_issue_count: '1',
+    owner: 'Bob',
+    updated_at: '2021/2/18',
+    due_date: '2021/2/28',
+  },
+  '2': {
+    id: '2',
+    title: 'Frontend dev for CxTasks',
+    description: 'description',
+    color: 'blue',
+    my_issue_count: '2',
+    owner: 'Bob',
+    updated_at: '2021/2/20',
+    due_date: '2021/2/26',
+  },
+  '3': {
+    id: '3',
+    title: 'Backend dev for CxTasks',
+    description: 'description',
+    color: 'pink',
+    my_issue_count: '2',
+    owner: 'Alice',
+    updated_at: '2021/2/21',
+    due_date: '2021/2/25',
+  },
+};

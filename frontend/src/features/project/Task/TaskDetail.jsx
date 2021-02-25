@@ -18,10 +18,12 @@ import {
 } from '@/features/shared';
 import {
   selectTaskById,
-  selectStatus,
-  selectPriority,
-  selectAssignee,
-  selectSection,
+  selectStatuses,
+  selectPriorities,
+  selectAssignees,
+  selectSections,
+} from '@/features/project/projectSlice';
+import {
   setTaskNew,
   setTaskTitle,
   setTaskDescription,
@@ -31,7 +33,7 @@ import {
   setTaskSection,
   setTaskDuedate,
   deleteTask,
-} from '@/features/project/projectSlice';
+} from '@/features/entity';
 
 const TaskDetail = ({ id, modalClose, fields }) => {
   const isAddMode = !id;
@@ -39,14 +41,15 @@ const TaskDetail = ({ id, modalClose, fields }) => {
   // useSelector must be called in this level, will seperate for new task later
   let task = useSelector(
     selectTaskById(id, {
-      status: fields && fields.status && parseInt(fields.status),
-      section: fields && fields.section && parseInt(fields.section),
+      status: fields && fields.status,
+      section: fields && fields.section,
+      project: fields && fields.project,
     })
   );
-  const status = useSelector(selectStatus);
-  const priority = useSelector(selectPriority);
-  const assignee = useSelector(selectAssignee);
-  const section = useSelector(selectSection);
+  const statuses = useSelector(selectStatuses);
+  const priorities = useSelector(selectPriorities);
+  const assignees = useSelector(selectAssignees);
+  const sections = useSelector(selectSections);
 
   const [taskCache, setTaskCache] = useState(task);
 
@@ -62,7 +65,7 @@ const TaskDetail = ({ id, modalClose, fields }) => {
     validate();
   };
   const submit = () => {
-    if (taskCache.id === 0) {
+    if (taskCache.id === '0') {
       dispatch(setTaskNew({ id: taskCache.id.toString(), task }));
     }
     changeSet.forEach((fn) => fn());
@@ -100,10 +103,8 @@ const TaskDetail = ({ id, modalClose, fields }) => {
         <>
           <div className="flex items-center justify-between px-2 py-3 text-gray-500">
             <div className="flex items-center ml-2 text-sm">
-              <Kind value={taskCache.taskKindTitle} />
-              <div>
-                {isAddMode ? `${taskCache.taskKindTitle} New` : `${taskCache.taskKindTitle}-${id}`}
-              </div>
+              <Kind value={taskCache.typeTitle} />
+              <div>{isAddMode ? `${taskCache.typeTitle} New` : `${taskCache.typeTitle}-${id}`}</div>
             </div>
             <div className="flex items-center">
               {dirty ? (
@@ -209,7 +210,7 @@ const TaskDetail = ({ id, modalClose, fields }) => {
                     withSearch={false}
                     name="status"
                     value={taskCache.status.toString()}
-                    options={map(status, (val, key) => ({
+                    options={map(statuses, (val, key) => ({
                       value: key,
                       label: val.title,
                     }))}
@@ -217,9 +218,7 @@ const TaskDetail = ({ id, modalClose, fields }) => {
                       !dirty && setDirty(true);
                       setTaskCache({ ...taskCache, status: val });
                       validate();
-                      addChangeFn(() =>
-                        dispatch(setTaskStatus({ id: taskCache.id, status: parseInt(val) }))
-                      );
+                      addChangeFn(() => dispatch(setTaskStatus({ id: taskCache.id, status: val })));
                     }}
                   />
                 </div>
@@ -233,7 +232,7 @@ const TaskDetail = ({ id, modalClose, fields }) => {
                     withSearch={false}
                     name="assignee"
                     value={taskCache.assignee && taskCache.assignee.toString()}
-                    options={map(assignee, (val, key) => ({
+                    options={map(assignees, (val, key) => ({
                       value: key,
                       label: val.name,
                     }))}
@@ -242,11 +241,13 @@ const TaskDetail = ({ id, modalClose, fields }) => {
                       setTaskCache({ ...taskCache, assignee: val });
                       validate();
                       addChangeFn(() =>
-                        dispatch(setTaskAssignee({ id: taskCache.id, assignee: parseInt(val) }))
+                        dispatch(setTaskAssignee({ id: taskCache.id, assignee: val }))
                       );
                     }}
-                    renderValue={({ value: assigneeId }) => RenderUserOption(assignee[assigneeId])}
-                    renderOption={({ value: assigneeId }) => RenderUserOption(assignee[assigneeId])}
+                    renderValue={({ value: assigneeId }) => RenderUserOption(assignees[assigneeId])}
+                    renderOption={({ value: assigneeId }) =>
+                      RenderUserOption(assignees[assigneeId])
+                    }
                   />
                 </div>
                 <div className="pt-3">
@@ -259,7 +260,7 @@ const TaskDetail = ({ id, modalClose, fields }) => {
                     withSearch={false}
                     name="priority"
                     value={taskCache.priority && taskCache.priority.toString()}
-                    options={map(priority, (val, key) => ({
+                    options={map(priorities, (val, key) => ({
                       value: key,
                       label: val.title,
                     }))}
@@ -268,14 +269,14 @@ const TaskDetail = ({ id, modalClose, fields }) => {
                       setTaskCache({ ...taskCache, priority: val });
                       validate();
                       addChangeFn(() =>
-                        dispatch(setTaskPriority({ id: taskCache.id, priority: parseInt(val) }))
+                        dispatch(setTaskPriority({ id: taskCache.id, priority: val }))
                       );
                     }}
                     renderValue={({ value: priorityId }) =>
-                      RenderPriorityOption(priority[priorityId])
+                      RenderPriorityOption(priorities[priorityId])
                     }
                     renderOption={({ value: priorityId }) =>
-                      RenderPriorityOption(priority[priorityId])
+                      RenderPriorityOption(priorities[priorityId])
                     }
                   />
                 </div>
@@ -289,7 +290,7 @@ const TaskDetail = ({ id, modalClose, fields }) => {
                     withSearch={false}
                     name="section"
                     value={taskCache.section && taskCache.section.toString()}
-                    options={map(section, (val, key) => ({
+                    options={map(sections, (val, key) => ({
                       value: key,
                       label: val.title,
                     }))}
@@ -298,7 +299,7 @@ const TaskDetail = ({ id, modalClose, fields }) => {
                       setTaskCache({ ...taskCache, section: val });
                       validate();
                       addChangeFn(() =>
-                        dispatch(setTaskSection({ id: taskCache.id, section: parseInt(val) }))
+                        dispatch(setTaskSection({ id: taskCache.id, section: val }))
                       );
                     }}
                   />

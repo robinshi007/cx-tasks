@@ -6,9 +6,9 @@ const Row = ({
   taskId,
   title,
   priority,
-  taskKindTitle,
+  typeTitle,
   status,
-  statusText,
+  statusTitle,
   assignee,
   assigneeName,
   priorityTitle,
@@ -41,13 +41,13 @@ const Row = ({
       </div>
       <div className="flex items-center">
         <div className="border-r border-gray-200 py-2 last:border-r-0 px-2 w-24 text-gray-500 truncate">
-          {taskKindTitle}
+          {typeTitle}
         </div>
         <div className="flex items-center justify-start border-r border-gray-200 py-2 last:border-r-0 px-2 w-28 text-gray-500 text-sm truncate">
-          <Status id={status} title={statusText} />
+          <Status title={statusTitle} />
         </div>
         <div className="border-r border-gray-200 py-2 last:border-r-0 px-2 w-16 text-gray-500 truncate flex items-center justify-center ">
-          <Priority value={priority} />
+          <Priority value={priorityTitle} />
         </div>
         <div className="border-r border-gray-200 py-2 last:border-r-0 px-2 w-28 text-sm truncate">
           {dueDate ? timeAgo(dueDate) : ''}
@@ -62,20 +62,19 @@ const Row = ({
   );
 };
 const statusClass = (status) => {
-  const lcStatus = status;
-  if (lcStatus === 11 || lcStatus === 12) {
+  if (status === 'Backlog' || status === 'Todo') {
     return 'bg-gray-200 text-gray-700';
-  } else if (lcStatus === 14) {
+  } else if (status === 'Done') {
     return 'bg-green-600 text-white';
   } else {
     return 'bg-blue-600 text-white';
   }
 };
-const Status = ({ id, title }) => {
+const Status = ({ title }) => {
   return (
     <div
       className={`text-center font-semibold text-xs rounded px-2 py-0.5 uppercase select-none ${statusClass(
-        id
+        title
       )}`}
     >
       {title}

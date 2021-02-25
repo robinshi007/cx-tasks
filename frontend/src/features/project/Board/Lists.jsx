@@ -7,7 +7,7 @@ import { useWindowSize } from 'react-use';
 import tw, { styled, css } from 'twin.macro';
 
 import { AddIcon } from '@/shared/components/Element';
-import { updateCardDragged } from '@/features/project/projectSlice';
+import { updateCardDragged } from '@/features/entity';
 import Card from './Card';
 import { RouteLink } from '@/features/shared';
 
@@ -258,10 +258,10 @@ const List = ({ title, cards, id, count, filteredCount, placeholderProps }) => {
                     <Card
                       taskId={obj.id}
                       title={obj.title}
-                      label={obj.label}
-                      kind={obj.kind}
-                      taskKindTitle={obj.taskKindTitle}
+                      type={obj.type}
+                      typeTitle={obj.typeTitle}
                       priority={obj.priority}
+                      priorityTitle={obj.priorityTitle}
                       section={obj.section}
                       sectionTitle={obj.sectionTitle}
                       assignee={obj.assignee}

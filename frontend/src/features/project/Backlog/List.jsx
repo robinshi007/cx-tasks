@@ -49,11 +49,10 @@ const List = ({ title, cards, id, count, filteredCount, columns, placeholderProp
                   <Row
                     taskId={obj.id}
                     title={obj.title}
-                    label={obj.label}
-                    kind={obj.kind}
-                    taskKindTitle={obj.taskKindTitle}
+                    type={obj.type}
+                    typeTitle={obj.typeTitle}
                     status={obj.status}
-                    statusText={obj.statusText}
+                    statusTitle={obj.statusTitle}
                     assignee={obj.assignee}
                     assigneeName={obj.assigneeName}
                     priority={obj.priority}

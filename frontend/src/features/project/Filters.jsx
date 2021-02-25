@@ -73,7 +73,6 @@ const SearchBox = () => {
 const Filters = ({ isBacklog }) => {
   const match = useRouteMatch();
   const dispatch = useDispatch();
-  const filterTerm = useSelector(selectFilterTerm);
   const filterRecent = useSelector(selectFilterRecent);
   const filterDueThisWeek = useSelector(selectFilterDueThisWeek);
 
@@ -81,8 +80,7 @@ const Filters = ({ isBacklog }) => {
   const [group, setGroup] = useState('section');
   const sortValues = { none: 'None', due_date: 'Due Date', priority: 'Priority', title: 'Name' };
   const groupValues = { section: 'Section', assignee: 'Assignee' };
-  const clearFilter = useMemo(() => filterTerm || filterRecent || filterDueThisWeek, [
-    filterTerm,
+  const clearFilter = useMemo(() => filterRecent || filterDueThisWeek, [
     filterRecent,
     filterDueThisWeek,
   ]);

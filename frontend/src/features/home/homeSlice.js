@@ -1,6 +1,8 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit';
-import { default as defaultState } from './defaultState';
 import { orderBy } from 'lodash';
+
+import { default as defaultState } from './defaultState';
+import { cacheTaskWithTitles } from '@/features/shared';
 
 export const homeSlice = createSlice({
   name: 'home',
@@ -13,7 +15,7 @@ export const homeSlice = createSlice({
   },
 });
 
-export const selectRecentProjects = (state) => state.home.recentProjects;
+export const selectRecentProjects = (state) => state.entities.projects;
 export const selectFilterTerm = (state) => state.home.projectFilters.filterTerm;
 export const selectFilterTermProjects = createSelector(
   [selectRecentProjects, selectFilterTerm],
@@ -27,17 +29,22 @@ export const selectFilterTermProjects = createSelector(
     }
   }
 );
-export const selectMyTasks = (state) => state.home.tasks;
+export const selectMyTasks = (state) =>
+  Object.values(state.entities.tasks)
+    .filter((task) => task.assignee === '61')
+    .map((task) => cacheTaskWithTitles(state.entities, task));
+
 export const selectMyTasksWorkedOn = createSelector(selectMyTasks, (tasks) =>
   orderBy(
-    Object.values(tasks).filter((task) => task.status === 13),
+    tasks.filter((task) => task.status === '13'),
     (t) => t.updated_at,
     'asc'
   )
 );
+
 export const selectMyTasksAssignedToMe = createSelector(selectMyTasks, (tasks) =>
   orderBy(
-    Object.values(tasks).filter((task) => task.status === 12),
+    tasks.filter((task) => task.status === '12'),
     (t) => t.assigned_at,
     'asc'
   )

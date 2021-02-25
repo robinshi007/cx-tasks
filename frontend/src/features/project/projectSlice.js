@@ -3,7 +3,13 @@ import { createSelector } from 'reselect';
 import { differenceInDays, isThisWeek } from 'date-fns';
 import { default as defaultState } from './defaultState';
 import { orderBy, groupBy, map, merge } from 'lodash';
-import { defaultTask, defaultSection } from '@/features/shared';
+import {
+  defaultTask,
+  defaultSection,
+  defaultProject,
+  cacheTaskWithTitles,
+} from '@/features/shared';
+import { selectCurrrentProjectId } from '@/features/entity';
 
 const defaultFilters = {
   filterTerm: '',
@@ -17,157 +23,43 @@ const projectSlice = createSlice({
     filters: defaultFilters,
   },
   reducers: {
-    updateListDragged: (state, { type, payload }) => {
-      // TODO: will reorder the card order if the order difference goes narrow
-      if (payload.source.listIndex === payload.destination.listIndex) {
-        return;
-      }
-      let newOrder = 0;
-      const step = 100;
-      // update the order in the same list
-      const { previousOrder, nextOrder } = payload.position;
-      if (previousOrder === 0 && nextOrder !== 0) {
-        newOrder = nextOrder - step;
-      } else if (previousOrder !== 0 && nextOrder === 0) {
-        newOrder = previousOrder + step;
-      } else if (previousOrder !== 0 && nextOrder !== 0) {
-        newOrder = Math.floor((previousOrder + nextOrder) / 2);
-      }
-      // if (sourceListIndex !== destListIndex) {
-      const newList = state[payload.group][payload.position.listId];
-      newList[payload.order] = newOrder;
-      return state;
-    },
-    updateCardDragged: (state, { type, payload }) => {
-      // TODO: will reorder the card order if the order difference goes narrow
-      if (
-        payload.source.listIndex === payload.destination.listIndex &&
-        payload.source.cardIndex === payload.destination.cardIndex
-      ) {
-        return;
-      }
-      let newOrder = 0;
-      const step = 100;
-      // update the order in the same list
-      const { previousCardOrder, nextCardOrder } = payload.position;
-      if (previousCardOrder === 0 && nextCardOrder !== 0) {
-        newOrder = nextCardOrder - step;
-      } else if (previousCardOrder !== 0 && nextCardOrder === 0) {
-        newOrder = previousCardOrder + step;
-      } else if (previousCardOrder !== 0 && nextCardOrder !== 0) {
-        newOrder = Math.floor((previousCardOrder + nextCardOrder) / 2);
-      }
-      const newCard = state.tasks[payload.position.cardId];
-      if (newOrder !== 0) {
-        newCard[payload.order] = newOrder;
-      }
-      if (payload.source.listIndex !== payload.destination.listIndex) {
-        newCard[payload.group] = parseInt(payload.destination.listIndex);
-      }
-      return state;
+    setCurrentProject: (state, action) => {
+      state.currentProjectId = action.payload;
     },
     setFilterTerm: (state, action) => {
       state.filters.filterTerm = action.payload;
-      return state;
     },
     setFilterRecent: (state, action) => {
       state.filters.filterRecent = action.payload;
-      return state;
     },
     setFilterDueThisWeek: (state, action) => {
       state.filters.filterDueThisWeek = action.payload;
-      return state;
     },
     setSortBy: (state, action) => {
       state.sortBy = { field: action.payload, direction: 'asc' };
-      return state;
     },
     setGroupBy: (state, action) => {
       state.groupBy = action.payload;
-      return state;
     },
     setFilterReset: (state) => {
       state.filters = defaultFilters;
-      return state;
-    },
-    setProject: (state, action) => {
-      state.title = action.payload.project.title;
-      state.description = action.payload.project.description;
-      return state;
-    },
-    setSectionNew: (state, action) => {
-      const newId = action.payload.id;
-      if (!!state.section[newId]) {
-        // TODO:  sync to backend
-        console.log('Please sync the new task to the backend first');
-      } else {
-        state.section[action.payload.id] = action.payload.section;
-      }
-      return state;
-    },
-    setSection: (state, action) => {
-      const section = state.section[action.payload.id];
-      section.title = action.payload.section.title;
-      section.description = action.payload.section.description;
-      return state;
-    },
-    setTaskNew: (state, action) => {
-      const newId = action.payload.id;
-      if (!!state.tasks[newId]) {
-        // TODO:  sync to backend
-        console.log('Please sync the new task to the backend first');
-      } else {
-        state.tasks[action.payload.id] = action.payload.task;
-      }
-      return state;
-    },
-    setTaskTitle: (state, action) => {
-      const task = state.tasks[action.payload.id];
-      task.title = action.payload.title;
-      return state;
-    },
-    setTaskDescription: (state, action) => {
-      const task = state.tasks[action.payload.id];
-      task.description = action.payload.description;
-      return state;
-    },
-    setTaskStatus: (state, action) => {
-      const task = state.tasks[action.payload.id];
-      task.status = action.payload.status;
-      return state;
-    },
-    setTaskAssignee: (state, action) => {
-      const task = state.tasks[action.payload.id];
-      task.assignee = action.payload.assignee;
-      return state;
-    },
-    setTaskPriority: (state, action) => {
-      const task = state.tasks[action.payload.id];
-      task.priority = action.payload.priority;
-      return state;
-    },
-    setTaskSection: (state, action) => {
-      const task = state.tasks[action.payload.id];
-      task.section = action.payload.section;
-      return state;
-    },
-    setTaskDuedate: (state, action) => {
-      const task = state.tasks[action.payload.id];
-      task.due_date = action.payload.due_date;
-      return state;
-    },
-    deleteTask: (state, action) => {
-      delete state.tasks[action.payload.id];
-      return state;
     },
   },
 });
 
-export const selectProject = (state) => state.project;
-export const selectProjectById = (state) => state.project;
-export const selectStatus = (state) => state.project.status;
-export const selectPriority = (state) => state.project.priority;
-export const selectSection = (state) => state.project.section;
+//export const selectProject = (state) => state.project;
+export const selectProjectById = (id) => (state) => {
+  let project;
+  if (!id) {
+    project = defaultProject();
+  } else {
+    project = state.entities.projects[id];
+  }
+  return project;
+};
+export const selectStatuses = (state) => state.entities.statuses;
+export const selectPriorities = (state) => state.entities.priorities;
+export const selectSections = (state) => state.entities.sections;
 export const selectSectionById = (id, fields) => (state) => {
   let section;
   if (!id && fields) {
@@ -175,12 +67,17 @@ export const selectSectionById = (id, fields) => (state) => {
   } else if (!id) {
     section = defaultSection();
   } else {
-    section = state.project.section[id];
+    section = state.entities.sections[id];
   }
-  console.log('section', section);
   return section;
 };
-export const selectAssignee = (state) => state.project.assignee;
+
+export const selectAssigneeById = (id) => (state) => {
+  const assignee = state.entities.users[id];
+  return assignee;
+};
+export const selectAssignees = (state) => state.entities.users;
+
 export const selectTaskById = (id, fields) => (state) => {
   let task;
   if (!id && fields) {
@@ -188,68 +85,58 @@ export const selectTaskById = (id, fields) => (state) => {
   } else if (!id) {
     task = defaultTask();
   } else {
-    task = state.project.tasks[id];
+    task = state.entities.tasks[id];
   }
   if (!!task) {
-    return {
-      ...task,
-      taskKindTitle: task.taskKind
-        ? state.project.taskKind[task.taskKind.toString()].title
-        : 'Task',
-      statusText: task.status ? state.project.status[task.status.toString()].title : '',
-      assigneeName: task.assignee ? state.project.assignee[task.assignee.toString()].name : '',
-      sectionTitle: task.section ? state.project.section[task.section.toString()].title : '',
-      priorityTitle: task.priority ? state.project.priority[task.priority.toString()].title : '',
-    };
+    return cacheTaskWithTitles(state.entities, task);
   } else {
     return task;
   }
 };
 
-export const selectAssigneeById = (id) => (state) => {
-  const a = state.project.assignee[id];
-  return {
-    ...a,
-  };
-};
-export const selectTasks = (state) => {
-  return map(state.project.tasks, (t) => {
-    return {
-      ...t,
-      taskKindTitle: t.taskKind ? state.project.taskKind[t.taskKind.toString()].title : 'Task',
-      statusText: state.project.status[t.status.toString()].title,
-      assigneeName: t.assignee ? state.project.assignee[t.assignee.toString()].name : '',
-      sectionTitle: t.section ? state.project.section[t.section.toString()].title : '',
-      priorityTitle: t.priority ? state.project.priority[t.priority.toString()].title : '',
-    };
-  });
-};
+export const selectEntities = (state) => state.entities;
+export const selectTasks = (state) => state.entities.tasks;
+
+export const selectTasksByCurrentProject = createSelector(
+  [selectTasks, selectCurrrentProjectId, selectEntities],
+  (tasks, pid, entities) => {
+    return map(
+      Object.values(tasks).filter((task) => task.project === pid),
+      (task) => {
+        return cacheTaskWithTitles(entities, task);
+      }
+    );
+  }
+);
 export const selectGroupBy = (state) => state.project.groupBy;
 export const selectSortBy = (state) => state.project.sortBy;
-export const selectTasksSortBy = createSelector([selectTasks, selectSortBy], (tasks, sort) => {
-  if (sort && sort.field !== '' && sort.direction !== '') {
-    if (sort.field === 'none') {
-      return orderBy(Object.values(tasks), (t) => t.order, 'asc');
+export const selectTasksSortBy = createSelector(
+  [selectTasksByCurrentProject, selectSortBy],
+  (tasks, sort) => {
+    if (sort && sort.field !== '' && sort.direction !== '') {
+      if (sort.field === 'none') {
+        return orderBy(tasks, (t) => t.order, 'asc');
+      } else {
+        return orderBy(tasks, (t) => t[sort.field], sort.direction);
+      }
     } else {
-      return orderBy(Object.values(tasks), (t) => t[sort.field], sort.direction);
+      return orderBy(tasks, (t) => t.order, 'asc');
     }
-  } else {
-    return orderBy(Object.values(tasks), (t) => t.order, 'asc');
   }
-});
+);
 export const selectTasksGroupBy = createSelector(
   [selectTasksSortBy, selectGroupBy],
   (tasks, group) => {
     if (group && group !== '') {
-      return groupBy(Object.values(tasks), group);
+      return groupBy(tasks, group);
     } else {
-      return groupBy(Object.values(tasks), 'section');
+      return groupBy(tasks, 'section');
     }
   }
 );
-export const selectTasksGroupByStatus = createSelector([selectTasks], (tasks) => {
+export const selectTasksGroupByStatus = createSelector([selectTasksByCurrentProject], (tasks) => {
   return groupBy(
-    orderBy(Object.values(tasks), (t) => t.bdorder, 'asc'),
+    orderBy(tasks, (t) => t.bdorder, 'asc'),
     'status'
   );
 });
@@ -258,13 +145,13 @@ export const selectFilterRecent = (state) => state.project.filters.filterRecent;
 export const selectFilterDueThisWeek = (state) => state.project.filters.filterDueThisWeek;
 
 export const selectCountedLists = createSelector(
-  [selectGroupBy, selectTasksGroupBy, selectSection, selectAssignee],
-  (group, lists, section, assignee) => {
+  [selectGroupBy, selectTasksGroupBy, selectSections, selectAssignees],
+  (group, lists, sections, assignees) => {
     let selectedGrouped;
     if (group === 'section') {
-      selectedGrouped = section;
+      selectedGrouped = sections;
     } else if (group === 'assignee') {
-      selectedGrouped = assignee;
+      selectedGrouped = assignees;
     }
     return Object.keys(selectedGrouped).map((groupId) => {
       let cards = [];
@@ -278,7 +165,7 @@ export const selectCountedLists = createSelector(
           : selectedGrouped[groupId].name;
       const order = selectedGrouped[groupId] && selectedGrouped[groupId].order;
       return {
-        id: parseInt(groupId),
+        id: groupId,
         title,
         cards,
         count,
@@ -288,18 +175,18 @@ export const selectCountedLists = createSelector(
   }
 );
 export const selectCountedBoardLists = createSelector(
-  [selectStatus, selectTasksGroupByStatus],
-  (status, lists) => {
-    return Object.keys(status).map((statusId) => {
+  [selectStatuses, selectTasksGroupByStatus],
+  (statuses, lists) => {
+    return Object.keys(statuses).map((statusId) => {
       let cards = [];
       if (lists[statusId]) {
         cards = Object.values(lists[statusId]);
       }
       const count = cards.length;
-      const title = status[statusId] && status[statusId].title;
-      const order = status[statusId] && status[statusId].order;
+      const title = statuses[statusId] && statuses[statusId].title;
+      const order = statuses[statusId] && statuses[statusId].order;
       return {
-        id: parseInt(statusId),
+        id: statusId,
         title,
         cards,
         count,
@@ -358,25 +245,12 @@ export const selectFilteredAllOrderedBoardLists = createSelector(
 );
 
 export const {
-  updateCardDragged,
-  updateListDragged,
+  setCurrentProject,
   setFilterTerm,
   setFilterRecent,
   setFilterReset,
   setFilterDueThisWeek,
   setSortBy,
   setGroupBy,
-  setProject,
-  setSectionNew,
-  setSection,
-  setTaskNew,
-  setTaskTitle,
-  setTaskDescription,
-  setTaskStatus,
-  setTaskAssignee,
-  setTaskPriority,
-  setTaskSection,
-  setTaskDuedate,
-  deleteTask,
 } = projectSlice.actions;
 export default projectSlice.reducer;

@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 
 import { Modal } from '@/shared/components/Element';
 import { selectFilteredAllOrderedBoardLists } from '@/features/project/projectSlice';
+import { selectCurrrentProjectId } from '@/features/entity';
 
 import Lists from './Lists';
 import Filters from '../Filters';
@@ -12,6 +13,7 @@ import TaskDetail from '../Task/TaskDetail';
 const Board = () => {
   const match = useRouteMatch();
   const history = useHistory();
+  const currentProjectId = useSelector(selectCurrrentProjectId);
   const lists = useSelector(selectFilteredAllOrderedBoardLists);
   return (
     <div className="px-8 py-4">
@@ -54,7 +56,10 @@ const Board = () => {
               renderContent={(modal) => (
                 <TaskDetail
                   modalClose={modal.close}
-                  fields={{ status: routeProps.location.query && routeProps.location.query.status }}
+                  fields={{
+                    status: routeProps.location.query && routeProps.location.query.status,
+                    project: currentProjectId,
+                  }}
                 />
               )}
               style={{ minHeight: '300px' }}

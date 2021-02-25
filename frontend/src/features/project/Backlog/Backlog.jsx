@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 
 import { Modal } from '@/shared/components/Element';
 import { selectFilteredAllOrderedLists } from '@/features/project/projectSlice';
+import { selectCurrrentProjectId } from '@/features/entity';
 
 import Lists from './Lists';
 import Filters from '../Filters';
@@ -14,6 +15,8 @@ const Backlog = () => {
   const location = useLocation();
   const history = useHistory();
   const match = useRouteMatch();
+
+  const currentProjectId = useSelector(selectCurrrentProjectId);
   const lists = useSelector(selectFilteredAllOrderedLists);
   const isBacklog = location.pathname.includes('/backlog');
   return (
@@ -58,6 +61,7 @@ const Backlog = () => {
                   modalClose={modal.close}
                   fields={{
                     section: routeProps.location.query && routeProps.location.query.section,
+                    project: currentProjectId,
                   }}
                 />
               )}
@@ -82,7 +86,7 @@ const Backlog = () => {
         />
         <Route
           path={`${match.path}/section_new`}
-          render={(routeProps) => (
+          render={() => (
             <Modal
               isOpen={true}
               width={520}
@@ -92,7 +96,7 @@ const Backlog = () => {
                 <SectionDetail
                   modalClose={modal.close}
                   fields={{
-                    project: routeProps.location.query && routeProps.location.query.project,
+                    project: currentProjectId,
                   }}
                 />
               )}

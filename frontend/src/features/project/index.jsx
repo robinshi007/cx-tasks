@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Switch, Route, Redirect, useRouteMatch } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { Nav, Sidebar } from '@/components/Layout';
 import {
@@ -10,14 +10,15 @@ import {
   FabricFolderIcon,
 } from '@/shared/components/Element';
 
-import { selectProject } from '@/features/project/projectSlice';
+import { setCurrentProject, selectProjectById } from '@/features/project/projectSlice';
 import { BacklogPage } from '@/features/project/Backlog';
 import { BoardPage } from '@/features/project/Board';
 import { SettingsPage } from '@/features/project/Settings';
 
-const Project = () => {
-  let { path } = useRouteMatch();
-  const project = useSelector(selectProject);
+const Project = ({ id }) => {
+  let { url } = useRouteMatch();
+  const dispatch = useDispatch();
+  const project = useSelector(selectProjectById(id));
 
   const navHeader = {
     title: project.title,
@@ -26,12 +27,16 @@ const Project = () => {
   };
   const navList = [
     //{ name: 'Roadmap', icon: TimelineProgressIcon },
-    { name: 'Backlog', icon: BacklogListIcon, path: `${path}/backlog` },
-    { name: 'Board', icon: TaskboardIcon, active: true, path: `${path}/board` },
+    { name: 'Backlog', icon: BacklogListIcon, path: `${url}/backlog` },
+    { name: 'Board', icon: TaskboardIcon, active: true, path: `${url}/board` },
     //{ name: 'Chart', icon: ChartIcon },
-    { name: 'Settings', icon: SettingsIcon, path: `${path}/settings` },
+    { name: 'Settings', icon: SettingsIcon, path: `${url}/settings` },
     // { name: 'Feedback', icon: FeedbackIcon },
   ];
+  useEffect(() => {
+    console.log('currentProject', id);
+    dispatch(setCurrentProject(id));
+  }, [id, dispatch]);
 
   return (
     <>
@@ -39,17 +44,17 @@ const Project = () => {
       <Sidebar navHeader={navHeader} navList={navList} />
       <div className="ml-60 min-w-96 bg-white min-h-screen overflow-y-auto">
         <Switch>
-          <Route path={`${path}/board`}>
+          <Route path={`${url}/board`}>
             <BoardPage />
           </Route>
-          <Route path={`${path}/backlog`}>
+          <Route path={`${url}/backlog`}>
             <BacklogPage />
           </Route>
-          <Route path={`${path}/settings`}>
-            <SettingsPage />
+          <Route path={`${url}/settings`}>
+            <SettingsPage id={id} />
           </Route>
-          <Route exact path={`${path}/`}>
-            <Redirect to={`${path}/board`} />
+          <Route exact path={`${url}/`}>
+            <Redirect to={`${url}/board`} />
           </Route>
         </Switch>
       </div>

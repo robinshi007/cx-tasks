@@ -1,7 +1,8 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Switch, Route, Redirect, useRouteMatch } from 'react-router-dom';
-import { Avatar } from '@/shared/components/Element';
+import { Switch, Route, Redirect, useRouteMatch, useHistory } from 'react-router-dom';
+import { Avatar, Modal } from '@/shared/components/Element';
+import TaskDetail from '@/features/project/Task/TaskDetail';
 
 import {
   selectRecentProjects,
@@ -26,45 +27,74 @@ const Card = ({ title, count, color, url }) => {
           </div>
         </div>
         <div>
-          <a href={url} className="text-blue-600 hover:underline text-xs font-semibold">
-            QUICK LINKS
-          </a>
+          <RouteLink
+            to={url}
+            className="text-blue-600 hover:underline text-xs font-semibold uppercase"
+          >
+            Quick Links
+          </RouteLink>
         </div>
       </div>
     </div>
   );
 };
-const Row = ({ kind, title, dueDate, assignee, project }) => {
+const Row = ({ id, typeTitle, title, dueDate, assigneeName, projectTitle }) => {
+  const { path } = useRouteMatch();
   return (
     <li className="flex items-center justify-between font-sm text-gray-600 py-1">
       <div className="flex items-center justify-start w-full">
-        <Kind value={kind} className="" />
-        <div className="text-sm font-normal truncate flex-shrink">{title}</div>
+        <Kind value={typeTitle} className="" />
+        <RouteLink className="text-sm font-normal truncate flex-shrink" to={`${path}/tasks/${id}`}>
+          {title}
+        </RouteLink>
         <div className="flex flex-1"></div>
-        <Label className="mr-2 flex-shrink-0" value={project} color="blue" />
+        <Label className="mr-2 flex-shrink-0" value={projectTitle} color="blue" />
         <div className="mr-2 text-right text-gray-400 text-sm truncate flex-shrink-0">
           {timeAgo(dueDate)}
         </div>
-        <Avatar initials={assignee} bg="purple" color="white" size={28} />
+        <Avatar initials={assigneeName} bg="purple" color="white" size={28} />
       </div>
     </li>
   );
 };
 
 const TaskList = ({ tasks }) => {
+  const match = useRouteMatch();
+  const history = useHistory();
   return (
-    <ul>
-      {Object.values(tasks).map(({ id, kind, title, due_date, assignee, project }) => (
-        <Row
-          kind={kind}
-          title={title}
-          dueDate={due_date}
-          key={id}
-          assignee={assignee}
-          project={project}
-        />
-      ))}
-    </ul>
+    <>
+      <ul>
+        {Object.values(tasks).map(
+          ({ id, typeTitle, title, due_date, assigneeName, projectTitle, project }) => (
+            <Row
+              id={id}
+              typeTitle={typeTitle}
+              title={title}
+              dueDate={due_date}
+              key={id}
+              assigneeName={assigneeName}
+              projectTitle={projectTitle}
+              project={project}
+            />
+          )
+        )}
+      </ul>
+      <Route
+        path={`${match.path}/tasks/:taskId`}
+        render={(routeProps) => (
+          <Modal
+            isOpen={true}
+            width={720}
+            withCloseIcon={false}
+            onClose={() => history.push(match.url)}
+            renderContent={(modal) => (
+              <TaskDetail id={routeProps.match.params.taskId} modalClose={modal.close} />
+            )}
+            style={{ minHeight: '300px' }}
+          />
+        )}
+      />
+    </>
   );
 };
 
@@ -92,7 +122,7 @@ const MyWork = () => {
               <Card
                 title={project.title}
                 count={project.my_issue_count}
-                url={`${path}/project/${project.id}`}
+                url={`/projects/${project.id}`}
                 color={`bg-${project.color}-300`}
                 key={project.id}
               />

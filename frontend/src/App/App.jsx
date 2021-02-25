@@ -19,7 +19,10 @@ function App() {
       <Switch>
         <Route path="/login" component={LoginPage} />
         <Route path="/home" component={HomePage} />
-        <Route path="/project" component={ProjectPage} />
+        <Route
+          path="/projects/:projectId"
+          render={(routeProps) => <ProjectPage id={routeProps.match.params.projectId} />}
+        />
         <Route path="/prototype" component={PrototypePage} />
         <Redirect exact from="/" to="/login" />
         <Route component={PageError} />

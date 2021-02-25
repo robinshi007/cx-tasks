@@ -1,5 +1,4 @@
 import React, { useRef, useCallback } from 'react';
-import { formatDistance } from 'date-fns';
 import tw, { styled } from 'twin.macro';
 import { Link, NavLink } from 'react-router-dom';
 import {
@@ -12,39 +11,6 @@ import {
   SingleBookmarkIcon,
   Avatar,
 } from '@/shared/components/Element';
-
-// === utils ===
-export const timeAgo = (timeString) => {
-  const time = Date.parse(timeString);
-  return formatDistance(time, new Date(), { addSuffix: true });
-};
-export const defaultSection = () => {
-  const newDate = new Date();
-  return {
-    id: 0,
-    title: '',
-    description: '',
-    order: Math.floor(newDate.getTime() / 100),
-  };
-};
-export const defaultTask = () => {
-  const newDate = new Date();
-  return {
-    id: 0,
-    title: '',
-    description: '',
-    taskKind: 71,
-    section: 0,
-    priority: 33,
-    status: 11,
-    assignee: 0,
-    tags: [],
-    updated_at: newDate.toISOString(),
-    due_date: '',
-    order: Math.floor(newDate.getTime() / 100),
-    bdorder: Math.floor(newDate.getTime() / 100),
-  };
-};
 
 // === components ===
 export const RouteLink = styled(Link)`
@@ -71,11 +37,11 @@ export const Label = ({ value, color, rounded, className }) => {
   );
 };
 export const Priority = ({ value }) => {
-  if (value === 31) {
+  if (value === 'Block') {
     return <BlockedIcon size={18} className="text-red-500" />;
-  } else if (value === 32) {
+  } else if (value === 'High') {
     return <ChevronUpIcon size={18} className="text-red-500" />;
-  } else if (value === 34) {
+  } else if (value === 'Low') {
     return <ChevronDownIcon size={18} className="text-gray-500" />;
   } else {
     return <EqualIcon size={18} className="text-blue-500" />;

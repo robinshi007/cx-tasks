@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
+import { selectGroupBy } from '@/features/project/projectSlice';
 import {
   updateCardDragged,
-  updateListDragged,
-  selectGroupBy,
-} from '@/features/project/projectSlice';
+  updateSectionListDragged,
+  updateUserListDragged,
+} from '@/features/entity';
 import List from './List';
 
 const Lists = ({ lists }) => {
@@ -129,21 +130,23 @@ const Lists = ({ lists }) => {
         previousOrder = lists[dIndex - 1].order;
         nextOrder = lists[dIndex].order;
       }
-      dispatch(
-        updateListDragged({
-          source: { listIndex: result.source.index },
-          destination: {
-            listIndex: result.destination.index,
-          },
-          position: {
-            listId: draggedListId,
-            previousOrder,
-            nextOrder,
-          },
-          group: groupBy === '' ? 'section' : groupBy,
-          order: 'order',
-        })
-      );
+      const payload = {
+        source: { listIndex: result.source.index },
+        destination: {
+          listIndex: result.destination.index,
+        },
+        position: {
+          listId: draggedListId,
+          previousOrder,
+          nextOrder,
+        },
+        order: 'order',
+      };
+      if (groupBy === 'assignee') {
+        dispatch(updateUserListDragged(payload));
+      } else {
+        dispatch(updateSectionListDragged(payload));
+      }
     } else {
       // caculate prev/next card order
       const droppedListIndex = lists.findIndex(
@@ -210,7 +213,7 @@ const Lists = ({ lists }) => {
             previousCardOrder,
             nextCardOrder,
           },
-          group: groupBy === '' ? 'section' : groupBy,
+          group: groupBy,
           order: 'order',
         })
       );

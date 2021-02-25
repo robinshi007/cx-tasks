@@ -7,7 +7,8 @@ import * as yup from 'yup';
 
 import { ClearIcon } from '@/shared/components/Element';
 import { Button, Input, FormSubmit, ErrorMessage, defaultSection } from '@/features/shared';
-import { setSectionNew, setSection, selectSectionById } from '@/features/project/projectSlice';
+import { selectSectionById } from '@/features/project/projectSlice';
+import { setSectionNew, setSection } from '@/features/entity';
 
 const SectionDetail = ({ id, modalClose }) => {
   const isAddMode = !id;
