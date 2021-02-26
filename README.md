@@ -1,6 +1,6 @@
 ## CxTasks
 
-A Task/Project management webapp like simplified Asana and Trello
+A Task/Project management webapp like simplified Jira and Asana.
 
 ## Folder Structure
 
@@ -52,8 +52,7 @@ Current status:
 - [done] [frontend] Finish phase 1 features: login -> my work -> projects -> project board with filters and dragdrop -> new project/task form
 - [done] [frontend] Add redirect to 404 page if entity is not found or server internal error
 - [done] [frontend] Replace the project with alpha transparency support
-- [todo] [frontend] Add context select list at side nav
-- [todo] [frontend] Add section association to each project
+- [done] [frontend] Add context select list at side nav
 - [todo] [frontend] Bolish the task form using react-hook-form library
 - [todo] [frontend] Implement a toast component for action feedback
 - [todo] [interface] Design the backend API spec

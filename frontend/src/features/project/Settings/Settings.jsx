@@ -6,8 +6,8 @@ import * as yup from 'yup';
 
 import { ClearIcon } from '@/shared/components/Element';
 import { TextArea, Button, ErrorMessage, FormSubmit, defaultProject } from '@/features/shared';
-import { setProject, setProjectNew } from '@/features/entity';
-import { selectProjectById, selectCurrentProjectId } from '@/features/project/projectSlice';
+import { setProject, setProjectNew, selectCurrentProjectId } from '@/features/entity';
+import { selectProjectById } from '@/features/project/projectSlice';
 
 const Settings = ({ modalClose }) => {
   const id = useSelector(selectCurrentProjectId);

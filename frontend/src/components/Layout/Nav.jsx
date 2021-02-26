@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import tw, { styled } from 'twin.macro';
 
@@ -9,51 +9,53 @@ import {
   AddIcon,
   FabricFolderIcon,
   RingerIcon,
-  HelpIcon,
 } from '@/shared/components/Element';
-import { selectCurrrentProjectId } from '@/features/entity';
+import { selectCurrentProjectId } from '@/features/entity';
 import logoImage from '@/assets/logo.png';
 
-const NavLink = styled(Link)`
+const MyNavLink = styled(NavLink)`
   ${tw`flex items-center justify-center w-full hover:bg-blue-600 cursor-pointer py-3`}
+  &.active {
+    ${tw`bg-blue-700 hover:bg-blue-600`}
+  }
 `;
 
 export const Nav = () => {
-  const currentProject = useSelector(selectCurrrentProjectId);
+  const currentProject = useSelector(selectCurrentProjectId);
   return (
     <nav className="bg-blue-700 w-12 fixed top-0 left-0 h-screen flex flex-col items-center justify-center h-full">
-      <NavLink className="pt-3.5 pb-3" to="/">
+      <MyNavLink className="pt-3.5 pb-3" to="/">
         <img src={logoImage} alt="logo" />
-      </NavLink>
+      </MyNavLink>
       <div className="flex flex-col items-center justify-between h-full">
         <div className="w-12 flex-grow-0 text-white">
-          <NavLink to={`/home`}>
+          <MyNavLink to={`/home`}>
             <HomeIcon size={24} />
-          </NavLink>
-          <NavLink to="/todo">
+          </MyNavLink>
+          <MyNavLink to="/todo_search">
             <SearchIcon size={24} />
-          </NavLink>
-          <NavLink to="/todo">
+          </MyNavLink>
+          <MyNavLink to="/todo_add">
             <AddIcon size={24} />
-          </NavLink>
+          </MyNavLink>
           {currentProject ? (
-            <NavLink to={`/projects/${currentProject}`}>
+            <MyNavLink to={`/projects/${currentProject}`}>
               <FabricFolderIcon size={24} />
-            </NavLink>
+            </MyNavLink>
           ) : (
             ''
           )}
         </div>
         <div className="w-12 flex flex-col items-center justify-center flex-grow-0 text-white">
-          <NavLink to="/projects/1/backlog/sections/133">
+          <MyNavLink to="/projects/1/backlog/sections/133">
             <RingerIcon size={24} />
-          </NavLink>
-          <NavLink to="/projects/1/board/tasks/323">
+          </MyNavLink>
+          {/*<MyNavLink to="/projects/1/board/tasks/323">
             <HelpIcon size={24} />
-          </NavLink>
-          <NavLink to="/projects/404">
+          </MyNavLink> */}
+          <MyNavLink to="/projects/404">
             <Avatar initials="WS" bg="purple" color="white" size={32} />
-          </NavLink>
+          </MyNavLink>
         </div>
       </div>
     </nav>

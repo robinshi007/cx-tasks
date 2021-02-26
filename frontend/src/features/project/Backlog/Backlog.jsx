@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 import { Modal } from '@/shared/components/Element';
 import { selectFilteredAllOrderedLists } from '@/features/project/projectSlice';
-import { selectCurrrentProjectId } from '@/features/entity';
+import { selectCurrentProjectId } from '@/features/entity';
 
 import Lists from './Lists';
 import Filters from '../Filters';
@@ -16,7 +16,7 @@ const Backlog = () => {
   const history = useHistory();
   const match = useRouteMatch();
 
-  const currentProjectId = useSelector(selectCurrrentProjectId);
+  const currentProjectId = useSelector(selectCurrentProjectId);
   const lists = useSelector(selectFilteredAllOrderedLists);
   const isBacklog = location.pathname.includes('/backlog');
   return (

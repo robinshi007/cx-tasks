@@ -56,7 +56,7 @@ const authSlice = createSlice({
     [loginAsyncAction.rejected]: (state, { payload }) => {
       state.isLoading = false;
       state.isAuthed = false;
-      state.error = payload.error.message;
+      state.error = payload.error && payload.error.message;
     },
   },
 });

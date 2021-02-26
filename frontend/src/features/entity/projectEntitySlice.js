@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { createSelector } from 'reselect';
 import { projectSeed } from './seed/projectSeed';
 
 const projectSlice = createSlice({
@@ -26,6 +27,13 @@ const projectSlice = createSlice({
 });
 export const { setProjectNew, setProject } = projectSlice.actions;
 
-export const selectCurrrentProjectId = (state) => state.project.currentProjectId;
+export const selectProjects = (state) => state.entities.projects;
+export const selectCurrentProjectId = (state) => state.project.currentProjectId;
+export const selectCurrentProject = createSelector(
+  [selectCurrentProjectId, selectProjects],
+  (id, projects) => {
+    return projects[id];
+  }
+);
 
 export default projectSlice.reducer;

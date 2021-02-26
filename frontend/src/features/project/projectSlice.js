@@ -9,7 +9,7 @@ import {
   defaultProject,
   cacheTaskWithTitles,
 } from '@/features/shared';
-import { selectCurrrentProjectId } from '@/features/entity';
+import { selectCurrentProjectId } from '@/features/entity';
 
 const defaultFilters = {
   filterTerm: '',
@@ -47,7 +47,6 @@ const projectSlice = createSlice({
   },
 });
 
-export const selectCurrentProjectId = (state) => state.project.currentProjectId;
 export const selectProjectById = (id) => (state) => {
   let project;
   if (!id) {
@@ -98,7 +97,7 @@ export const selectEntities = (state) => state.entities;
 export const selectTasks = (state) => state.entities.tasks;
 
 export const selectTasksByCurrentProject = createSelector(
-  [selectTasks, selectCurrrentProjectId, selectEntities],
+  [selectTasks, selectCurrentProjectId, selectEntities],
   (tasks, pid, entities) => {
     return map(
       Object.values(tasks).filter((task) => task.project === pid),

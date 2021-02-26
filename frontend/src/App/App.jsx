@@ -43,7 +43,8 @@ function App() {
           render={(routeProps) => <ProjectPage id={routeProps.match.params.projectId} />}
         />
         <Route path="/prototype" component={PrototypePage} />
-        <Route exact path="/todo" component={PageTodo} />
+        <Route exact path="/todo_search" component={PageTodo} />
+        <Route exact path="/todo_add" component={PageTodo} />
         <Route component={Page404} />
       </Switch>
     </Router>
