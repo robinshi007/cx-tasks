@@ -4,8 +4,8 @@ The Epic grouped the triaged stories to implement.
 
 ## Test target:
 
-Desktop, Chrome/Edge browser
-Mobile/Tablet: not implement, will cover in later phase.
+* Desktop, Chrome/Edge browser
+* Mobile/Tablet: not implement, will cover in later phase.
 
 ### Epic1
 
