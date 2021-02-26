@@ -2,6 +2,11 @@
 
 The Epic grouped the triaged stories to implement.
 
+## Test target:
+
+Desktop, Chrome/Edge browser
+Mobile/Tablet: not implement, will cover in later phase.
+
 ### Epic1
 
 - [001_user_login](./001_user_login.md)
