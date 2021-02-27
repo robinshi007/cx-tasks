@@ -1,4 +1,5 @@
 import { Route } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 
 import { Nav } from './Nav';
 import { Sidebar } from './Sidebar';
@@ -15,6 +16,7 @@ export const MainFrame = ({ hasSideNav, sideNav, children }) => {
       >
         {children}
       </div>
+      <Toaster position="bottom-left" />
     </>
   );
 };

@@ -53,9 +53,9 @@ Current status:
 - [done] [frontend] Add redirect to 404 page if entity is not found or server internal error
 - [done] [frontend] Replace the project with alpha transparency support
 - [done] [frontend] Add context select list at side nav
-- [todo] [frontend] Bolish the task form using react-hook-form library
-- [todo] [frontend] Implement a toast component for action feedback
-- [todo] [interface] Design the backend API spec
+- [done] [frontend] Bolish the task form using react-hook-form library
+- [done] [frontend] Implement a toast component for action feedback
+- [doing] [interface] Design the backend API spec
 
 ## Refer apps
 

@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { NavLink, useRouteMatch } from 'react-router-dom';
+import { NavLink, useRouteMatch, useHistory } from 'react-router-dom';
 import tw, { styled, css } from 'twin.macro';
 
 import { Select, FabricFolderIcon, ChevronDownIcon } from '@/shared/components/Element';
@@ -36,8 +36,9 @@ const SidebarLinks = ({ links }) => {
     </>
   );
 };
-const SidebarHeader = ({ title, description, Icon }) => {
+const SidebarHeader = ({ title, description }) => {
   const { url } = useRouteMatch();
+  const history = useHistory();
   const dispatch = useDispatch();
   const project = useSelector(selectCurrentProject);
   const projects = useSelector(selectProjects);
@@ -58,6 +59,11 @@ const SidebarHeader = ({ title, description, Icon }) => {
           }))}
           onChange={(val) => {
             dispatch(setCurrentProject(val));
+            const pathname = history.location.pathname;
+            const newPaths = pathname.split('/');
+            newPaths[2] = val;
+            const newPath = newPaths.join('/');
+            history.push(newPath);
           }}
           renderValue={({ value: projectId }) => RenderSelectedProjectOption(projects[projectId])}
           renderOption={({ value: projectId }) => RenderProjectOption(projects[projectId])}
@@ -79,12 +85,12 @@ const RenderSelectedProjectOption = (project) => {
   if (project) {
     return (
       <>
-        <FabricFolderIcon size={28} className="text-gray-600 flex-none mr-2 -ml-2" />
+        <FabricFolderIcon size={28} className="text-gray-600 flex-none mr-2 -ml-1" />
         <div className="w-22 h-11" style={{ width: '104px' }}>
           <h4 className="text-gray-600 text-sm font-medium truncate">{project.title}</h4>
           <p className="text-xs text-gray-500 truncate">{project.description}</p>
         </div>
-        <ChevronDownIcon size={12} color="gray" className="-mr-3" />
+        <ChevronDownIcon size={12} color="gray" className="-mr-2" />
       </>
     );
   }

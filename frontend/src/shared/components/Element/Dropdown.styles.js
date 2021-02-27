@@ -8,7 +8,7 @@ export const StyledSelect = styled.div(() => [
 ]);
 
 export const ValueContainer = styled.div((props) => [
-  tw`flex items-center w-full py-1 px-4 rounded`,
+  tw`flex items-center w-full py-1 px-3 rounded truncate`,
   !props.isMulti &&
     !props.isValueEmpty &&
     tw`bg-gray-200 hover:bg-gray-300 transition ease-out duration-200`,
@@ -54,7 +54,7 @@ export const Options = styled.div(() => [
 ]);
 
 export const Option = styled.div(() => [
-  tw`py-2 px-3 break-words cursor-pointer`,
+  tw`py-2 px-3 break-words cursor-pointer truncate`,
   css`
     &:first-of-type {
       margin-top: 2px;

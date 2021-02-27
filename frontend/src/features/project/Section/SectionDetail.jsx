@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import toast from 'react-hot-toast';
 
 import { ClearIcon } from '@/shared/components/Element';
 import { Button, TextArea, FormSubmit, ErrorMessage, defaultSection } from '@/features/shared';
@@ -35,7 +36,13 @@ const SectionDetail = ({ id, modalClose }) => {
     } else {
       dispatch(setSection({ id, section: data }));
     }
-    modalClose();
+    modalClose && modalClose();
+
+    if (isAddMode) {
+      toast.success('New section is created.');
+    } else {
+      toast.success(`Section ${id} is updated.`);
+    }
   };
 
   // const [section, setSection] = useState({});

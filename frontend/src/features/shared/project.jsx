@@ -105,11 +105,11 @@ export const Input = React.forwardRef(({ children, type, ...props }, ref) => {
   );
 });
 
-const StyledTextArea = styled.textarea(({ isHeading, isError }) => [
-  tw`block p-1.5 w-full rounded bg-white border-none resize-none overflow-y-auto overflow-x-hidden focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500`,
+const StyledTextArea = styled.textarea(({ isBgWhite, isError }) => [
+  tw`block p-1 w-full rounded border-none resize-none overflow-y-auto overflow-x-hidden focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500`,
   tw`text-sm bg-gray-100 text-gray-700`,
   tw`transition ease-out duration-200`,
-  isHeading && tw`text-base`,
+  isBgWhite && tw`bg-white`,
   isError && tw`ring-2 ring-red-600`,
 ]);
 
@@ -140,7 +140,7 @@ export const TextArea = React.forwardRef(
       <StyledTextArea
         ref={el}
         inputRef={ref}
-        rows={rows || 1}
+        rows={rows || (isMulti ? 2 : 1)}
         {...props}
         onKeyDown={handleKeyDown}
         onChange={(e) => {
@@ -154,6 +154,14 @@ export const TextArea = React.forwardRef(
     );
   }
 );
+
+export const RenderProjectOption = (project) => {
+  return (
+    <div className="truncate" key={project.id} style={{ maxWidth: '160px' }}>
+      {project.title}
+    </div>
+  );
+};
 
 export const RenderUserOption = (user) => {
   return (
@@ -176,7 +184,7 @@ export const RenderPriorityOption = (priority) => {
 export const ErrorMessage = ({ field, className }) => {
   return (
     <div
-      className={`text-xs text-red-600 px-2 mt-1 text-left truncate mb-1.5 truncate${className}`}
+      className={`text-xs text-red-600 px-2 my-1 text-left truncate truncate${className}`}
       style={{ minHeight: '20px' }}
     >
       {field && field.message}

@@ -1,19 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Redirect, useRouteMatch } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { map } from 'lodash';
+import { map, merge } from 'lodash';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import toast from 'react-hot-toast';
 
-import { ClearIcon, DeleteIcon, Select } from '@/shared/components/Element';
+import { ClearIcon, Select } from '@/shared/components/Element';
 import {
   timeAgo,
   Button,
   Kind,
   RenderUserOption,
+  RenderProjectOption,
   RenderPriorityOption,
   TextArea,
+  FormSubmit,
   ErrorMessage,
 } from '@/features/shared';
 import {
@@ -23,17 +28,7 @@ import {
   selectAssignees,
   selectSections,
 } from '@/features/project/projectSlice';
-import {
-  setTaskNew,
-  setTaskTitle,
-  setTaskDescription,
-  setTaskStatus,
-  setTaskPriority,
-  setTaskAssignee,
-  setTaskSection,
-  setTaskDuedate,
-  deleteTask,
-} from '@/features/entity';
+import { selectProjects, setTask, setTaskNew } from '@/features/entity';
 
 const TaskDetail = ({ id, modalClose, fields }) => {
   const isAddMode = !id;
@@ -51,52 +46,45 @@ const TaskDetail = ({ id, modalClose, fields }) => {
   const priorities = useSelector(selectPriorities);
   const assignees = useSelector(selectAssignees);
   const sections = useSelector(selectSections);
+  const projects = useSelector(selectProjects);
+  // schema
+  var validationSchema = yup.object().shape({
+    title: yup.string().required().max(256),
+    description: yup.string().max(1024),
+    project: yup.string().required(),
+    section: yup.string(),
+    assignee: yup.string(),
+    status: yup.string().required(),
+    priority: yup.string().required(),
+    due_date: yup.string(),
+  });
 
-  const [taskCache, setTaskCache] = useState(task);
+  const { handleSubmit, errors, control, reset, formState } = useForm({
+    mode: 'onChange',
+    resolver: yupResolver(validationSchema),
+  });
+  const { isDirty, isValid } = formState;
 
-  const [dirty, setDirty] = useState(false);
-  const [changeSet, setChangeSet] = useState([]);
-  const addChangeFn = (fn) => {
-    setChangeSet([...changeSet, fn]);
-  };
-  const cancel = () => {
-    setChangeSet([]);
-    setTaskCache(task);
-    setDirty(false);
-    validate();
-  };
-  const submit = () => {
-    if (taskCache.id === '0') {
-      dispatch(setTaskNew({ id: taskCache.id.toString(), task }));
+  const handleSubmitFn = (data) => {
+    if (data.due_date.length === 13) {
+      data.due_date = new Date(parseInt(data.due_date)).toISOString();
+    } else if (data.due_date === 'NaN') {
+      data.due_date = '';
     }
-    changeSet.forEach((fn) => fn());
-    modalClose();
+    console.log('data', data);
+    let newTask = merge(task, data);
+    if (isAddMode) {
+      dispatch(setTaskNew({ id: newTask.id, task: newTask }));
+    } else {
+      dispatch(setTask({ id: newTask.id, task: newTask }));
+    }
+    modalClose && modalClose();
+    if (isAddMode) {
+      toast.success('New task is created.');
+    } else {
+      toast.success(`Task ${id} is updated.`);
+    }
   };
-  const validateTitle = (e) => {
-    const titleSchema = yup.string().required().max(128);
-    const val = e ? e.target.value : taskCache.title;
-    titleSchema.validate(val).catch((err) => {
-      if (err.errors.length > 0) {
-        setTitleError(err.errors[0]);
-      }
-    });
-  };
-  const validateDesc = (e) => {
-    const descSchema = yup.string().max(1024);
-    const val = e ? e.target.value : taskCache.description;
-    descSchema.validate(val).catch((err) => {
-      if (err.errors.length > 0) {
-        setDescError(err.errors[0]);
-      }
-    });
-  };
-  const validate = () => {
-    validateTitle();
-    validateDesc();
-  };
-
-  const [titleError, setTitleError] = useState('');
-  const [descError, setDescError] = useState('');
 
   return (
     <>
@@ -104,231 +92,234 @@ const TaskDetail = ({ id, modalClose, fields }) => {
         <>
           <div className="flex items-center justify-between px-2 py-3 text-gray-500">
             <div className="flex items-center ml-2 text-sm">
-              <Kind value={taskCache.typeTitle} />
-              <div>{isAddMode ? `${taskCache.typeTitle} New` : `${taskCache.typeTitle}-${id}`}</div>
+              <Kind value={task.typeTitle} />
+              <div>{isAddMode ? `${task.typeTitle} New` : `${task.typeTitle}-${id}`}</div>
             </div>
             <div className="flex items-center">
-              {dirty ? (
-                <>
-                  <Button className="mr-2" variant="text" color="light" onClick={cancel}>
-                    Cancel
-                  </Button>
-                  <Button
-                    className="mr-2"
-                    variant="contained"
-                    color="primary"
-                    onClick={submit}
-                    disabled={titleError !== '' || descError !== '' ? true : false}
-                  >
-                    Save
-                  </Button>
-                </>
-              ) : (
-                ''
-              )}
-              {id === 'new' ? (
-                ''
-              ) : (
-                <Button
-                  className="mr-2"
-                  variant="text"
-                  color="danger"
-                  onClick={() => {
-                    // TODO: delete task with prompt
-                    dispatch(deleteTask({ id: taskCache.id }));
-                    modalClose();
-                  }}
-                >
-                  <DeleteIcon size={20} />
-                </Button>
-              )}
               <Button variant="text" color="light" onClick={modalClose} className="mr-2">
                 <ClearIcon size={20} />
               </Button>
             </div>
           </div>
-          <div className="bg-white px-4 pt-2 pb-4 text-gray-700">
-            <div className="flex items-start justify-between">
-              <div className="w-full mr-4">
-                <h3 className="text-lg leading-5 font-medium">
-                  <TextArea
-                    value={taskCache.title}
-                    placeholder="Task name"
-                    isHeading={true}
-                    onChange={(e) => {
-                      // TODO: add input validate
-                      !dirty && setDirty(true);
-                      setTitleError('');
-                      setTaskCache({ ...taskCache, title: e.target.value });
-                      validateTitle(e);
-                    }}
-                    onBlur={() => {
-                      if (titleError === '') {
-                        addChangeFn(() =>
-                          dispatch(setTaskTitle({ id: taskCache.id, title: taskCache.title }))
-                        );
-                      }
-                    }}
+          <div className="bg-white px-4 pt-2 pb-2 text-gray-700">
+            <form
+              className="flex items-start justify-between"
+              onSubmit={handleSubmit(handleSubmitFn)}
+            >
+              <div className="mr-4 w-full">
+                <div className="">
+                  <Controller
+                    name="title"
+                    defaultValue={task.title}
+                    control={control}
+                    render={({ ref, ...props }) => (
+                      <TextArea
+                        ref={ref}
+                        isBgWhite={true}
+                        placeholder="Task name"
+                        className="text-lg font-medium"
+                        isError={errors.title}
+                        {...props}
+                      />
+                    )}
                   />
-                  <ErrorMessage field={{ message: titleError }} />
-                </h3>
-                <div className="py-2 text-sm">
-                  <TextArea
-                    value={taskCache.description}
-                    isMulti={true}
-                    placeholder="Task description"
-                    onChange={(e) => {
-                      // TODO: add input validate
-                      !dirty && setDirty(true);
-                      setDescError('');
-                      setTaskCache({ ...taskCache, description: e.target.value });
-                      validateDesc(e);
-                    }}
-                    onBlur={() => {
-                      if (descError === '') {
-                        addChangeFn(() =>
-                          dispatch(
-                            setTaskDescription({
-                              id: taskCache.id,
-                              description: taskCache.description,
-                            })
-                          )
-                        );
-                      }
-                    }}
+                </div>
+                <ErrorMessage field={errors.title} />
+                <div className="">
+                  <Controller
+                    name="description"
+                    defaultValue={task.description}
+                    control={control}
+                    render={({ ref, ...props }) => (
+                      <TextArea
+                        ref={ref}
+                        isMulti={true}
+                        isBgWhite={true}
+                        placeholder="Task description"
+                        className="text-xs"
+                        isHeading={true}
+                        isError={errors.description}
+                        {...props}
+                      />
+                    )}
                   />
-                  <ErrorMessage field={{ message: descError }} />
+                  <ErrorMessage field={errors.description} />
                 </div>
               </div>
-              <div className="w-96">
+              <div className="" style={{ width: '240px' }}>
                 <div className="">
+                  <p className="text-gray-500 text-xs font-medium uppercase mr-2">project</p>
+                  <Controller
+                    name="project"
+                    defaultValue={task.project}
+                    control={control}
+                    render={({ ref, ...props }) => (
+                      <Select
+                        ref={ref}
+                        variant="empty"
+                        placeholder="None"
+                        withClearValue={false}
+                        withSearch={false}
+                        options={map(projects, (val, key) => ({
+                          value: key,
+                          label: val.title,
+                        }))}
+                        renderValue={({ value: id }) => RenderProjectOption(projects[id])}
+                        renderOption={({ value: id }) => RenderProjectOption(projects[id])}
+                        {...props}
+                        style={{}}
+                      />
+                    )}
+                  />
+                </div>
+                <div className="pt-3">
                   <p className="text-gray-500 text-xs font-medium uppercase mr-2">status</p>
-                  <Select
-                    variant="empty"
-                    placeholder="None"
-                    dropdownWidth={120}
-                    withClearValue={false}
-                    withSearch={false}
+                  <Controller
                     name="status"
-                    value={taskCache.status.toString()}
-                    options={map(statuses, (val, key) => ({
-                      value: key,
-                      label: val.title,
-                    }))}
-                    onChange={(val) => {
-                      !dirty && setDirty(true);
-                      setTaskCache({ ...taskCache, status: val });
-                      validate();
-                      addChangeFn(() => dispatch(setTaskStatus({ id: taskCache.id, status: val })));
-                    }}
+                    defaultValue={task.status}
+                    control={control}
+                    render={({ ref, ...props }) => (
+                      <Select
+                        ref={ref}
+                        dropdownWidth={130}
+                        variant="empty"
+                        placeholder="None"
+                        withClearValue={false}
+                        withSearch={false}
+                        options={map(statuses, (val, key) => ({
+                          value: key,
+                          label: val.title,
+                        }))}
+                        {...props}
+                      />
+                    )}
                   />
                 </div>
                 <div className="pt-3">
                   <p className="text-gray-500 text-xs font-medium uppercase mr-2">assignee</p>
-                  <Select
-                    variant="empty"
-                    placeholder="Unassigned"
-                    dropdownWidth={120}
-                    withClearValue={false}
-                    withSearch={false}
+                  <Controller
                     name="assignee"
-                    value={taskCache.assignee && taskCache.assignee.toString()}
-                    options={map(assignees, (val, key) => ({
-                      value: key,
-                      label: val.name,
-                    }))}
-                    onChange={(val) => {
-                      !dirty && setDirty(true);
-                      setTaskCache({ ...taskCache, assignee: val });
-                      validate();
-                      addChangeFn(() =>
-                        dispatch(setTaskAssignee({ id: taskCache.id, assignee: val }))
-                      );
-                    }}
-                    renderValue={({ value: assigneeId }) => RenderUserOption(assignees[assigneeId])}
-                    renderOption={({ value: assigneeId }) =>
-                      RenderUserOption(assignees[assigneeId])
-                    }
+                    defaultValue={task.assignee && task.assignee.toString()}
+                    control={control}
+                    render={({ ref, ...props }) => (
+                      <Select
+                        ref={ref}
+                        variant="empty"
+                        dropdownWidth={130}
+                        placeholder="Unassigned"
+                        withClearValue={false}
+                        withSearch={false}
+                        options={map(assignees, (val, key) => ({
+                          value: key,
+                          label: val.name,
+                        }))}
+                        renderValue={({ value: assigneeId }) =>
+                          RenderUserOption(assignees[assigneeId])
+                        }
+                        renderOption={({ value: assigneeId }) =>
+                          RenderUserOption(assignees[assigneeId])
+                        }
+                        {...props}
+                      />
+                    )}
                   />
                 </div>
                 <div className="pt-3">
                   <p className="text-gray-500 text-xs font-medium uppercase mr-2">priority</p>
-                  <Select
-                    variant="empty"
-                    placeholder="None"
-                    dropdownWidth={120}
-                    withClearValue={false}
-                    withSearch={false}
+                  <Controller
                     name="priority"
-                    value={taskCache.priority && taskCache.priority.toString()}
-                    options={map(priorities, (val, key) => ({
-                      value: key,
-                      label: val.title,
-                    }))}
-                    onChange={(val) => {
-                      !dirty && setDirty(true);
-                      setTaskCache({ ...taskCache, priority: val });
-                      validate();
-                      addChangeFn(() =>
-                        dispatch(setTaskPriority({ id: taskCache.id, priority: val }))
-                      );
-                    }}
-                    renderValue={({ value: priorityId }) =>
-                      RenderPriorityOption(priorities[priorityId])
-                    }
-                    renderOption={({ value: priorityId }) =>
-                      RenderPriorityOption(priorities[priorityId])
-                    }
+                    defaultValue={task.priority && task.priority}
+                    control={control}
+                    render={({ ref, ...props }) => (
+                      <Select
+                        ref={ref}
+                        variant="empty"
+                        dropdownWidth={130}
+                        placeholder="None"
+                        withClearValue={false}
+                        withSearch={false}
+                        options={map(priorities, (val, key) => ({
+                          value: key,
+                          label: val.title,
+                        }))}
+                        renderValue={({ value: priorityId }) =>
+                          RenderPriorityOption(priorities[priorityId])
+                        }
+                        renderOption={({ value: priorityId }) =>
+                          RenderPriorityOption(priorities[priorityId])
+                        }
+                        {...props}
+                      />
+                    )}
                   />
                 </div>
                 <div className="pt-3">
                   <p className="text-gray-500 text-xs font-medium uppercase mr-2">section</p>
-                  <Select
-                    variant="empty"
-                    placeholder="None"
-                    dropdownWidth={120}
-                    withClearValue={false}
-                    withSearch={false}
+                  <Controller
                     name="section"
-                    value={taskCache.section && taskCache.section.toString()}
-                    options={map(sections, (val, key) => ({
-                      value: key,
-                      label: val.title,
-                    }))}
-                    onChange={(val) => {
-                      !dirty && setDirty(true);
-                      setTaskCache({ ...taskCache, section: val });
-                      validate();
-                      addChangeFn(() =>
-                        dispatch(setTaskSection({ id: taskCache.id, section: val }))
-                      );
-                    }}
+                    defaultValue={task.section && task.section}
+                    control={control}
+                    render={({ ref, ...props }) => (
+                      <Select
+                        ref={ref}
+                        variant="empty"
+                        placeholder="None"
+                        dropdownWidth={130}
+                        withClearValue={false}
+                        withSearch={false}
+                        options={map(sections, (val, key) => ({
+                          value: key,
+                          label: val.title,
+                        }))}
+                        {...props}
+                      />
+                    )}
                   />
                 </div>
                 <div className="pt-3">
                   <p className="text-gray-500 text-xs font-medium uppercase mr-2">Due date</p>
                   <div className="text-sm">
-                    <DatePicker
-                      className="w-32 bg-gray-200 text-gray-600 px-4 py-1.5 rounded"
-                      selected={Date.parse(taskCache.due_date)}
-                      dateFormat="yyyy/MM/dd"
-                      onChange={(date) => {
-                        !dirty && setDirty(true);
-                        setTaskCache({ ...taskCache, due_date: date });
-                        validate();
-                        addChangeFn(() =>
-                          dispatch(
-                            setTaskDuedate({ id: taskCache.id, due_date: date.toISOString() })
-                          )
-                        );
-                      }}
+                    <Controller
+                      name="due_date"
+                      defaultValue={Date.parse(task.due_date)}
+                      control={control}
+                      render={({ value, ...props }) => (
+                        <DatePicker
+                          className="w-32 bg-gray-200 text-gray-600 px-4 py-1.5 rounded"
+                          selected={value}
+                          dateFormat="yyyy/MM/dd"
+                          {...props}
+                        />
+                      )}
                     />
                   </div>
                 </div>
-                <div className="pt-3 text-xs">Updated at {timeAgo(taskCache.updated_at)} </div>
+                <div className="pt-3 text-xs">Updated at {timeAgo(task.updated_at)} </div>
+                <div className="placeholder pt-3 h-20">
+                  {isDirty ? (
+                    <div className="flex items-center pt-2">
+                      <Button
+                        className="mr-2"
+                        variant="text"
+                        color="light"
+                        onClick={() => {
+                          reset();
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                      <FormSubmit
+                        type="submit"
+                        color="primary"
+                        disabled={isValid && isDirty ? false : true}
+                      />
+                    </div>
+                  ) : (
+                    ''
+                  )}
+                </div>
               </div>
-            </div>
-            <div className="placeholder pt-3 h-20"></div>
+            </form>
           </div>
         </>
       ) : (

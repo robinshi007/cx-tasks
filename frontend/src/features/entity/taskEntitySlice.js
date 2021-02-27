@@ -16,6 +16,23 @@ const taskSlice = createSlice({
         state[payload.id] = payload.task;
       }
     },
+    setTask: (state, { payload }) => {
+      const task = state[payload.id];
+      const timeNow = new Date().toISOString();
+      console.log('due_date', payload.task.due_date);
+      //task.due_date = new Date(parseInt(payload.task.due_date)).toISOString();
+      if (task.assignee !== payload.task.assignee) {
+        task.assigned_at = timeNow;
+      }
+      task.title = payload.task.title;
+      task.description = payload.task.description;
+      task.project = payload.task.project;
+      task.status = payload.task.status;
+      task.section = payload.task.section;
+      task.assignee = payload.task.assignee;
+      task.priority = payload.task.priority;
+      task.due_date = payload.task.due_date;
+    },
     setTaskTitle: (state, { payload }) => {
       const task = state[payload.id];
       task.title = payload.title;
@@ -74,6 +91,7 @@ const taskSlice = createSlice({
 
 export const {
   setTaskNew,
+  setTask,
   setTaskTitle,
   setTaskDescription,
   setTaskStatus,

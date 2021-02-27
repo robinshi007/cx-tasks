@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import toast from 'react-hot-toast';
 
 import { ClearIcon } from '@/shared/components/Element';
 import { TextArea, Button, ErrorMessage, FormSubmit, defaultProject } from '@/features/shared';
@@ -12,13 +13,14 @@ import { selectProjectById } from '@/features/project/projectSlice';
 const Settings = ({ modalClose }) => {
   const id = useSelector(selectCurrentProjectId);
   const isAddMode = !id;
+  const project = useSelector(selectProjectById(id));
   const dispatch = useDispatch();
 
   const validationSchema = yup.object().shape({
     title: yup.string().required().max(128),
     description: yup.string().max(512),
   });
-  const { handleSubmit, errors, control, formState } = useForm({
+  const { handleSubmit, errors, control, setValue, formState } = useForm({
     mode: 'onChange',
     resolver: yupResolver(validationSchema),
   });
@@ -31,12 +33,21 @@ const Settings = ({ modalClose }) => {
       dispatch(setProject({ id: id, project: data }));
     }
     modalClose && modalClose();
+
+    if (isAddMode) {
+      toast.success('New project is created.');
+    } else {
+      toast.success(`Project ${id} is updated.`);
+    }
   };
 
-  // data
-  let project = useSelector(selectProjectById(id));
-  // const fields = ['title', 'description'];
-  // fields.forEach((field) => setValue(field, project[field]));
+  useEffect(() => {
+    if (project) {
+      setValue('title', project.title);
+      setValue('description', project.description);
+    }
+  }, [project, setValue]);
+
   return (
     <div className="px-8 py-4 flex items-center justify-between text-sm ">
       <div className="w-full">

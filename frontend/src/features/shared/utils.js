@@ -4,6 +4,7 @@ import { formatDistance } from 'date-fns';
 export const timeAgo = (timeString) => {
   if (timeString !== '') {
     const time = Date.parse(timeString);
+    console.log('time string', timeString);
     return formatDistance(time, new Date(), { addSuffix: true });
   } else {
     return '';
