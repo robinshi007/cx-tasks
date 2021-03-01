@@ -2,6 +2,8 @@
 
 A Task/Project management webapp like simplified Jira and Asana.
 
+[Demo](https://hopeful-mccarthy-b4e638.netlify.app) login: demo/demo
+
 ## Folder Structure
 
 - doc: contains user stories, design notes and development notes.

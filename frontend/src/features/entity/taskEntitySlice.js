@@ -126,7 +126,7 @@ const taskSlice = createSlice({
       toast.success(`Task #${payload} created successfully.`);
     },
     [deleteTaskThunk.fulfilled]: (state, { payload }) => {
-      toast.success(`Task #${payload} deleted successfully.`);
+      toast.success(`Task deleted successfully.`);
     },
   },
 });

@@ -3,8 +3,9 @@ import { NavLink, useRouteMatch, useHistory } from 'react-router-dom';
 import tw, { styled, css } from 'twin.macro';
 
 import { Select, FabricFolderIcon, ChevronDownIcon } from '@/shared/components/Element';
-import { selectProjects, selectCurrentProject } from '@/features/entity';
+import { selectCurrentProject } from '@/features/entity';
 import { setCurrentProject } from '@/features/project/projectSlice';
+import { selectRecentProjects } from '@/features/home/homeSlice';
 import { map } from 'lodash';
 
 const linkActiveStyles = () => css`
@@ -41,7 +42,7 @@ const SidebarHeader = ({ title, description }) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const project = useSelector(selectCurrentProject);
-  const projects = useSelector(selectProjects);
+  const projects = useSelector(selectRecentProjects);
   const isProject = url.startsWith('/projects');
   return (
     <>
