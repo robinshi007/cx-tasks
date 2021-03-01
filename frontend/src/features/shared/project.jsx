@@ -191,3 +191,24 @@ export const ErrorMessage = ({ field, className }) => {
     </div>
   );
 };
+
+const statusClass = (status) => {
+  if (status === 'Backlog' || status === 'Todo') {
+    return 'bg-gray-200 text-gray-700';
+  } else if (status === 'Done') {
+    return 'bg-green-600 text-white';
+  } else {
+    return 'bg-blue-600 text-white';
+  }
+};
+export const Status = ({ title }) => {
+  return (
+    <div
+      className={`text-center font-semibold text-xs rounded px-2 py-0.5 uppercase select-none ${statusClass(
+        title
+      )}`}
+    >
+      {title}
+    </div>
+  );
+};

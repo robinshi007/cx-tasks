@@ -24,26 +24,46 @@ export const computeOrder = (previous, next) => {
 };
 
 export const cacheTaskWithTitles = (entities, task) => {
-  return {
-    ...task,
-    typeTitle: task.type ? entities.taskTypes[task.type].title : '',
-    statusTitle: task.status ? entities.statuses[task.status].title : '',
-    projectTitle: task.project ? entities.projects[task.project].title : '',
-    assigneeName: task.assignee ? entities.users[task.assignee].name : '',
-    sectionTitle: task.section ? entities.sections[task.section].title : '',
-    priorityTitle: task.priority ? entities.priorities[task.priority].title : '',
-  };
+  let result;
+  try {
+    result = {
+      ...task,
+      typeTitle: task.type ? entities.taskTypes[task.type].title : '',
+      statusTitle: task.status ? entities.statuses[task.status].title : '',
+      projectTitle: task.project ? entities.projects[task.project].title : '',
+      assigneeName: task.assignee ? entities.users[task.assignee].name : '',
+      sectionTitle: task.section ? entities.sections[task.section].title : '',
+      priorityTitle: task.priority ? entities.priorities[task.priority].title : '',
+    };
+  } catch (e) {
+    console.log('cacheTaskWithTitles', e);
+  }
+  return result;
+};
+export const cacheProjectWithTitles = (entities, project) => {
+  let result;
+  try {
+    result = {
+      ...project,
+      ownerName: project.owner ? entities.users[project.owner].name : '',
+    };
+  } catch (e) {
+    console.log('cacheProjectWithTitles', e);
+  }
+  return result;
 };
 
-export const generateIdFunc = () => {
-  let base = 200;
+export const generateIdFunc = (base) => {
+  let count = base || 200;
   return function () {
-    base += 1;
-    return base;
+    count += 1;
+    return count;
   };
 };
 
-export const generateId = generateIdFunc();
+export const generateTaskId = generateIdFunc(6);
+export const generateProjectId = generateIdFunc(3);
+export const generateSectionId = generateIdFunc(5);
 
 export const getFromLocalStorage = (defaultValue, key) => {
   const localStorageValue = window.localStorage.getItem(key);

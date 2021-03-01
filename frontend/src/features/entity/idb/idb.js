@@ -2,8 +2,9 @@ import * as idb from 'idb';
 
 const dbPromise = idb.openDB('cxtasks', 1, {
   upgrade(db) {
-    const projectStore = db.createObjectStore('projects', { keyPath: 'id' });
-    projectStore.createIndex('Name', 'name');
+    //const projectStore = db.createObjectStore('projects', { keyPath: 'id' });
+    //   projectStore.createIndex('Name', 'name');
+    db.createObjectStore('projects', { keyPath: 'id' });
     db.createObjectStore('sections', { keyPath: 'id' });
     db.createObjectStore('tasks', { keyPath: 'id' });
     db.createObjectStore('task_types', { keyPath: 'id' });

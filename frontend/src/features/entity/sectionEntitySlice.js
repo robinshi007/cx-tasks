@@ -60,10 +60,12 @@ const sectionSlice = createSlice({
   },
   extraReducers: {
     [getAllSectionThunk.fulfilled]: (state, { payload }) => {
-      payload.forEach((section) => {
-        state[section.id] = section;
-      });
-      console.log('bootstrap: load sections');
+      if (payload) {
+        payload.forEach((section) => {
+          state[section.id] = section;
+        });
+        //console.log('bootstrap: load sections');
+      }
     },
     [putAllSectionThunk.fulfilled]: () => {
       toast.success(`All data are synced to local.`);

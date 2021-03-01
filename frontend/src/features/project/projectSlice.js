@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { createSelector } from 'reselect';
 import { differenceInDays, isThisWeek } from 'date-fns';
 import { default as defaultState } from './defaultState';
-import { orderBy, groupBy, map, merge } from 'lodash';
+import { orderBy, groupBy, map, merge, pickBy } from 'lodash';
 import {
   defaultTask,
   defaultSection,
@@ -51,12 +51,18 @@ export const selectProjectById = (id) => (state) => {
   let project;
   if (id) {
     project = state.entities.projects[id];
+  } else {
+    project = defaultProject();
   }
   return project;
 };
 export const selectStatuses = (state) => state.entities.statuses;
 export const selectPriorities = (state) => state.entities.priorities;
-export const selectSections = (state) => state.entities.sections;
+export const selectSections = (state) => state.entities.sections.map;
+export const selectSectionsByCurrentProject = (state) => {
+  const pid = state.project.currentProjectId;
+  return pickBy(state.entities.sections, (val) => val && val.project === pid);
+};
 export const selectSectionById = (id, fields) => (state) => {
   let section;
   if (!id && fields) {
@@ -121,6 +127,12 @@ export const selectTasksSortBy = createSelector(
     }
   }
 );
+export const selectTasksUngrouped = createSelector(
+  [selectTasksByCurrentProject, selectGroupBy],
+  (tasks, groupBy) => {
+    return tasks.filter((val) => val && val[groupBy] === '');
+  }
+);
 export const selectTasksGroupBy = createSelector(
   [selectTasksSortBy, selectGroupBy],
   (tasks, group) => {
@@ -142,7 +154,7 @@ export const selectFilterRecent = (state) => state.project.filters.filterRecent;
 export const selectFilterDueThisWeek = (state) => state.project.filters.filterDueThisWeek;
 
 export const selectCountedLists = createSelector(
-  [selectGroupBy, selectTasksGroupBy, selectSections, selectAssignees],
+  [selectGroupBy, selectTasksGroupBy, selectSectionsByCurrentProject, selectAssignees],
   (group, lists, sections, assignees) => {
     let selectedGrouped;
     if (group === 'section') {

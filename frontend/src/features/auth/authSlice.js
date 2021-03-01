@@ -21,7 +21,7 @@ export const loginAsyncAction = createAsyncThunk('auth/login', async (data) => {
   if (data && data.name && data.password && data.name === 'demo' && data.password === 'demo') {
     return {
       user: {
-        id: '61',
+        id: '1',
         name: 'Demo',
         email: 'demo@test.com',
       },

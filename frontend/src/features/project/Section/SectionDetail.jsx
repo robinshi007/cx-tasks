@@ -4,23 +4,26 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { merge } from 'lodash';
 
 import { ClearIcon } from '@/shared/components/Element';
 import { Button, TextArea, FormSubmit, ErrorMessage } from '@/features/shared';
 import { selectSectionById } from '@/features/project/projectSlice';
 import { setSectionNew, setSection, putSectionThunk, putNewSectionThunk } from '@/features/entity';
 
-const SectionDetail = ({ id, modalClose }) => {
+const SectionDetail = ({ id, modalClose, fields }) => {
   const isAddMode = !id;
   const dispatch = useDispatch();
   const { url } = useRouteMatch();
 
-  const section = useSelector(selectSectionById(id));
+  const section = useSelector(
+    selectSectionById(id, {
+      project: fields && fields.project,
+    })
+  );
 
   const validationSchema = yup.object().shape({
-    title: yup.string().required().max(128),
-    description: yup.string().max(512),
+    title: yup.string().trim('').required().max(128),
+    description: yup.string().trim('').max(512),
   });
 
   const { handleSubmit, errors, control, formState } = useForm({
@@ -30,14 +33,15 @@ const SectionDetail = ({ id, modalClose }) => {
   const { isValid, isDirty } = formState;
 
   const handleSubmitFn = (data) => {
-    //console.log(data);
-    let newSection = merge(section, data);
+    console.log(data);
+    let newSection = { ...section, ...data };
+    console.log('newSection', newSection);
     if (isAddMode) {
       dispatch(setSectionNew({ id: newSection.id, section: newSection }));
-      dispatch(putSectionThunk(newSection));
+      dispatch(putNewSectionThunk(newSection));
     } else {
       dispatch(setSection({ id, section: newSection }));
-      dispatch(putNewSectionThunk(newSection));
+      dispatch(putSectionThunk(newSection));
     }
     modalClose && modalClose();
   };

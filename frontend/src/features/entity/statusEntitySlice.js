@@ -14,10 +14,12 @@ const statusSlice = createSlice({
   reducers: {},
   extraReducers: {
     [getAllStatusThunk.fulfilled]: (state, { payload }) => {
-      payload.forEach((status) => {
-        state[status.id] = status;
-      });
-      console.log('bootstrap: load statuses');
+      if (payload) {
+        payload.forEach((status) => {
+          state[status.id] = status;
+        });
+        //console.log('bootstrap: load statuses');
+      }
     },
   },
 });

@@ -1,9 +1,9 @@
-import { generateId } from './utils';
+import { generateSectionId, generateTaskId, generateProjectId } from './utils';
 
 export const defaultSection = () => {
   const newDate = new Date();
   return {
-    id: generateId().toString(),
+    id: generateSectionId().toString(),
     title: '',
     description: '',
     project: '',
@@ -13,12 +13,12 @@ export const defaultSection = () => {
 export const defaultProject = () => {
   const newDate = new Date();
   return {
-    id: generateId().toString(),
+    id: generateProjectId().toString(),
     title: '',
     description: '',
     color: 'blue',
     my_issue_count: '0',
-    owner: '61',
+    owner: '1',
     updated_at: newDate.toISOString(),
     due_date: '',
   };
@@ -26,14 +26,14 @@ export const defaultProject = () => {
 export const defaultTask = () => {
   const newDate = new Date();
   return {
-    id: generateId().toString(),
+    id: generateTaskId().toString(),
     title: '',
     description: '',
-    type: '71',
+    type: '1',
     section: '',
-    priority: '33',
-    status: '11',
-    assignee: '61',
+    priority: '3',
+    status: '1',
+    assignee: '1',
     project: '',
     tags: [],
     updated_at: newDate.toISOString(),

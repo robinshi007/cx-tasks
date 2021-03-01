@@ -35,14 +35,24 @@ const userSlice = createSlice({
   },
   extraReducers: {
     [getAllUserThunk.fulfilled]: (state, { payload }) => {
-      payload.forEach((user) => {
-        state[user.id] = user;
-      });
-      console.log('bootstrap: load users');
+      if (payload) {
+        payload.forEach((user) => {
+          state[user.id] = user;
+        });
+        //console.log('bootstrap: load users');
+      }
     },
   },
 });
 
 export const { updateUserListDragged } = userSlice.actions;
+
+export const selectUserById = (id) => (state) => {
+  let user;
+  if (id) {
+    user = state.entities.users[id];
+  }
+  return user;
+};
 
 export default userSlice.reducer;

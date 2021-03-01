@@ -21,6 +21,9 @@ export const putTaskThunk = createAsyncThunk('task/put', async (task) => {
 export const putNewTaskThunk = createAsyncThunk('task/putNew', async (task) => {
   return await IDB.put('tasks', task);
 });
+export const deleteTaskThunk = createAsyncThunk('task/delete', async (taskId) => {
+  return await IDB.delete('tasks', taskId);
+});
 
 const taskSlice = createSlice({
   name: 'task',
@@ -38,7 +41,6 @@ const taskSlice = createSlice({
     setTask: (state, { payload }) => {
       const task = state[payload.id];
       const timeNow = new Date().toISOString();
-      console.log('due_date', payload.task.due_date);
       //task.due_date = new Date(parseInt(payload.task.due_date)).toISOString();
       if (task.assignee !== payload.task.assignee) {
         task.assigned_at = timeNow;
@@ -98,8 +100,6 @@ const taskSlice = createSlice({
       if (newOrder !== 0) {
         newCard[payload.order] = newOrder;
       }
-      console.log(payload);
-      console.log(newCard);
       if (payload.source.listIndex !== payload.destination.listIndex) {
         newCard[payload.group] = payload.destination.listIndex;
       }
@@ -109,11 +109,12 @@ const taskSlice = createSlice({
   },
   extraReducers: {
     [getAllTaskThunk.fulfilled]: (state, { payload }) => {
-      const tasks = payload;
-      tasks.forEach((task) => {
-        state[task.id] = task;
-      });
-      console.log('bootstrap: load tasks');
+      if (payload) {
+        payload.forEach((task) => {
+          state[task.id] = task;
+        });
+        //console.log('bootstrap: load tasks');
+      }
     },
     [putAllTaskThunk.fulfilled]: () => {
       toast.success(`All data are synced to local.`);
@@ -123,6 +124,9 @@ const taskSlice = createSlice({
     },
     [putNewTaskThunk.fulfilled]: (state, { payload }) => {
       toast.success(`Task #${payload} created successfully.`);
+    },
+    [deleteTaskThunk.fulfilled]: (state, { payload }) => {
+      toast.success(`Task #${payload} deleted successfully.`);
     },
   },
 });

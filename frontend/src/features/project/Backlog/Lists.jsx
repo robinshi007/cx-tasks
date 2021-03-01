@@ -150,11 +150,9 @@ const Lists = ({ lists }) => {
     } else {
       // caculate prev/next card order
       const droppedListIndex = lists.findIndex(
-        (l) => l.id.toString() === result.destination.droppableId
+        (l) => `list${l.id}` === result.destination.droppableId
       );
-      const draggedListIndex = lists.findIndex(
-        (l) => l.id.toString() === result.source.droppableId
-      );
+      const draggedListIndex = lists.findIndex((l) => `list${l.id}` === result.source.droppableId);
       const draggedCardId = lists[draggedListIndex].cards[result.source.index].id;
       let previousCardOrder, nextCardOrder;
       // dropped index
@@ -203,9 +201,12 @@ const Lists = ({ lists }) => {
       // dispatch the dropped event
       dispatch(
         updateCardDragged({
-          source: { listIndex: result.source.droppableId, cardIndex: result.source.index },
+          source: {
+            listIndex: result.source.droppableId.substring(4),
+            cardIndex: result.source.index,
+          },
           destination: {
-            listIndex: result.destination.droppableId,
+            listIndex: result.destination.droppableId.substring(4),
             cardIndex: result.destination.index,
           },
           position: {
@@ -277,7 +278,7 @@ const Lists = ({ lists }) => {
             style={{ marginLeft: '-32px' }}
           >
             {lists.map((list, idx) => (
-              <Draggable draggableId={list.id.toString()} index={idx} key={list.id}>
+              <Draggable draggableId={`l${list.id}`} index={idx} key={`l${list.id}`}>
                 {(p) => (
                   <div ref={p.innerRef} {...p.draggableProps}>
                     <List
@@ -288,6 +289,7 @@ const Lists = ({ lists }) => {
                       id={list.id}
                       key={idx}
                       columns={columns}
+                      groupBy={groupBy}
                       placeholderProps={placeholderProps}
                       dhProps={p.dragHandleProps}
                     />

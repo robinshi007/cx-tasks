@@ -7,7 +7,17 @@ import { StyledList } from './List.styles';
 import Row from './Row';
 import { RouteLink } from '@/features/shared';
 
-const List = ({ title, cards, id, count, filteredCount, columns, placeholderProps, dhProps }) => {
+const List = ({
+  title,
+  cards,
+  id,
+  count,
+  filteredCount,
+  columns,
+  groupBy,
+  placeholderProps,
+  dhProps,
+}) => {
   const match = useRouteMatch();
   return (
     <div className="bg-white flex flex-col items-center ml-8 -mr-8 py-1 w-full rounded">
@@ -16,7 +26,10 @@ const List = ({ title, cards, id, count, filteredCount, columns, placeholderProp
           <div className="flex items-center h-full" {...dhProps} style={{ width: '20px' }}>
             <GripperDotsVerticalIcon className="text-gray-500 cursor-move" />
           </div>
-          <RouteLink className="font-semibold mr-2 uppercase" to={`${match.url}/sections/${id}`}>
+          <RouteLink
+            className="font-semibold mr-2 uppercase"
+            to={groupBy === 'section' ? `${match.url}/sections/${id}` : `${match.url}/users/${id}`}
+          >
             {title}
           </RouteLink>
           <span className="font-medium tracking-tighter">
@@ -27,7 +40,7 @@ const List = ({ title, cards, id, count, filteredCount, columns, placeholderProp
           <RouteLink
             to={{
               pathname: `${match.url}/tasks_new`,
-              query: { section: id.toString() },
+              query: { section: id },
             }}
             className="p-1 text-gray-600 hover:bg-gray-100 rounded"
           >
@@ -35,7 +48,7 @@ const List = ({ title, cards, id, count, filteredCount, columns, placeholderProp
           </RouteLink>
         </div>
       </div>
-      <Droppable droppableId={id.toString()} style={{ marginLeft: '-34px' }}>
+      <Droppable droppableId={`list${id}`} style={{ marginLeft: '-34px' }}>
         {(provided, snapshot) => (
           <StyledList
             ref={provided.innerRef}
@@ -44,7 +57,7 @@ const List = ({ title, cards, id, count, filteredCount, columns, placeholderProp
             style={{ minHeight: '38px' }}
           >
             {cards.map((obj, idx) => (
-              <Draggable draggableId={obj.id.toString()} index={idx} key={obj.id}>
+              <Draggable draggableId={`t${obj.id}`} index={idx} key={`t${obj.id}`}>
                 {(p, snapshot) => (
                   <Row
                     taskId={obj.id}

@@ -16,8 +16,8 @@ const Settings = ({ id, modalClose }) => {
   const dispatch = useDispatch();
 
   const validationSchema = yup.object().shape({
-    title: yup.string().required().max(128),
-    description: yup.string().max(512),
+    title: yup.string().trim('').required().max(128),
+    description: yup.string().trim('').max(512),
   });
   const { handleSubmit, errors, control, setValue, formState } = useForm({
     mode: 'onChange',
@@ -29,11 +29,11 @@ const Settings = ({ id, modalClose }) => {
     if (isAddMode) {
       const newProject = { ...defaultProject(), ...data };
       dispatch(setProjectNew({ id: newProject.id, project: { ...newProject, ...data } }));
-      dispatch(putProjectThunk(newProject));
+      dispatch(putNewProjectThunk(newProject));
     } else {
       const updateProject = { ...project, ...data };
       dispatch(setProject({ id: id, project: updateProject }));
-      dispatch(putNewProjectThunk(updateProject));
+      dispatch(putProjectThunk(updateProject));
     }
     modalClose && modalClose();
   };

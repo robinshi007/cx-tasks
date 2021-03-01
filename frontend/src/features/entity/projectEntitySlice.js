@@ -36,11 +36,12 @@ const projectSlice = createSlice({
   },
   extraReducers: {
     [getAllProjectThunk.fulfilled]: (state, { payload }) => {
-      const projects = payload;
-      projects.forEach((project) => {
-        state[project.id] = project;
-      });
-      console.log('bootstrap: load projects');
+      if (payload) {
+        payload.forEach((project) => {
+          state[project.id] = project;
+        });
+        //console.log('bootstrap: load projects');
+      }
     },
     [putAllProjectThunk.fulfilled]: () => {
       toast.success(`All data are synced to local.`);

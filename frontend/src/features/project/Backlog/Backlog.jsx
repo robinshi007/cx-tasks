@@ -3,13 +3,18 @@ import { Switch, Route, useLocation, useRouteMatch, useHistory } from 'react-rou
 import { useSelector } from 'react-redux';
 
 import { Modal } from '@/shared/components/Element';
-import { selectFilteredAllOrderedLists } from '@/features/project/projectSlice';
+import {
+  selectFilteredAllOrderedLists,
+  selectTasksUngrouped,
+} from '@/features/project/projectSlice';
 import { selectCurrentProjectId } from '@/features/entity';
 
 import Lists from './Lists';
 import Filters from '../Filters';
 import TaskDetail from '../Task/TaskDetail';
 import SectionDetail from '../Section/SectionDetail';
+import UserDetail from '../User/UserDetail';
+import { UndragableList } from './Row';
 
 const Backlog = () => {
   const location = useLocation();
@@ -18,6 +23,7 @@ const Backlog = () => {
 
   const currentProjectId = useSelector(selectCurrentProjectId);
   const lists = useSelector(selectFilteredAllOrderedLists);
+  const ungroupedTasks = useSelector(selectTasksUngrouped);
   const isBacklog = location.pathname.includes('/backlog');
   return (
     <div className="px-8 py-4 relative">
@@ -31,6 +37,9 @@ const Backlog = () => {
       </div>
       <div className="flex flex-col items-start justify-start">
         <Lists lists={lists} />
+        <div className="w-full">
+          <UndragableList lists={ungroupedTasks} />
+        </div>
       </div>
       <Switch>
         <Route
@@ -104,8 +113,24 @@ const Backlog = () => {
             />
           )}
         />
+        <Route
+          path={`${match.path}/users/:userId`}
+          render={(routeProps) => (
+            <Modal
+              isOpen={true}
+              width={520}
+              withCloseIcon={false}
+              onClose={() => history.push(match.url)}
+              renderContent={(modal) => (
+                <UserDetail id={routeProps.match.params.userId} modalClose={modal.close} />
+              )}
+              style={{ minHeight: '300px' }}
+            />
+          )}
+        />
       </Switch>
     </div>
   );
 };
+
 export default Backlog;

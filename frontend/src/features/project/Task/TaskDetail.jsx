@@ -1,14 +1,14 @@
 import React from 'react';
 import { Redirect, useRouteMatch } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { map, merge } from 'lodash';
+import { map } from 'lodash';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-import { ClearIcon, Select } from '@/shared/components/Element';
+import { ClearIcon, DeleteIcon, Select } from '@/shared/components/Element';
 import {
   timeAgo,
   Button,
@@ -25,7 +25,7 @@ import {
   selectStatuses,
   selectPriorities,
   selectAssignees,
-  selectSections,
+  selectSectionsByCurrentProject,
 } from '@/features/project/projectSlice';
 import {
   selectProjects,
@@ -33,6 +33,8 @@ import {
   setTaskNew,
   putTaskThunk,
   putNewTaskThunk,
+  deleteTask,
+  deleteTaskThunk,
 } from '@/features/entity';
 
 const TaskDetail = ({ id, modalClose, fields }) => {
@@ -50,12 +52,12 @@ const TaskDetail = ({ id, modalClose, fields }) => {
   const statuses = useSelector(selectStatuses);
   const priorities = useSelector(selectPriorities);
   const assignees = useSelector(selectAssignees);
-  const sections = useSelector(selectSections);
+  const sections = useSelector(selectSectionsByCurrentProject);
   const projects = useSelector(selectProjects);
   // schema
   var validationSchema = yup.object().shape({
-    title: yup.string().required().max(256),
-    description: yup.string().max(1024),
+    title: yup.string().trim('').required().max(256),
+    description: yup.string().trim('').max(1024),
     project: yup.string().required(),
     section: yup.string(),
     assignee: yup.string(),
@@ -76,15 +78,20 @@ const TaskDetail = ({ id, modalClose, fields }) => {
     } else if (data.due_date === 'NaN') {
       data.due_date = '';
     }
-    console.log('data', data);
-    let newTask = merge(task, data);
+    let newTask = { ...task, ...data };
     if (isAddMode) {
       dispatch(setTaskNew({ id: newTask.id, task: newTask }));
-      dispatch(putTaskThunk(newTask));
+      dispatch(putNewTaskThunk(newTask));
     } else {
       dispatch(setTask({ id: newTask.id, task: newTask }));
-      dispatch(putNewTaskThunk(newTask));
+      dispatch(putTaskThunk(newTask));
     }
+    modalClose && modalClose();
+  };
+
+  const handleDelete = () => {
+    dispatch(deleteTask({ id }));
+    dispatch(deleteTaskThunk(id));
     modalClose && modalClose();
   };
 
@@ -98,6 +105,13 @@ const TaskDetail = ({ id, modalClose, fields }) => {
               <div>{isAddMode ? `${task.typeTitle} New` : `${task.typeTitle}-${id}`}</div>
             </div>
             <div className="flex items-center">
+              {id ? (
+                <Button variant="text" color="danger" onClick={handleDelete} className="mr-2">
+                  <DeleteIcon size={20} />
+                </Button>
+              ) : (
+                ''
+              )}
               <Button variant="text" color="light" onClick={modalClose} className="mr-2">
                 <ClearIcon size={20} />
               </Button>
@@ -158,6 +172,7 @@ const TaskDetail = ({ id, modalClose, fields }) => {
                     render={({ ref, ...props }) => (
                       <Select
                         ref={ref}
+                        dropdownWidth={180}
                         variant="empty"
                         placeholder="None"
                         withClearValue={false}

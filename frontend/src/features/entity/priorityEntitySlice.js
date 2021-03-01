@@ -14,10 +14,12 @@ const prioritySlice = createSlice({
   reducers: {},
   extraReducers: {
     [getAllPriorityThunk.fulfilled]: (state, { payload }) => {
-      payload.forEach((priority) => {
-        state[priority.id] = priority;
-      });
-      console.log('bootstrap: load priorities');
+      if (payload) {
+        payload.forEach((priority) => {
+          state[priority.id] = priority;
+        });
+        //console.log('bootstrap: load priorities');
+      }
     },
   },
 });

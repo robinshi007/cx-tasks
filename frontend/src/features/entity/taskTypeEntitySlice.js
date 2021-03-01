@@ -14,10 +14,12 @@ const taskTypeSlice = createSlice({
   reducers: {},
   extraReducers: {
     [getAllTaskTypeThunk.fulfilled]: (state, { payload }) => {
-      payload.forEach((taskType) => {
-        state[taskType.id] = taskType;
-      });
-      console.log('bootstrap: load task_types');
+      if (payload) {
+        payload.forEach((taskType) => {
+          state[taskType.id] = taskType;
+        });
+        //console.log('bootstrap: load task_types');
+      }
     },
   },
 });

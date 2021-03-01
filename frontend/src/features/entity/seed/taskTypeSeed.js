@@ -1,14 +1,14 @@
 export const taskTypeSeed = {
-  '71': {
-    id: '71',
+  '1': {
+    id: '1',
     title: 'Task',
   },
-  '72': {
-    id: '72',
+  '2': {
+    id: '2',
     title: 'Story',
   },
-  '73': {
-    id: '73',
+  '3': {
+    id: '3',
     title: 'Bug',
   },
 };

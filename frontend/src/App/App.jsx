@@ -12,6 +12,7 @@ import { PageProduct, Page404, PageTodo } from '@/features/page';
 import LoginPage from '@/features/auth/Login';
 import HomePage from '@/features/home';
 import ProjectPage from '@/features/project';
+import { PageProfile as ProfilePage } from '@/features/page/PageProfile';
 
 const RouteUnAuthed = ({ component: Component, path, ...rest }) => {
   const isAuthed = useSelector((state) => state.auth.isAuthed);
@@ -42,7 +43,11 @@ function App() {
           path="/projects/:projectId"
           render={(routeProps) => <ProjectPage id={routeProps.match.params.projectId} />}
         />
+
+        <Route path="/profile" component={ProfilePage} />
+
         <Route path="/prototype" component={PrototypePage} />
+
         <Route exact path="/todo_search" component={PageTodo} />
         <Route exact path="/todo_add" component={PageTodo} />
         <Route component={Page404} />

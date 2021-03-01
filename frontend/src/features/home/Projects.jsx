@@ -8,7 +8,7 @@ import { setFilterTerm, selectFilterTermProjects } from './homeSlice';
 import { timeAgo, RouteLink, Button, Tab } from '@/features/shared';
 import { SettingsPage as ProjectDetail } from '../project/Settings';
 
-const Row = ({ id, title, dueDate, owner }) => {
+const Row = ({ id, title, dueDate, ownerName }) => {
   return (
     <li className="flex items-center justify-between font-sm text-gray-600 py-1">
       <div className="flex items-center justify-start w-full">
@@ -19,7 +19,7 @@ const Row = ({ id, title, dueDate, owner }) => {
         <div className="mr-2 text-right text-gray-400 text-sm truncate flex-shrink-0">
           {dueDate !== '' && timeAgo(dueDate)}
         </div>
-        <Avatar initials={owner} bg="purple" color="white" size={28} />
+        <Avatar initials={ownerName} bg="purple" color="white" size={28} />
       </div>
     </li>
   );
@@ -28,8 +28,8 @@ const Row = ({ id, title, dueDate, owner }) => {
 const ProjectList = ({ projects }) => {
   return (
     <ul>
-      {Object.values(projects).map(({ id, title, due_date, owner }) => (
-        <Row id={id} title={title} dueDate={due_date} key={id} owner={owner} />
+      {projects.map(({ id, title, due_date, ownerName }) => (
+        <Row id={id} title={title} dueDate={due_date} key={id} ownerName={ownerName} />
       ))}
     </ul>
   );

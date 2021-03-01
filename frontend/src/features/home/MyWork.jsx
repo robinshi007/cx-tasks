@@ -16,6 +16,7 @@ import {
   selectRecentProjects,
   selectMyTasksWorkedOn,
   selectMyTasksAssignedToMe,
+  selectOwnedTasks,
 } from './homeSlice';
 import { timeAgo, RouteLink, Kind, Label, Tab } from '@/features/shared';
 
@@ -23,12 +24,12 @@ const Card = ({ title, count, color, url }) => {
   return (
     <div className="flex flex-none items-center h-28 w-52 bg-white rounded">
       <div className={`w-5 flex-none h-full rounded-l ${color ? color : 'bg-blue-300'}`}></div>
-      <div className="p-2  h-full flex justify-between flex-col">
+      <div className="p-2  h-full flex justify-between flex-col w-full">
         <h5 className="block text-gray-500 text-sm font-medium max-h-28 overflow-y-hidden">
           {title}
         </h5>
 
-        <div className="flex justify-between text-gray-500 text-sm mt-1">
+        <div className="flex items-center justify-between text-gray-500 text-sm mt-1">
           <div className="text-sm">My open tasks:</div>
           <div className="text-gray-500 text-xs bg-gray-200 text-sm rounded-full px-1.5 min-w-4 select-none">
             {count}
@@ -110,8 +111,18 @@ const MyWork = () => {
   const dispatch = useDispatch();
   const { path } = useRouteMatch();
   const recentProjects = useSelector(selectRecentProjects);
+  const myTasks = useSelector(selectOwnedTasks);
   const workedOnTasks = useSelector(selectMyTasksWorkedOn);
   const assignedToMeTasks = useSelector(selectMyTasksAssignedToMe);
+
+  let countArray = [];
+  Object.keys(recentProjects).forEach((key) =>
+    countArray.push(
+      Object.values(myTasks).filter(
+        (task) => task.project === recentProjects[key].id && task.status !== '4'
+      ).length
+    )
+  );
 
   useEffect(() => {
     dispatch(getAllProjectThunk());
@@ -136,11 +147,11 @@ const MyWork = () => {
           </RouteLink>
         </div>
         <div className="flex items-center justify-start space-x-4 flex-nowrap overflow-x-auto">
-          {Object.values(recentProjects).map((project) => {
+          {Object.values(recentProjects).map((project, index) => {
             return (
               <Card
                 title={project.title}
-                count={project.my_issue_count}
+                count={countArray[index]}
                 url={`/projects/${project.id}`}
                 color={`bg-${project.color}-300`}
                 key={project.id}

@@ -1,21 +1,21 @@
 export const statusSeed = {
-  '11': {
-    id: '11',
+  '1': {
+    id: '1',
     title: 'Backlog',
     order: 1612281200,
   },
-  '12': {
-    id: '12',
+  '2': {
+    id: '2',
     title: 'Todo',
     order: 1612281400,
   },
-  '13': {
-    id: '13',
+  '3': {
+    id: '3',
     title: 'In progress',
     order: 1612281600,
   },
-  '14': {
-    id: '14',
+  '4': {
+    id: '4',
     title: 'Done',
     order: 1612281800,
   },
