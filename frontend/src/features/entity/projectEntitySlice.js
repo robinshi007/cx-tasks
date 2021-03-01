@@ -1,6 +1,23 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { createSelector } from 'reselect';
 import { projectSeed } from './seed/projectSeed';
+
+import * as API from './idb/project';
+import toast from 'react-hot-toast';
+
+export const getAllProjectThunk = createAsyncThunk('project/getAll', async () => {
+  return await API.getAll();
+});
+
+export const putAllProjectThunk = createAsyncThunk('project/putAll', async (projects) => {
+  return await API.putAll(Object.values(projects));
+});
+export const putProjectThunk = createAsyncThunk('project/put', async (project) => {
+  return await API.put(project);
+});
+export const putNewProjectThunk = createAsyncThunk('project/putNew', async (project) => {
+  return await API.put(project);
+});
 
 const projectSlice = createSlice({
   name: 'project',
@@ -14,14 +31,25 @@ const projectSlice = createSlice({
       state[id].description = action.payload.project.description;
     },
     setProjectNew: (state, action) => {
-      const newId = action.payload.id;
-      console.log(action.payload.project);
-      if (!!state[newId]) {
-        // TODO:  sync to backend
-        console.log('Please sync the new project to the backend first');
-      } else {
-        state[action.payload.id] = action.payload.project;
-      }
+      state[action.payload.id] = action.payload.project;
+    },
+  },
+  extraReducers: {
+    [getAllProjectThunk.fulfilled]: (state, { payload }) => {
+      const projects = payload;
+      projects.forEach((project) => {
+        state[project.id] = project;
+      });
+      console.log('bootstrap: load projects');
+    },
+    [putAllProjectThunk.fulfilled]: () => {
+      toast.success(`All data are synced to local.`);
+    },
+    [putProjectThunk.fulfilled]: (state, { payload }) => {
+      toast.success(`Project #${payload} Update successfully.`);
+    },
+    [putNewProjectThunk.fulfilled]: (state, { payload }) => {
+      toast.success(`Project #${payload} created successfully.`);
     },
   },
 });

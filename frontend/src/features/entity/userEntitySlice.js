@@ -1,5 +1,10 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { userSeed } from './seed/userSeed';
+
+import { Service as IDB } from './idb/idb';
+export const getAllUserThunk = createAsyncThunk('user/getAll', async () => {
+  return await IDB.getAll('users');
+});
 
 const userSlice = createSlice({
   name: 'user',
@@ -26,6 +31,14 @@ const userSlice = createSlice({
       // if (sourceListIndex !== destListIndex) {
       const newList = state[payload.position.listId];
       newList[payload.order] = newOrder;
+    },
+  },
+  extraReducers: {
+    [getAllUserThunk.fulfilled]: (state, { payload }) => {
+      payload.forEach((user) => {
+        state[user.id] = user;
+      });
+      console.log('bootstrap: load users');
     },
   },
 });

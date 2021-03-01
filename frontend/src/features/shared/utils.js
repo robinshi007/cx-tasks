@@ -4,7 +4,6 @@ import { formatDistance } from 'date-fns';
 export const timeAgo = (timeString) => {
   if (timeString !== '') {
     const time = Date.parse(timeString);
-    console.log('time string', timeString);
     return formatDistance(time, new Date(), { addSuffix: true });
   } else {
     return '';
@@ -43,3 +42,26 @@ export const generateIdFunc = () => {
     return base;
   };
 };
+
+export const generateId = generateIdFunc();
+
+export const getFromLocalStorage = (defaultValue, key) => {
+  const localStorageValue = window.localStorage.getItem(key);
+  return localStorageValue !== null ? JSON.parse(localStorageValue) : defaultValue;
+};
+export const setToLocalStorage = (key, value) => {
+  try {
+    window.localStorage.setItem(key, JSON.stringify(value));
+  } catch (e) {
+    console.log('setLocalStorageStat failed:', e);
+  }
+};
+// export const getFromIndexedDB = (storeName) => {
+//   return await db.transaction(storeName).objectStore(storeName).getAll()
+// }
+// export const setToIndexedDB = (storeName, key, val) => {
+//   const tx = db.transaction(storeName, 'readwrite')
+//   const store = await tx.objectStore(storeName)
+//   await store.put(val, key)
+//   await tx.done
+// }

@@ -7,7 +7,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import toast from 'react-hot-toast';
 
 import { ClearIcon, Select } from '@/shared/components/Element';
 import {
@@ -28,7 +27,13 @@ import {
   selectAssignees,
   selectSections,
 } from '@/features/project/projectSlice';
-import { selectProjects, setTask, setTaskNew } from '@/features/entity';
+import {
+  selectProjects,
+  setTask,
+  setTaskNew,
+  putTaskThunk,
+  putNewTaskThunk,
+} from '@/features/entity';
 
 const TaskDetail = ({ id, modalClose, fields }) => {
   const isAddMode = !id;
@@ -75,15 +80,12 @@ const TaskDetail = ({ id, modalClose, fields }) => {
     let newTask = merge(task, data);
     if (isAddMode) {
       dispatch(setTaskNew({ id: newTask.id, task: newTask }));
+      dispatch(putTaskThunk(newTask));
     } else {
       dispatch(setTask({ id: newTask.id, task: newTask }));
+      dispatch(putNewTaskThunk(newTask));
     }
     modalClose && modalClose();
-    if (isAddMode) {
-      toast.success('New task is created.');
-    } else {
-      toast.success(`Task ${id} is updated.`);
-    }
   };
 
   return (

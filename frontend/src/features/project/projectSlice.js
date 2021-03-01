@@ -49,9 +49,7 @@ const projectSlice = createSlice({
 
 export const selectProjectById = (id) => (state) => {
   let project;
-  if (!id) {
-    project = defaultProject();
-  } else {
+  if (id) {
     project = state.entities.projects[id];
   }
   return project;

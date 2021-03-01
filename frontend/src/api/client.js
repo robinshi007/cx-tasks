@@ -27,7 +27,7 @@ const api = (method, url, variables) =>
       },
       (error) => {
         console.log('http client:', error);
-        reject(defaults.error);
+        reject({ error: defaults.error });
       }
     );
   });

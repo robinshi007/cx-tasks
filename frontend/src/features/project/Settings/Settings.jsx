@@ -3,15 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import toast from 'react-hot-toast';
+//import {  merge } from 'lodash';
 
 import { ClearIcon } from '@/shared/components/Element';
 import { TextArea, Button, ErrorMessage, FormSubmit, defaultProject } from '@/features/shared';
-import { setProject, setProjectNew, selectCurrentProjectId } from '@/features/entity';
+import { setProject, setProjectNew, putProjectThunk, putNewProjectThunk } from '@/features/entity';
 import { selectProjectById } from '@/features/project/projectSlice';
 
-const Settings = ({ modalClose }) => {
-  const id = useSelector(selectCurrentProjectId);
+const Settings = ({ id, modalClose }) => {
   const isAddMode = !id;
   const project = useSelector(selectProjectById(id));
   const dispatch = useDispatch();
@@ -28,17 +27,15 @@ const Settings = ({ modalClose }) => {
 
   const handleSubmitFn = (data) => {
     if (isAddMode) {
-      dispatch(setProjectNew({ id: '0', project: { ...defaultProject(), ...data } }));
+      const newProject = { ...defaultProject(), ...data };
+      dispatch(setProjectNew({ id: newProject.id, project: { ...newProject, ...data } }));
+      dispatch(putProjectThunk(newProject));
     } else {
-      dispatch(setProject({ id: id, project: data }));
+      const updateProject = { ...project, ...data };
+      dispatch(setProject({ id: id, project: updateProject }));
+      dispatch(putNewProjectThunk(updateProject));
     }
     modalClose && modalClose();
-
-    if (isAddMode) {
-      toast.success('New project is created.');
-    } else {
-      toast.success(`Project ${id} is updated.`);
-    }
   };
 
   useEffect(() => {
@@ -70,7 +67,7 @@ const Settings = ({ modalClose }) => {
               <div>
                 <Controller
                   name="title"
-                  defaultValue={project.title}
+                  defaultValue={(project && project.title) || ''}
                   control={control}
                   render={({ ref, ...props }, { invalid, isDirty }) => (
                     <TextArea ref={ref} placeholder="Title" isError={errors.title} {...props} />
@@ -81,7 +78,7 @@ const Settings = ({ modalClose }) => {
               <div>
                 <Controller
                   name="description"
-                  defaultValue={project.description}
+                  defaultValue={(project && project.description) || ''}
                   control={control}
                   render={({ ref, ...props }, { invalid, isDirty }) => (
                     <TextArea

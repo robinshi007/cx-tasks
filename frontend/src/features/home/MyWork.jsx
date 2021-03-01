@@ -1,8 +1,16 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Switch, Route, Redirect, useRouteMatch, useHistory } from 'react-router-dom';
 import { Avatar, Modal } from '@/shared/components/Element';
 import TaskDetail from '@/features/project/Task/TaskDetail';
+
+import { getAllProjectThunk } from '@/features/entity/projectEntitySlice';
+import { getAllSectionThunk } from '@/features/entity/sectionEntitySlice';
+import { getAllTaskThunk } from '@/features/entity/taskEntitySlice';
+import { getAllTaskTypeThunk } from '@/features/entity/taskTypeEntitySlice';
+import { getAllStatusThunk } from '@/features/entity/statusEntitySlice';
+import { getAllPriorityThunk } from '@/features/entity/priorityEntitySlice';
+import { getAllUserThunk } from '@/features/entity/userEntitySlice';
 
 import {
   selectRecentProjects,
@@ -99,10 +107,21 @@ const TaskList = ({ tasks }) => {
 };
 
 const MyWork = () => {
+  const dispatch = useDispatch();
   const { path } = useRouteMatch();
   const recentProjects = useSelector(selectRecentProjects);
   const workedOnTasks = useSelector(selectMyTasksWorkedOn);
   const assignedToMeTasks = useSelector(selectMyTasksAssignedToMe);
+
+  useEffect(() => {
+    dispatch(getAllProjectThunk());
+    dispatch(getAllSectionThunk());
+    dispatch(getAllTaskThunk());
+    dispatch(getAllTaskTypeThunk());
+    dispatch(getAllStatusThunk());
+    dispatch(getAllPriorityThunk());
+    dispatch(getAllUserThunk());
+  }, [dispatch]);
 
   return (
     <div className="px-8 py-4 relative">

@@ -1,6 +1,26 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { taskSeed } from './seed/taskSeed';
 import { computeOrder } from '@/features/shared';
+import { Service as IDB } from './idb/idb';
+import toast from 'react-hot-toast';
+
+export const getAllTaskThunk = createAsyncThunk('task/getAll', async () => {
+  return await IDB.getAll('tasks');
+});
+
+export const putAllTaskThunk = createAsyncThunk('task/putAll', async (tasks) => {
+  return await Promise.all(
+    tasks.map(async (obj) => {
+      return await IDB.put('tasks', obj);
+    })
+  );
+});
+export const putTaskThunk = createAsyncThunk('task/put', async (task) => {
+  return await IDB.put('tasks', task);
+});
+export const putNewTaskThunk = createAsyncThunk('task/putNew', async (task) => {
+  return await IDB.put('tasks', task);
+});
 
 const taskSlice = createSlice({
   name: 'task',
@@ -10,8 +30,7 @@ const taskSlice = createSlice({
   reducers: {
     setTaskNew: (state, { payload }) => {
       if (!!state[payload.id]) {
-        // TODO:  sync to backend
-        console.log('Please sync the new task to the backend first');
+        // TODO:  sync to backend console.log('Please sync the new task to the backend first');
       } else {
         state[payload.id] = payload.task;
       }
@@ -86,6 +105,25 @@ const taskSlice = createSlice({
       }
       return state;
     },
+    saveAllToLocal: () => {},
+  },
+  extraReducers: {
+    [getAllTaskThunk.fulfilled]: (state, { payload }) => {
+      const tasks = payload;
+      tasks.forEach((task) => {
+        state[task.id] = task;
+      });
+      console.log('bootstrap: load tasks');
+    },
+    [putAllTaskThunk.fulfilled]: () => {
+      toast.success(`All data are synced to local.`);
+    },
+    [putTaskThunk.fulfilled]: (state, { payload }) => {
+      toast.success(`Task #${payload} Update successfully.`);
+    },
+    [putNewTaskThunk.fulfilled]: (state, { payload }) => {
+      toast.success(`Task #${payload} created successfully.`);
+    },
   },
 });
 
@@ -101,6 +139,7 @@ export const {
   setTaskDuedate,
   deleteTask,
   updateCardDragged,
+  saveAllToLocal,
 } = taskSlice.actions;
 
 export default taskSlice.reducer;

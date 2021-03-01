@@ -1,5 +1,26 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { sectionSeed } from './seed/sectionSeed';
+
+import { Service as IDB } from './idb/idb';
+import toast from 'react-hot-toast';
+
+export const getAllSectionThunk = createAsyncThunk('section/getAll', async () => {
+  return await IDB.getAll('sections');
+});
+
+export const putAllSectionThunk = createAsyncThunk('section/putAll', async (sections) => {
+  return await Promise.all(
+    sections.map(async (obj) => {
+      return await IDB.put('sections', obj);
+    })
+  );
+});
+export const putSectionThunk = createAsyncThunk('section/put', async (section) => {
+  return await IDB.put('sections', section);
+});
+export const putNewSectionThunk = createAsyncThunk('section/putNew', async (section) => {
+  return await IDB.put('sections', section);
+});
 
 const sectionSlice = createSlice({
   name: 'section',
@@ -8,13 +29,7 @@ const sectionSlice = createSlice({
   },
   reducers: {
     setSectionNew: (state, action) => {
-      const newId = action.payload.id;
-      if (!!state[newId]) {
-        // TODO:  sync to backend
-        console.log('Please sync the new task to the backend first');
-      } else {
-        state[action.payload.id] = action.payload.section;
-      }
+      state[action.payload.id] = action.payload.section;
     },
     setSection: (state, action) => {
       const section = state[action.payload.id];
@@ -41,6 +56,23 @@ const sectionSlice = createSlice({
       // if (sourceListIndex !== destListIndex) {
       const newList = state[payload.position.listId];
       newList[payload.order] = newOrder;
+    },
+  },
+  extraReducers: {
+    [getAllSectionThunk.fulfilled]: (state, { payload }) => {
+      payload.forEach((section) => {
+        state[section.id] = section;
+      });
+      console.log('bootstrap: load sections');
+    },
+    [putAllSectionThunk.fulfilled]: () => {
+      toast.success(`All data are synced to local.`);
+    },
+    [putSectionThunk.fulfilled]: (state, { payload }) => {
+      toast.success(`Section #${payload} Update successfully.`);
+    },
+    [putNewSectionThunk.fulfilled]: (state, { payload }) => {
+      toast.success(`Section #${payload} created successfully.`);
     },
   },
 });

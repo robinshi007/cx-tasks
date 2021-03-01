@@ -40,7 +40,7 @@ const Login = () => {
           <ErrorMessage field={error} className="pb-1" />
           <div className="">
             <label htmlFor="email" className="sr-only">
-              Email
+              Name
             </label>
             <Controller
               name="name"

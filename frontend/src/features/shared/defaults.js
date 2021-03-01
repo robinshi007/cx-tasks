@@ -1,7 +1,9 @@
+import { generateId } from './utils';
+
 export const defaultSection = () => {
   const newDate = new Date();
   return {
-    id: '0',
+    id: generateId().toString(),
     title: '',
     description: '',
     project: '',
@@ -11,7 +13,7 @@ export const defaultSection = () => {
 export const defaultProject = () => {
   const newDate = new Date();
   return {
-    id: '0',
+    id: generateId().toString(),
     title: '',
     description: '',
     color: 'blue',
@@ -24,7 +26,7 @@ export const defaultProject = () => {
 export const defaultTask = () => {
   const newDate = new Date();
   return {
-    id: '0',
+    id: generateId().toString(),
     title: '',
     description: '',
     type: '71',

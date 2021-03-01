@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import client from '@/api/client';
+//import client from '@/api/client';
 
 const defaultUser = {
   id: '',
@@ -15,9 +15,25 @@ const initialState = {
 };
 
 export const loginAsyncAction = createAsyncThunk('auth/login', async (data) => {
-  console.log('request with', data);
-  const response = await client.get('/login');
-  return response;
+  // const response = await client.get('/login');
+
+  // validate on client side
+  if (data && data.name && data.password && data.name === 'demo' && data.password === 'demo') {
+    return {
+      user: {
+        id: '61',
+        name: 'Demo',
+        email: 'demo@test.com',
+      },
+    };
+  } else
+    return {
+      error: {
+        message: 'Invalid name or password',
+      },
+    };
+
+  //return response;
 });
 
 const authSlice = createSlice({
@@ -51,12 +67,14 @@ const authSlice = createSlice({
         state.isAuthed = true;
       } else {
         state.isAuthed = false;
+        state.error = (payload && payload.error) || { message: 'Invalid user name or password.' };
       }
     },
     [loginAsyncAction.rejected]: (state, { payload }) => {
       state.isLoading = false;
       state.isAuthed = false;
-      state.error = payload.error && payload.error.message;
+      console.log('payload', payload);
+      state.error = (payload && payload.error) || { message: 'Connection error!' };
     },
   },
 });

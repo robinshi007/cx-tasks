@@ -19,6 +19,14 @@ const MyNavLink = styled(NavLink)`
     ${tw`bg-blue-700 hover:bg-blue-600`}
   }
 `;
+// const MyNavButton = styled.button(() => [
+//   tw`flex items-center justify-center w-full hover:bg-blue-600 cursor-pointer py-3 focus:outline-none`,
+//   css`
+//     &.active {
+//       ${tw`bg-blue-700 hover:bg-blue-600`}
+//     }
+//   `,
+// ]);
 
 export const Nav = () => {
   const currentProject = useSelector(selectCurrentProjectId);

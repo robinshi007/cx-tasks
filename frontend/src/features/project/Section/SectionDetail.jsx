@@ -4,12 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import toast from 'react-hot-toast';
+import { merge } from 'lodash';
 
 import { ClearIcon } from '@/shared/components/Element';
-import { Button, TextArea, FormSubmit, ErrorMessage, defaultSection } from '@/features/shared';
+import { Button, TextArea, FormSubmit, ErrorMessage } from '@/features/shared';
 import { selectSectionById } from '@/features/project/projectSlice';
-import { setSectionNew, setSection } from '@/features/entity';
+import { setSectionNew, setSection, putSectionThunk, putNewSectionThunk } from '@/features/entity';
 
 const SectionDetail = ({ id, modalClose }) => {
   const isAddMode = !id;
@@ -31,18 +31,15 @@ const SectionDetail = ({ id, modalClose }) => {
 
   const handleSubmitFn = (data) => {
     //console.log(data);
+    let newSection = merge(section, data);
     if (isAddMode) {
-      dispatch(setSectionNew({ id: '0', section: { ...defaultSection(), ...data } }));
+      dispatch(setSectionNew({ id: newSection.id, section: newSection }));
+      dispatch(putSectionThunk(newSection));
     } else {
-      dispatch(setSection({ id, section: data }));
+      dispatch(setSection({ id, section: newSection }));
+      dispatch(putNewSectionThunk(newSection));
     }
     modalClose && modalClose();
-
-    if (isAddMode) {
-      toast.success('New section is created.');
-    } else {
-      toast.success(`Section ${id} is updated.`);
-    }
   };
 
   // const [section, setSection] = useState({});

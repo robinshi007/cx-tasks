@@ -52,7 +52,7 @@ const Project = ({ id }) => {
               <BacklogPage />
             </Route>
             <Route path={`${url}/settings`}>
-              <SettingsPage />
+              <SettingsPage id={id} />
             </Route>
             <Route exact path={`${url}/`}>
               <Redirect to={`${url}/board`} />
