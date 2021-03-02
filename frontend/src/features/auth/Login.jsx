@@ -90,32 +90,27 @@ const Login = () => {
             />
           </div>
           <div className="text-blue-600 text-sm pt-6">
-            <a className="hover:underline hover:text-blue-500" href="/">
-              Cann't log in?
-            </a>
+            {/* TODO:will be link later */}
+            <div className="inline-block hover:underline cursor-pointer ">Cann't log in?</div>
             <div className="inline-block mx-1">
               <svg height="16" width="16" className="fill-current text-gray-300">
                 <circle cx="8" cy="11" r="2" stroke="black" strokeWidth="0" />
               </svg>
             </div>
-            <a className="hover:underline hover:text-blue-500" href="/">
+            <div className="inline-block hover:underline cursor-pointer ">
               Sign up for the account
-            </a>
+            </div>
           </div>
         </form>
       </div>
       <div className="flex items-center justify-center text-white text-sm h-16">
-        <a className="hover:underline" href="/">
-          Privacy policy
-        </a>
+        <div className="inline-block hover:underline cursor-pointer">Privacy policy</div>
         <div className="inline-block mx-1">
           <svg height="20" width="16" className="fill-current text-gray-100">
             <circle cx="8" cy="11" r="2" stroke="black" strokeWidth="0" />
           </svg>
         </div>
-        <a className="hover:underline" href="/">
-          Term of use
-        </a>
+        <div className="inline-block hover:underline cursor-pointer">Term of use</div>
       </div>
     </div>
   );
