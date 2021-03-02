@@ -41,14 +41,14 @@ Current supported GRPC, REST and GraphQL endpoint.
 
 ## Refers
 
-<https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html>
-<https://github.com/AkbaraliShaikh/denti>
-<https://github.com/hatajoe/8am>
-<https://github.com/sagikazarmark/modern-go-application>
-<https://github.com/go-masonry/>
-<https://github.com/tensor-programming/hex-microservice>
-<https://github.com/tensor-programming/go-kit-tutorial>
-<https://github.com/sdgmf/go-project-sample>
+- <https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html>
+- <https://github.com/AkbaraliShaikh/denti>
+- <https://github.com/hatajoe/8am>
+- <https://github.com/sagikazarmark/modern-go-application>
+- <https://github.com/go-masonry/>
+- <https://github.com/tensor-programming/hex-microservice>
+- <https://github.com/tensor-programming/go-kit-tutorial>
+- <https://github.com/sdgmf/go-project-sample>
 
 ## License
 
