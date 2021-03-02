@@ -1,0 +1,24 @@
+app:
+  name: app
+  mode: dev
+  server:
+    rest:
+      port: 8080
+    rpc:
+      port: 8081
+  logger:
+    code: zerolog
+    level: trace
+    console: true
+    static:
+      app: true
+      git: true
+      host: true
+  database:
+    code: postgres
+    dsn: "host=db port=5432 user=postgres password=test dbname=cx-tasks-prod sslmode=disable"
+  serializer:
+    code: json
+  contact:
+    name: Robin Shi
+    email: robinshi@outlook.com

@@ -1,0 +1,45 @@
+version: '3'
+services:
+  # rest:
+  #   build:
+  #     context: ..
+  #     dockerfile: "build/rest/Dockerfile"
+  #   environment:
+  #     APP_MODE: prod
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     - db
+  #   links:
+  #     - db
+  graphql:
+    build:
+      context: ..
+      dockerfile: "build/graphql/Dockerfile"
+    environment:
+      APP_MODE: prod
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    links:
+      - db
+  rpc:
+    build:
+      context: ..
+      dockerfile: "build/rpc/Dockerfile"
+    environment:
+      APP_MODE: prod
+    ports:
+      - "8081:8081"
+    depends_on:
+      - db
+    links:
+      - db
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: test
+    ports:
+      - "5433:5432"

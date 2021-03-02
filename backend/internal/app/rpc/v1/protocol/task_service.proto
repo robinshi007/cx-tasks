@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package protocol;
+
+service TaskService {
+  rpc ListTask(ListTaskRequestType) returns (ListTaskResponseType) {}
+}
+
+message Task {
+  string id = 1;
+  string name = 2;
+}
+
+message ListTaskRequestType {
+}
+
+message ListTaskResponseType {
+  repeated Task tasks= 1;
+}

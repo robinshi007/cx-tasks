@@ -1,0 +1,7 @@
+.DS_Store
+/tmp
+/dist
+bindata.go
+internal/di/wire_gen.go
+internal/app/graphql/gen/*
+internal/app/rpc/v1/protocol/*.pb.go

@@ -1,0 +1,19 @@
+type Task{
+  id: ID!
+  name: String!
+  description: String!
+  created_at: String!
+  updated_at: String!
+  deleted_at: String!
+}
+
+input NewTask{
+  name: String!
+}
+input EditTask{
+  id: ID!
+  name: String!
+}
+input FetchTask{
+  id: ID!
+}

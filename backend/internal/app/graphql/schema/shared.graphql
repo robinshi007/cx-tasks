@@ -1,0 +1,11 @@
+type Query {
+  tasks: [Task!]!
+  fetchTask (input: FetchTask!): Task!
+}
+type Mutation {
+  createTask(input: NewTask!): Task!
+  updateTask(input: EditTask!): Task!
+  deleteTask(input: FetchTask!): Task!
+}
+
+scalar Time
